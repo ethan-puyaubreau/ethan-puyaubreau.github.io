@@ -1,0 +1,307 @@
+---
+// Single blog post. Renders the Markdown body inside the paper layout, with a
+// BlogPosting JSON-LD block for search engines. Both locales render this with
+// their own entry. House style: no em dashes.
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import SiteHeader from "./SiteHeader.astro";
+import SiteFooter from "./SiteFooter.astro";
+import { getUI } from "../lib/ui";
+import { site } from "../lib/site";
+import { type Locale, localeHome, blogHome, blogPost } from "../lib/i18n";
+import avatar from "../assets/avatar.jpg";
+
+interface Props {
+  locale: Locale;
+  entry: CollectionEntry<"blog">;
+}
+const { locale, entry } = Astro.props;
+const { Content } = await render(entry);
+
+const ui = getUI(locale);
+const d = entry.data;
+
+// EN-only (or FR-only) posts have no counterpart in the other locale. Detect it
+// so we neither emit an hreflang to a 404 (Base `paired`) nor point the language
+// switch at a missing translation (omitted, so it falls back to that locale's home).
+const other: Locale = locale === "en" ? "fr" : "en";
+const hasOther =
+  (await getCollection("blog", (p) => p.data.lang === other && p.data.slug === d.slug)).length > 0;
+const langPaths: Partial<Record<Locale, string>> = { [locale]: blogPost(locale, d.slug) };
+if (hasOther) langPaths[other] = blogPost(other, d.slug);
+const dateLabel = d.pubDate.toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+const canonical = d.canonical ?? new URL(blogPost(locale, d.slug), site.url).href;
+const ogImage = new URL("/og.png", site.url).href;
+const logoUrl = new URL("/favicon-32.png", site.url).href;
+
+const articleLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: d.title,
+  description: d.description,
+  datePublished: d.pubDate.toISOString(),
+  dateModified: (d.updatedDate ?? d.pubDate).toISOString(),
+  inLanguage: locale,
+  keywords: d.tags.join(", "),
+  image: ogImage,
+  author: { "@type": "Person", "@id": `${site.url}#person`, name: site.name, url: site.url },
+  publisher: {
+    "@type": "Organization",
+    name: site.name,
+    url: site.url,
+    logo: { "@type": "ImageObject", url: logoUrl },
+  },
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+};
+---
+
+<Base
+  locale={locale}
+  title={`${d.title} · ${site.name}`}
+  description={d.description}
+  ogType="article"
+  paired={hasOther}
+>
+  <SiteHeader
+    locale={locale}
+    sections={[]}
+    ui={ui}
+    brandHref={localeHome(locale)}
+    langPaths={langPaths}
+    solid
+  />
+  <script type="application/ld+json" set:html={JSON.stringify(articleLd)} is:inline />
+
+  <main id="main" tabindex="-1" class="post-main">
+    <article class="container post">
+      <a class="back" href={blogHome(locale)}
+        ><span aria-hidden="true">←</span> {ui.blog.backToIndex}</a
+      >
+      <header class="post-head" data-reveal>
+        <p class="label post-date">{ui.blog.published} {dateLabel}</p>
+        <h1 class="post-title">{d.title}</h1>
+        <p class="post-desc">{d.description}</p>
+        {
+          d.tags.length > 0 && (
+            <ul class="post-tags" aria-label={ui.blog.tagsLabel}>
+              {d.tags.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+      <div class="prose" data-reveal>
+        <Content />
+      </div>
+
+      <footer class="author-card" data-reveal>
+        <Image src={avatar} alt="" width={88} densities={[1, 2]} class="author-avatar" />
+        <div class="author-meta">
+          <p class="author-name">{site.name}</p>
+          <p class="author-tagline">{ui.blog.authorTagline}</p>
+          <p class="author-available">{ui.blog.authorAvailable}</p>
+        </div>
+        <a class="author-cta" href={`${localeHome(locale)}#contact`}>{ui.blog.contactCta}</a>
+      </footer>
+    </article>
+  </main>
+
+  <SiteFooter
+    colophon={ui.colophon}
+    buildLabel={ui.footerBuildLabel}
+    commitLabel={ui.footerCommit}
+    builtLabel={ui.footerBuilt}
+    contactHref={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}
+    contactLabel={ui.blog.contactCta}
+    owner={site.name}
+    blogHref={blogHome(locale)}
+  />
+</Base>
+
+<style>
+  .post-main {
+    padding-top: calc(3.5rem + var(--space-xl));
+    padding-bottom: var(--space-2xl);
+  }
+  .post {
+    max-width: 42rem;
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: var(--space-l);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--ink-dim);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 2px;
+  }
+  .back:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .post-date {
+    margin-bottom: var(--space-s);
+  }
+  .post-title {
+    font-family: var(--font-display);
+    font-size: var(--step-5);
+    font-weight: 480;
+    line-height: 1.08;
+  }
+  .post-desc {
+    margin-top: var(--space-m);
+    max-width: 50ch;
+    color: var(--ink-dim);
+    font-size: var(--step-1);
+  }
+  .post-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    margin: var(--space-m) 0 0;
+  }
+  .post-tags li {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-wide);
+    color: var(--accent-deep);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.15rem 0.5rem;
+  }
+  .prose {
+    margin-top: var(--space-xl);
+  }
+  .prose :global(h2) {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 480;
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-s);
+  }
+  .prose :global(p) {
+    margin-bottom: var(--space-m);
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .prose :global(a) {
+    color: var(--accent-deep);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .prose :global(a:hover) {
+    color: var(--accent);
+  }
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--line);
+    padding: 0.1rem 0.3rem;
+    border-radius: var(--radius);
+  }
+  .prose :global(pre) {
+    overflow-x: auto;
+    padding: var(--space-m);
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    margin-bottom: var(--space-m);
+  }
+  .prose :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 var(--space-m) 1.4rem;
+    line-height: 1.7;
+  }
+  /* Figures: diagrams (inline SVG) and photos scale to the column; captions are
+     muted. Posts may carry several of each (e.g. the GPU-energy write-up). */
+  .prose :global(figure) {
+    margin: var(--space-l) 0;
+  }
+  .prose :global(figure svg),
+  .prose :global(figure img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+  }
+  .prose :global(figure img) {
+    border: 1px solid var(--line);
+  }
+  .prose :global(figcaption) {
+    margin-top: var(--space-s);
+    font-size: var(--step--1);
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  /* Author card: a recruiter who lands straight on the article still sees who
+     wrote it, that they are available, and a one-click path to contact. */
+  .author-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    flex-wrap: wrap;
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--line);
+  }
+  .author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--line-strong);
+    flex-shrink: 0;
+  }
+  .author-meta {
+    flex: 1 1 16rem;
+    min-width: 0;
+  }
+  .author-name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+  .author-tagline {
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+  .author-available {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    margin-top: 0.2rem;
+  }
+  .author-cta {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.9rem;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .author-cta:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+</style>

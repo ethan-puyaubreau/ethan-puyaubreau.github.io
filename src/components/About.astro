@@ -1,0 +1,143 @@
+---
+import { Image } from "astro:assets";
+import type { TimelineEntry } from "../lib/content";
+import { site } from "../lib/site";
+import portrait from "../assets/ethan-portrait.jpg";
+
+interface Props {
+  about: readonly string[];
+  timeline: readonly TimelineEntry[];
+  role: string;
+  timelineLabel: string;
+}
+const { about, timeline, role, timelineLabel } = Astro.props;
+---
+
+<div class="about">
+  <div class="prose" data-reveal>
+    <figure class="portrait">
+      <Image
+        src={portrait}
+        alt={`${site.name}, ${role}`}
+        width={232}
+        densities={[1, 2]}
+        loading="lazy"
+      />
+      <figcaption>
+        <span class="realname">{site.name}</span>
+        <span class="loc">{site.location}</span>
+      </figcaption>
+    </figure>
+    {about.map((p) => <p>{p}</p>)}
+  </div>
+
+  <aside class="track" aria-label={timelineLabel}>
+    <ol>
+      {
+        timeline.map((t, i) => (
+          <li data-reveal style={`--ri: ${i}`}>
+            <span class="when">{t.when}</span>
+            <span class="what">{t.what}</span>
+            <span class="where">{t.where}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </aside>
+</div>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+    gap: clamp(1.5rem, 6vw, 4.5rem);
+    align-items: start;
+  }
+  .prose {
+    max-width: var(--measure);
+    display: grid;
+    gap: var(--space-s);
+  }
+  .prose p {
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+  }
+  .prose p:first-of-type {
+    color: var(--ink);
+    font-size: var(--step-1);
+  }
+  .portrait {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    margin-bottom: var(--space-xs);
+  }
+  .portrait img {
+    width: 116px;
+    height: 116px;
+    object-fit: cover;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+  .portrait figcaption {
+    display: grid;
+    gap: 0.15rem;
+  }
+  .realname {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--ink);
+  }
+  .alias {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--muted);
+  }
+  .loc {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--muted);
+  }
+
+  .track ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--line);
+  }
+  .track li {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0 0 var(--space-m) var(--space-s);
+    position: relative;
+  }
+  .track li::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    top: 0.5rem;
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .when {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-wide);
+    color: var(--accent);
+  }
+  .what {
+    color: var(--ink);
+  }
+  .where {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  @media (max-width: 720px) {
+    .about {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

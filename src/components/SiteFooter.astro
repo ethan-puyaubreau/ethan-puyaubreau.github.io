@@ -1,0 +1,130 @@
+---
+interface Props {
+  /** Colophon with a single {cluster} placeholder for the highlighted name. */
+  colophon: string;
+  buildLabel: string;
+  commitLabel: string;
+  builtLabel: string;
+  /** Contact link for the face rendering this footer. */
+  contactHref: string;
+  contactLabel: string;
+  /** Copyright holder for the face rendering this footer. */
+  owner: string;
+  /** Blog link. Omitted on a face that has no blog. */
+  blogHref?: string;
+}
+const {
+  colophon,
+  buildLabel,
+  commitLabel,
+  builtLabel,
+  contactHref,
+  contactLabel,
+  owner,
+  blogHref,
+} = Astro.props;
+
+// Contact, owner and the blog link are the caller's business, not read from a
+// shared `site` module here, so this component makes no assumption about which
+// identity is using it.
+
+const sha = (import.meta.env.PUBLIC_BUILD_SHA ?? "dev").slice(0, 7);
+const buildTime = import.meta.env.PUBLIC_BUILD_TIME ?? "";
+const year = new Date().getUTCFullYear();
+
+// Split the colophon around an optional {cluster} placeholder so the cluster
+// name keeps its highlight when the caller's copy references it; plain text
+// otherwise (this face's colophon does not name the cluster).
+const CLUSTER = "sentinel";
+const hasCluster = colophon.includes("{cluster}");
+const [colophonBefore, colophonAfter] = colophon.split("{cluster}");
+---
+
+<footer class="site-footer">
+  <div class="container foot">
+    <p class="colophon">
+      {colophonBefore}{hasCluster && <span class="hl">{CLUSTER}</span>}{colophonAfter}
+    </p>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href={contactHref}>{contactLabel}</a>
+      {blogHref && <a href={blogHref}>Blog</a>}
+    </nav>
+    <dl class="build" aria-label={buildLabel}>
+      <div><dt>{commitLabel}</dt><dd>{sha}</dd></div>
+      {
+        buildTime && (
+          <div>
+            <>
+              <dt>{builtLabel}</dt>
+              <dd>{buildTime}</dd>
+            </>
+          </div>
+        )
+      }
+      <div><dt>©</dt><dd>{year} {owner}</dd></div>
+    </dl>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    margin-top: var(--space-2xl);
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-m);
+    padding-block: var(--space-l);
+  }
+  .colophon {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .foot-nav {
+    display: flex;
+    gap: var(--space-m);
+  }
+  .foot-nav a {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--ink-dim);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 2px;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .foot-nav a:hover {
+    color: var(--accent);
+  }
+  .hl {
+    color: var(--accent-deep);
+  }
+  .build {
+    display: flex;
+    gap: var(--space-m);
+    margin: 0;
+  }
+  .build div {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+  .build dt {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--muted);
+  }
+  .build dd {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--ink-dim);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

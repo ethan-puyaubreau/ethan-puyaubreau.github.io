@@ -1,0 +1,102 @@
+---
+// Discreet, keyboard-accessible EN/FR switch. Real links (one per locale) so it
+// works without JS; a tiny inline script records the manual choice so the
+// first-visit region detector never overrides it. House style: no em dashes.
+import { type Locale, localeHome } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+  locales: readonly Locale[];
+  defaultLocale: Locale;
+  switchLabel: string;
+  names: Record<Locale, string>;
+  titles: Record<Locale, string>;
+  storageKey: string;
+  /** Per-locale target URL. Defaults to each locale's home; set on sub-pages
+      (e.g. /cluster) so switching language stays on the same page. */
+  paths?: Partial<Record<Locale, string>>;
+}
+const { locale, locales, switchLabel, names, titles, storageKey, paths } = Astro.props;
+---
+
+<nav class="lang" aria-label={switchLabel} data-lang-switch data-storage-key={storageKey}>
+  {
+    locales.map((l, i) => (
+      <>
+        {i > 0 && (
+          <span class="sep" aria-hidden="true">
+            /
+          </span>
+        )}
+        {l === locale ? (
+          <span class="opt current" aria-current="true" lang={l}>
+            {names[l]}
+          </span>
+        ) : (
+          <a
+            class="opt"
+            href={paths?.[l] ?? localeHome(l)}
+            hreflang={l}
+            lang={l}
+            title={titles[l]}
+            data-locale={l}
+          >
+            {names[l]}
+          </a>
+        )}
+      </>
+    ))
+  }
+</nav>
+
+<script is:inline>
+  // Remember a manual language choice so the auto-detect redirect on / yields to it.
+  (function () {
+    const nav = document.querySelector("[data-lang-switch]");
+    if (!nav) return;
+    const key = nav.getAttribute("data-storage-key") || "site.locale";
+    nav.addEventListener("click", function (e) {
+      const t = e.target instanceof Element ? e.target.closest("a[data-locale]") : null;
+      if (!t) return;
+      try {
+        localStorage.setItem(key, t.getAttribute("data-locale") || "");
+      } catch {
+        /* private mode: navigation still works, choice just isn't remembered */
+      }
+    });
+  })();
+</script>
+
+<style>
+  .lang {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-wide);
+  }
+  .opt {
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--muted);
+    border-bottom: 1px solid transparent;
+    /* a comfortable tap target (WCAG 2.5.8) without disturbing the baseline row */
+    padding-block: 0.25rem;
+    padding-inline: 0.35rem;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  a.opt:hover,
+  a.opt:focus-visible {
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+  .opt.current {
+    color: var(--accent);
+  }
+  .sep {
+    color: var(--faint);
+  }
+</style>

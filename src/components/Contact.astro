@@ -1,0 +1,160 @@
+---
+import { site, links } from "../lib/site";
+import type { Availability } from "../lib/content";
+
+interface Props {
+  availability: Availability;
+  cv: string;
+  cvKind: string;
+  /** Locale-specific CV path (EN at /, FR at /fr). */
+  cvHref: string;
+}
+const { availability, cv, cvKind, cvHref } = Astro.props;
+
+const confirmed = links.filter((l) => l.confirmed && l.href);
+---
+
+<div class="contact">
+  <div class="pitch" data-reveal>
+    <p class="avail-head">{availability.headline}</p>
+    <p class="avail-detail">{availability.detail}</p>
+    <p class="reach">{availability.cta}</p>
+    <a
+      class="primary"
+      href={`mailto:${site.email}?subject=${encodeURIComponent(availability.mailSubject)}`}
+      >{availability.contactLabel}</a
+    >
+    <a class="email-plain" href={`mailto:${site.email}`}>{site.email}</a>
+  </div>
+
+  <div class="channels">
+    <ul class="link-list">
+      {
+        confirmed.map((l, i) => (
+          <li data-reveal style={`--ri: ${i}`}>
+            <a href={l.href} rel="noopener" target="_blank">
+              {l.label} <span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))
+      }
+      <li data-reveal style={`--ri: ${confirmed.length}`}>
+        <a href={cvHref} download>
+          {cv}
+          <span class="aside">{cvKind}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
+    gap: clamp(1.5rem, 6vw, 4.5rem);
+    align-items: start;
+  }
+  .pitch {
+    position: relative;
+  }
+  /* Corner ticks frame the recruiter pitch, echoing the OG card. */
+  .pitch::before,
+  .pitch::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 0 solid var(--line);
+    pointer-events: none;
+  }
+  .pitch::before {
+    top: -10px;
+    left: -10px;
+    border-top-width: 1.5px;
+    border-left-width: 1.5px;
+  }
+  .pitch::after {
+    bottom: -10px;
+    right: -10px;
+    border-bottom-width: 1.5px;
+    border-right-width: 1.5px;
+  }
+  .avail-head {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    color: var(--ink);
+    max-width: 16ch;
+  }
+  .avail-detail {
+    color: var(--ink-dim);
+    margin-top: var(--space-2xs);
+    max-width: 40ch;
+  }
+  .reach {
+    margin-top: var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--muted);
+  }
+  .primary {
+    display: inline-block;
+    margin-top: var(--space-2xs);
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    color: var(--accent);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 3px;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .primary:hover {
+    border-color: var(--accent);
+  }
+  .email-plain {
+    display: inline-block;
+    margin-top: var(--space-s);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--muted);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .email-plain:hover {
+    color: var(--accent);
+  }
+
+  .link-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .link-list li {
+    border-bottom: 1px solid var(--hairline);
+  }
+  .link-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-xs) 0;
+    font-family: var(--font-mono);
+    color: var(--ink);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .link-list a:hover {
+    color: var(--accent);
+  }
+  .aside {
+    font-size: var(--step--2);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+  }
+
+  @media (max-width: 720px) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

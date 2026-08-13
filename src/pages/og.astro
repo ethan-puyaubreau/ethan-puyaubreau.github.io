@@ -1,0 +1,156 @@
+---
+// Source page for the 1200x630 Open Graph card. Captured to /og.png by
+// scripts/shoot-og.mjs (headless, real Fraunces). Not indexed, not in the sitemap.
+// Kept in English: the committed og.png is the EN card shared for all locales.
+import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/jetbrains-mono";
+import { site, getSiteCopy } from "../lib/site";
+
+const copy = getSiteCopy("en");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>OG card</title>
+  </head>
+  <body>
+    <div class="og">
+      <div class="field" aria-hidden="true">
+        <span class="orbit orbit-1"></span>
+        <span class="orbit orbit-2"></span>
+        <span class="core"></span>
+      </div>
+      <span class="tick tl"></span>
+      <span class="tick br"></span>
+      <div class="copy">
+        <p class="kicker">{site.url.replace("https://", "")}</p>
+        <h1>{site.name}</h1>
+        <p class="role">{copy.role}</p>
+        <p class="line">{copy.positioning}</p>
+      </div>
+    </div>
+
+    <style>
+      :global(html),
+      :global(body) {
+        margin: 0;
+        padding: 0;
+      }
+      .og {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #08090c;
+        color: #f1ede3;
+        font-family: "Archivo Variable", system-ui, sans-serif;
+      }
+      .field {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(38% 52% at 70% 44%, rgb(255 224 150 / 0.85), transparent 60%),
+          radial-gradient(60% 80% at 70% 44%, rgb(240 180 41 / 0.34), transparent 60%),
+          radial-gradient(90% 120% at 70% 44%, rgb(201 132 39 / 0.16), transparent 55%);
+      }
+      .field::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgb(255 241 218 / 0.55) 0.6px, transparent 0.8px);
+        background-size: 4px 4px;
+        -webkit-mask-image: radial-gradient(46% 60% at 70% 44%, #000 8%, transparent 70%);
+        mask-image: radial-gradient(46% 60% at 70% 44%, #000 8%, transparent 70%);
+        opacity: 0.5;
+      }
+      .orbit {
+        position: absolute;
+        top: 44%;
+        left: 70%;
+        border: 1px solid rgb(240 180 41 / 0.3);
+        border-radius: 50%;
+        translate: -50% -50%;
+        rotate: -18deg;
+      }
+      .orbit-1 {
+        width: 620px;
+        height: 200px;
+      }
+      .orbit-2 {
+        width: 430px;
+        height: 128px;
+        border-color: rgb(240 180 41 / 0.22);
+      }
+      .core {
+        position: absolute;
+        top: 44%;
+        left: 70%;
+        width: 16px;
+        height: 16px;
+        translate: -50% -50%;
+        background: #ffe6ad;
+        border-radius: 50%;
+        box-shadow: 0 0 40px 12px rgb(240 180 41 / 0.55);
+      }
+      .tick {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border: 0 solid rgb(236 232 223 / 0.34);
+      }
+      .tl {
+        top: 56px;
+        left: 56px;
+        border-top-width: 1.5px;
+        border-left-width: 1.5px;
+      }
+      .br {
+        bottom: 56px;
+        right: 56px;
+        border-bottom-width: 1.5px;
+        border-right-width: 1.5px;
+      }
+      .copy {
+        position: absolute;
+        left: 72px;
+        bottom: 76px;
+        max-width: 760px;
+      }
+      .kicker {
+        margin: 0 0 18px;
+        font-family: "JetBrains Mono Variable", monospace;
+        font-size: 22px;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: #8c8779;
+      }
+      h1 {
+        margin: 0;
+        font-family: "Fraunces Variable", Georgia, serif;
+        font-weight: 470;
+        font-size: 112px;
+        line-height: 0.98;
+        letter-spacing: -0.015em;
+        color: #f7f4ec;
+      }
+      .role {
+        margin: 16px 0 0;
+        font-family: "Fraunces Variable", Georgia, serif;
+        font-style: italic;
+        font-weight: 420;
+        font-size: 38px;
+        color: #f0b429;
+      }
+      .line {
+        margin: 30px 0 0;
+        font-family: "JetBrains Mono Variable", monospace;
+        font-size: 23px;
+        letter-spacing: 0.5px;
+        color: #cbc6b8;
+      }
+    </style>
+  </body>
+</html>

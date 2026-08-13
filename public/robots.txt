@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ethan-puyaubreau.github.io/sitemap-index.xml

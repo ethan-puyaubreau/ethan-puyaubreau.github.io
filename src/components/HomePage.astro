@@ -1,0 +1,435 @@
+---
+// Shared home composition. Both routes (src/pages/index.astro EN,
+// src/pages/fr/index.astro FR) render this with their locale, so the structure
+// lives in one place and only the language differs. House style: no em dashes.
+import Base from "../layouts/Base.astro";
+import SiteHeader from "./SiteHeader.astro";
+import SiteFooter from "./SiteFooter.astro";
+import SectionHeader from "./SectionHeader.astro";
+import CaseStudyEntry from "./CaseStudy.astro";
+import MoreWork from "./MoreWork.astro";
+import Expertise from "./Expertise.astro";
+import About from "./About.astro";
+import Contact from "./Contact.astro";
+import NbodyHero from "../islands/NbodyHero.vue";
+import HomelabStatus from "../islands/HomelabStatus.vue";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { site, refs, getSiteCopy, links } from "../lib/site";
+import { getContent } from "../lib/content";
+import { getUI } from "../lib/ui";
+import { type Locale, blogHome, blogPost } from "../lib/i18n";
+import snapshot from "../data/cluster-snapshot.json";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const copy = getSiteCopy(locale);
+const ui = getUI(locale);
+const content = getContent(locale);
+
+// Verifiable references surfaced in the hero (credibility before the argument).
+const proofLinks = links.filter(
+  (l) => l.confirmed && ["ORCID", "GitHub", "LinkedIn"].includes(l.label),
+);
+const heads = ui.sectionHeads;
+
+// Latest blog posts for the "Writing" teaser section. Newest first, capped at 3
+// so it stays a teaser and does not compete with the case studies above it.
+const posts = (
+  await getCollection(
+    "blog",
+    (p: CollectionEntry<"blog">) => p.data.lang === locale && !p.data.draft,
+  )
+)
+  .sort(
+    (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
+      b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+  )
+  .slice(0, 3);
+const fmtDate = (d: Date): string =>
+  d.toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+// The hero title carries inline emphasis and a line break, so it's assembled as
+// HTML with the two accented words in <em>. Built here (not in the template) to
+// keep exact whitespace and avoid stray spaces leaking inside the <em> spans.
+const esc = (s: string): string =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const t = ui.hero;
+const heroTitle = `${esc(t.titleLead)}<em>${esc(t.titleEm1)}</em><br />${esc(t.titleMid)}<em>${esc(
+  t.titleEm2,
+)}</em>${esc(t.titleTail)}`;
+---
+
+<Base locale={locale}>
+  <SiteHeader
+    locale={locale}
+    sections={content.sections}
+    ui={ui}
+    langPaths={{ en: "/", fr: "/fr" }}
+  />
+
+  <main id="main" tabindex="-1">
+    <section id="top" class="hero theme-dark">
+      <NbodyHero client:only="vue" strings={ui.heroFallback} />
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-grain" aria-hidden="true"></div>
+      <div class="hero-overlay container">
+        <p class="label hero-kicker">{copy.role}</p>
+        <h1 class="hero-title" set:html={heroTitle} />
+        <p class="hero-lede">
+          {ui.hero.ledeBeforeLink}<a href={refs.kokkos} rel="noopener" target="_blank"
+            >{ui.hero.ledeLinkLabel}</a
+          >{ui.hero.ledeAfterLink}
+        </p>
+        <p class="hero-proof">{ui.hero.proof}</p>
+        <p class="hero-proof-links">
+          {
+            proofLinks.map((l, i) => (
+              <Fragment>
+                {i > 0 && <span aria-hidden="true"> · </span>}
+                <a href={l.href} rel="noopener" target="_blank">
+                  {l.label}
+                </a>
+              </Fragment>
+            ))
+          }
+        </p>
+        <a class="hero-cue" href="#work">
+          <span>{ui.hero.cue}</span>
+          <span class="arrow" aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="container">
+      <section id="work">
+        <SectionHeader num="01" label={content.sections[0].label} title={heads.work.title}>
+          {heads.work.intro}
+        </SectionHeader>
+        {
+          content.caseStudies.map((study) => (
+            <CaseStudyEntry study={study} total={content.caseStudies.length} ui={ui}>
+              {study.id === "homelab" && (
+                <HomelabStatus
+                  slot="artifact"
+                  client:visible
+                  strings={ui.homelabStatus}
+                  nodesOnline={snapshot.cluster.nodesOnline}
+                  nodesTotal={snapshot.cluster.nodesTotal}
+                  guestsRunning={snapshot.cluster.guestsRunning}
+                  guestsTotal={snapshot.cluster.guestsTotal}
+                  cpuPct={snapshot.cluster.cpuPct}
+                  memPct={snapshot.cluster.memPct}
+                  uptimeDays={snapshot.uptimeDays}
+                />
+              )}
+            </CaseStudyEntry>
+          ))
+        }
+        <MoreWork items={content.moreWork} head={ui.moreWorkHead} label={ui.moreWorkLabel} />
+      </section>
+
+      <section id="expertise">
+        <SectionHeader num="02" label={content.sections[1].label} title={heads.expertise.title}>
+          {heads.expertise.intro}
+        </SectionHeader>
+        <Expertise domains={content.expertise} provenByLabel={ui.provenBy} />
+      </section>
+
+      {
+        posts.length > 0 && (
+          <section id="writing">
+            <SectionHeader num="03" label={content.sections[2].label} title={ui.blog.indexTitle}>
+              {ui.blog.indexIntro}
+            </SectionHeader>
+            <ul class="writing-list">
+              {posts.map((p: CollectionEntry<"blog">) => (
+                <li class="writing-row" data-reveal>
+                  <a href={blogPost(locale, p.data.slug)}>
+                    <span class="w-date">{fmtDate(p.data.pubDate)}</span>
+                    <span class="w-title">{p.data.title}</span>
+                    <span class="w-desc">{p.data.description}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a class="writing-all" href={blogHome(locale)}>
+              {ui.blog.seeAll}{" "}
+              <span class="arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </section>
+        )
+      }
+
+      <section id="about">
+        <SectionHeader num="04" label={content.sections[3].label} title={heads.about.title} />
+        <About
+          about={content.about}
+          timeline={content.timeline}
+          role={copy.role}
+          timelineLabel={ui.timelineLabel}
+        />
+      </section>
+
+      <section id="contact">
+        <SectionHeader num="05" label={content.sections[4].label} title={heads.contact.title} />
+        <Contact
+          availability={content.availability}
+          cv={ui.cv}
+          cvKind={ui.cvKind}
+          cvHref={locale === "fr" ? "/Ethan-Puyaubreau-CV-FR.pdf" : "/Ethan-Puyaubreau-CV.pdf"}
+        />
+      </section>
+    </div>
+  </main>
+
+  <SiteFooter
+    colophon={ui.colophon}
+    buildLabel={ui.footerBuildLabel}
+    commitLabel={ui.footerCommit}
+    builtLabel={ui.footerBuilt}
+    contactHref={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}
+    contactLabel={ui.blog.contactCta}
+    owner={site.name}
+    blogHref={blogHome(locale)}
+  />
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* darken where the text sits (bottom-left), fade toward the bright core */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(80deg, rgb(6 7 10 / 0.84) 0%, rgb(6 7 10 / 0.36) 32%, transparent 58%),
+      linear-gradient(to top, rgb(6 7 10 / 0.74) 0%, rgb(6 7 10 / 0.12) 28%, transparent 52%);
+  }
+  /* faint film grain over the canvas — atmosphere, not decoration */
+  .hero-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: radial-gradient(rgb(236 232 223 / 0.025) 0.5px, transparent 0.5px);
+    background-size: 4px 4px;
+    mix-blend-mode: screen;
+  }
+  .hero-overlay {
+    position: relative;
+    z-index: 2;
+    padding-bottom: var(--space-2xl);
+    padding-top: calc(3.5rem + var(--space-xl));
+    pointer-events: none;
+  }
+  .hero-overlay a {
+    pointer-events: auto;
+  }
+  .hero-kicker {
+    margin-bottom: var(--space-m);
+  }
+  .hero-title {
+    font-size: var(--step-7);
+    max-width: 16ch;
+    font-weight: 480;
+    text-shadow: 0 2px 34px rgb(0 0 0 / 0.55);
+  }
+  /* The title is injected via set:html, so its <em> tags carry no scope
+     attribute; :global keeps the accent on them while staying inside .hero-title. */
+  .hero-title :global(em) {
+    font-style: italic;
+    font-weight: 460;
+    color: var(--accent);
+  }
+  .hero-lede {
+    margin-top: var(--space-l);
+    max-width: 52ch;
+    color: var(--ink-dim);
+    font-size: var(--step-1);
+    text-shadow: 0 1px 24px rgb(0 0 0 / 0.6);
+  }
+  .hero-lede a {
+    color: var(--ink);
+    border-bottom: 1px solid var(--line-strong);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .hero-proof {
+    margin-top: var(--space-s);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .hero-proof-links {
+    margin-top: var(--space-2xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--muted);
+  }
+  .hero-lede a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .hero-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: var(--space-l);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--ink-dim);
+  }
+  .hero-cue:hover {
+    color: var(--accent);
+  }
+  .hero-cue .arrow {
+    animation: nudge 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes nudge {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(3px);
+    }
+  }
+
+  /* one choreographed entrance: the masthead reveals in sequence on load */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-overlay > * {
+      animation: reveal var(--dur-slow) var(--ease-out) backwards;
+    }
+    .hero-kicker {
+      animation-delay: 0.1s;
+    }
+    .hero-title {
+      animation-delay: 0.22s;
+    }
+    .hero-lede {
+      animation-delay: 0.5s;
+    }
+    .hero-cue {
+      animation-delay: 0.72s;
+    }
+  }
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  main > .container > section {
+    scroll-margin-top: 4.5rem;
+  }
+
+  .writing-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-l) 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .writing-row a {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 0.2rem var(--space-l);
+    padding: var(--space-m) 0;
+    min-height: 44px;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .writing-row a:hover .w-title {
+    color: var(--accent);
+  }
+  /* Whole-row affordance: an arrow appears at the end of the title on hover, so
+     hovering the date or description still signals the row is clickable. */
+  .w-title::after {
+    content: " \2192";
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .writing-row a:hover .w-title::after {
+    opacity: 1;
+  }
+  .w-date {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--muted);
+  }
+  .w-title {
+    grid-column: 2;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--ink);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .w-desc {
+    grid-column: 2;
+    margin-top: 0.25rem;
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+  }
+  .writing-all {
+    display: inline-block;
+    margin-top: var(--space-l);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent-deep);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 2px;
+  }
+  .writing-all:hover {
+    color: var(--accent);
+  }
+  .writing-all .arrow {
+    display: inline-block;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .writing-all:hover .arrow {
+    transform: translateX(3px);
+  }
+  @media (max-width: 640px) {
+    .writing-row a {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+    .w-title,
+    .w-desc {
+      grid-column: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cue .arrow {
+      animation: none;
+    }
+  }
+</style>

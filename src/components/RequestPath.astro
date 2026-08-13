@@ -1,0 +1,165 @@
+---
+// The real request path, edge to backend, as an instrument schematic: stations
+// on a rail, with packets travelling left to right (the request direction).
+// Pure CSS animation; static and fully legible under reduced motion and no JS.
+import type { PathStage } from "../lib/cluster";
+
+interface Props {
+  stages: readonly PathStage[];
+  label: string;
+}
+const { stages, label } = Astro.props;
+---
+
+<div class="reqpath">
+  <ol class="track" aria-label={label}>
+    {
+      stages.map((s) => (
+        <li class="station">
+          <span class="bead" aria-hidden="true" />
+          <span class="st-label">{s.label}</span>
+          <span class="st-sub">{s.sub}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="packets" aria-hidden="true">
+    <span class="packet"></span>
+    <span class="packet"></span>
+    <span class="packet"></span>
+  </div>
+</div>
+
+<style>
+  .reqpath {
+    position: relative;
+    margin-top: var(--space-l);
+    padding-block: var(--space-s);
+  }
+  .track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    position: relative;
+  }
+  /* the rail connecting the beads */
+  .track::before {
+    content: "";
+    position: absolute;
+    top: 0.35rem;
+    left: 0.35rem;
+    right: 0.35rem;
+    height: 1px;
+    background: var(--line);
+  }
+  .station {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: center;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .bead {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--accent);
+    /* ring of page background masks the rail passing behind the bead */
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+  .st-label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink);
+    letter-spacing: var(--tracking-wide);
+  }
+  .st-sub {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--muted);
+  }
+
+  .packets {
+    position: absolute;
+    top: 0.35rem;
+    left: 0.35rem;
+    right: 0.35rem;
+    height: 0;
+  }
+  .packet {
+    position: absolute;
+    top: -3px;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .packet {
+      animation: travel 4.5s linear infinite;
+    }
+    .packet:nth-child(2) {
+      animation-delay: 1.5s;
+    }
+    .packet:nth-child(3) {
+      animation-delay: 3s;
+    }
+    @keyframes travel {
+      0% {
+        left: 0;
+        opacity: 0;
+      }
+      8% {
+        opacity: 1;
+      }
+      92% {
+        opacity: 1;
+      }
+      100% {
+        left: 100%;
+        opacity: 0;
+      }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .packet {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .track {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-m);
+    }
+    .track::before {
+      top: 0.35rem;
+      bottom: 0.35rem;
+      left: 0.35rem;
+      right: auto;
+      width: 1px;
+      height: auto;
+    }
+    .station {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.6rem;
+      text-align: left;
+    }
+    .packets {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,196 @@
+---
+import type { CaseStudy } from "../lib/content";
+import type { UIStrings } from "../lib/ui";
+
+interface Props {
+  study: CaseStudy;
+  total: number;
+  ui: UIStrings;
+}
+const { study, total, ui } = Astro.props;
+const counter = `${study.num} / ${String(total).padStart(2, "0")}`;
+---
+
+<article id={study.id} class:list={["case", { flagship: study.flagship }]} data-reveal>
+  <aside class="meta">
+    <p class="counter">{counter}</p>
+    <p class="kicker label">{study.kicker}</p>
+    <dl class="facts">
+      <div><dt>{ui.factRole}</dt><dd>{study.role}</dd></div>
+      <div><dt>{ui.factWhen}</dt><dd>{study.period}</dd></div>
+    </dl>
+    <ul class="stack" aria-label={ui.stackLabel}>
+      {study.stack.map((s) => <li>{s}</li>)}
+    </ul>
+    {
+      study.links && study.links.length > 0 && (
+        <ul class="links">
+          {study.links.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                rel="noopener"
+                target={l.href.startsWith("http") ? "_blank" : undefined}
+              >
+                {l.label} <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </aside>
+
+  <div class="narrative">
+    {study.flagship && <p class="flag label">{ui.flagship}</p>}
+    <h3 class="case-title">{study.title}</h3>
+    <p class="summary">{study.summary}</p>
+    {
+      study.body.map((b) => (
+        <div class="block">
+          <h4>{b.h}</h4>
+          <p>{b.p}</p>
+        </div>
+      ))
+    }
+    {study.caveat && <p class="caveat">{study.caveat}</p>}
+    <slot name="artifact" />
+  </div>
+</article>
+
+<style>
+  .case {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    padding-block: var(--space-l);
+    border-top: 1px solid var(--hairline);
+    scroll-margin-top: 5rem;
+  }
+  .case.flagship {
+    border-top-color: var(--line-strong);
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+  .counter {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-wide);
+  }
+  .kicker {
+    color: var(--accent-deep);
+  }
+  .facts {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: 0.6rem;
+  }
+  .facts dt {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--muted);
+  }
+  .facts dd {
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+  }
+  .stack {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .stack li {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--ink-dim);
+    border: 1px solid var(--line);
+    padding: 0.15rem 0.5rem;
+  }
+  .links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .links a {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 2px;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .links a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .narrative {
+    max-width: var(--measure);
+  }
+  .flag {
+    color: var(--accent);
+    margin-bottom: var(--space-2xs);
+  }
+  .case-title {
+    font-size: var(--step-3);
+  }
+  .flagship .case-title {
+    font-size: var(--step-4);
+  }
+  .summary {
+    color: var(--ink);
+    font-size: var(--step-1);
+    margin-top: var(--space-xs);
+  }
+  .block {
+    margin-top: var(--space-m);
+  }
+  .block h4 {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--muted);
+    margin-bottom: var(--space-3xs);
+  }
+  .block p {
+    color: var(--ink-dim);
+  }
+  .caveat {
+    margin-top: var(--space-m);
+    padding-left: var(--space-s);
+    border-left: 1px solid var(--line);
+    color: var(--muted);
+    font-size: var(--step--1);
+    font-style: italic;
+  }
+
+  @media (max-width: 720px) {
+    .case {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+    }
+  }
+</style>

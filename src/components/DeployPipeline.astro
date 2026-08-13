@@ -1,0 +1,134 @@
+---
+// The CI/CD pipeline that ships this page, as an instrument diagram. Static and
+// self-referential: the build SHA is this page's own, and the three stages with
+// their approximate durations are the real Gitea Actions pipeline.
+import type { PipelineStage } from "../lib/cluster";
+
+interface Props {
+  stages: readonly PipelineStage[];
+  buildLabel: string;
+  note: string;
+}
+const { stages, buildLabel, note } = Astro.props;
+const sha = (import.meta.env.PUBLIC_BUILD_SHA ?? "dev").slice(0, 7);
+---
+
+<div class="pipeline">
+  <ol class="stages">
+    {
+      stages.map((s, i) => (
+        <li class="stage">
+          <span class="stage-top">
+            <span class="stage-num">{String(i + 1).padStart(2, "0")}</span>
+            <span class="stage-approx">{s.approx}</span>
+          </span>
+          <span class="stage-name">{s.name}</span>
+          <span class="stage-detail">{s.detail}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="pipeline-foot">
+    <span class="build">{buildLabel} <code>{sha}</code></span>
+    <span class="note">{note}</span>
+  </p>
+</div>
+
+<style>
+  .pipeline {
+    margin-top: var(--space-l);
+  }
+  .stages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-m);
+  }
+  .stage {
+    position: relative;
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--accent);
+    padding: var(--space-s) var(--space-m) var(--space-m);
+    background: var(--bg-raised);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  /* arrow between stages */
+  .stage:not(:last-child)::after {
+    content: "→";
+    position: absolute;
+    right: calc(-1 * var(--space-m));
+    top: 50%;
+    transform: translate(40%, -50%);
+    font-family: var(--font-mono);
+    color: var(--accent);
+    z-index: 1;
+  }
+  .stage-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .stage-num {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .stage-approx {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--accent-deep);
+    font-variant-numeric: tabular-nums;
+  }
+  .stage-name {
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    color: var(--ink);
+    letter-spacing: var(--tracking-wide);
+  }
+  .stage-detail {
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+  .pipeline-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem var(--space-m);
+    margin-top: var(--space-m);
+  }
+  .build {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--muted);
+  }
+  .build code {
+    color: var(--accent-deep);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .note {
+    font-size: var(--step--2);
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  @media (max-width: 640px) {
+    .stages {
+      grid-template-columns: 1fr;
+    }
+    .stage:not(:last-child)::after {
+      content: "↓";
+      right: 50%;
+      top: auto;
+      bottom: calc(-1 * var(--space-m));
+      transform: translate(50%, 40%);
+    }
+  }
+</style>
