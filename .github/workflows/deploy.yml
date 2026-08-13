@@ -18,7 +18,9 @@ jobs:
   verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
-    container: mcr.microsoft.com/playwright:v1.60.0-jammy
+    # Must match the @playwright/test version resolved in package-lock.json,
+    # or the container's bundled browsers won't match what npm ci installs.
+    container: mcr.microsoft.com/playwright:v1.62.1-jammy
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
