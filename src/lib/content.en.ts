@@ -92,17 +92,17 @@ export const en: SiteContent = {
     {
       id: "homelab",
       num: "03",
-      kicker: "sentinel cluster · self-hosted",
+      kicker: "homelab cluster · self-hosted",
       title: "Running my own production",
       role: "Architect & operator",
       period: "Ongoing",
       stack: ["Proxmox", "Traefik", "Docker", "Coolify", "VyOS / WireGuard"],
       summary:
-        "A five-node Proxmox cluster, sentinel, hosting around 20 publicly reachable services on hardware I run and automate myself.",
+        "A five-node Proxmox cluster hosting around 20 publicly reachable services on hardware I run and automate myself.",
       body: [
         {
           h: "The setup",
-          p: "Five Proxmox nodes (cerberus, echelon, mikoshi, cynosure, ultron) behind a VyOS edge over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 self-hosted services: a Gitea forge, a Coolify PaaS, Nextcloud, a media stack, and several of my own projects. The cluster's runbooks and automation are themselves a repo.",
+          p: "Five Proxmox nodes (edge, apps, kube, core, gpu) behind a VyOS edge over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 self-hosted services: a Gitea forge, a Coolify PaaS, Nextcloud, a media stack, and several of my own projects. The cluster's runbooks and automation are themselves a repo.",
         },
         {
           h: "Why it's here",
@@ -204,7 +204,7 @@ export const en: SiteContent = {
         "Traefik, TLS & reverse proxy",
         "Docker & Gitea CI/CD",
       ],
-      provenBy: { label: "sentinel cluster", id: "homelab" },
+      provenBy: { label: "homelab cluster", id: "homelab" },
     },
     {
       title: "Full-stack & real-time",
@@ -221,12 +221,12 @@ export const en: SiteContent = {
         "Edge & reverse-proxy hardening",
         "Secrets & access hygiene",
       ],
-      provenBy: { label: "sentinel cluster", id: "homelab" },
+      provenBy: { label: "homelab cluster", id: "homelab" },
     },
   ],
 
   about: [
-    "It all comes from one place: a cluster I built at home, Sentinel. I measure GPU energy and run my own production on it, from on-call to certificates. This site's cluster page comes off it.",
+    "It all comes from one place: a cluster I built at home. I measure GPU energy and run my own production on it, from on-call to certificates. This site's cluster page comes off it.",
     "I work two tracks at once. One is high-performance computing: the GPU and performance work that makes scientific code fast. The other is the infrastructure that puts software into production and keeps it there: containers, pipelines, reverse proxies, and the cluster underneath. The two meet quickly: the code I tune ends up on machines someone has to operate, and I have worked both ends.",
     "At Oak Ridge National Laboratory I built GPU energy-measurement tooling for Kokkos, the portability layer that runs US Department of Energy codes on its supercomputers. The periodic-sampling daemon is merged upstream into Kokkos Tools, and the work became a poster at the 2025 Smoky Mountains Conference.",
     "Alongside that I spent three years as an apprentice on HPC for nuclear simulation at EDF, and I run a five-node production cluster of my own: around twenty services behind Traefik and TLS, deployed with Docker and CI/CD, with image scanning and automatic rollback. When something breaks at three in the morning, there is nobody else to call.",

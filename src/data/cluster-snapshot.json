@@ -11,35 +11,35 @@
   "uptimeDays": 4.5,
   "nodes": [
     {
-      "name": "cerberus",
+      "name": "edge",
       "online": true,
       "cpuPct": 7,
       "memPct": 69,
       "uptimeDays": 5
     },
     {
-      "name": "echelon",
+      "name": "apps",
       "online": true,
       "cpuPct": 7,
       "memPct": 42,
       "uptimeDays": 5
     },
     {
-      "name": "mikoshi",
+      "name": "kube",
       "online": true,
       "cpuPct": 2,
       "memPct": 49,
       "uptimeDays": 5
     },
     {
-      "name": "cynosure",
+      "name": "core",
       "online": true,
       "cpuPct": 23,
       "memPct": 31,
       "uptimeDays": 5
     },
     {
-      "name": "ultron",
+      "name": "gpu",
       "online": true,
       "cpuPct": 6,
       "memPct": 72,

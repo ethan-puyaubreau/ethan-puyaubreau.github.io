@@ -1,13 +1,13 @@
 ---
-title: "Démonter Ultron, de Proxmox à un Debian nu"
-description: "Ultron était un nœud Proxmox. Je l'ai effacé pour un Debian 13 nu afin que le GPU réponde à une seule machine plutôt qu'à un hyperviseur, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a mordu, c'est le Secure Boot."
+title: "Démonter le nœud GPU, de Proxmox à un Debian nu"
+description: "Ce nœud tournait sous Proxmox. Je l'ai effacé pour un Debian 13 nu afin que le GPU réponde à une seule machine plutôt qu'à un hyperviseur, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a mordu, c'est le Secure Boot."
 pubDate: 2026-06-18
 lang: fr
-slug: ultron-debian-nvidia
+slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 ---
 
-<p>Ultron est le nœud GPU de mon homelab, une station de travail Xeon mono-socket qui, pendant un an, a fait tourner Proxmox comme le reste du cluster. La semaine dernière, je l'ai effacé et j'ai réinstallé un Debian 13 (Trixie) nu, parce que la seule tâche que je veux vraiment de cette machine, faire tourner des charges CUDA sur son GPU, est justement celle qu'un hyperviseur rend plus difficile plutôt que plus simple. La réinstallation a pris vingt minutes. Faire charger le pilote a pris le reste de la soirée, presque entièrement sur une seule chose dont personne ne vous prévient : le Secure Boot refusant en silence un module non signé.</p>
+<p>Le nœud GPU de mon homelab est une station de travail Xeon mono-socket qui, pendant un an, a fait tourner Proxmox comme le reste du cluster. La semaine dernière, je l'ai effacé et j'ai réinstallé un Debian 13 (Trixie) nu, parce que la seule tâche que je veux vraiment de cette machine, faire tourner des charges CUDA sur son GPU, est justement celle qu'un hyperviseur rend plus difficile plutôt que plus simple. La réinstallation a pris vingt minutes. Faire charger le pilote a pris le reste de la soirée, presque entièrement sur une seule chose dont personne ne vous prévient : le Secure Boot refusant en silence un module non signé.</p>
 
 <p>L'ordre des opérations qui marche réellement sur Trixie tient en quelques étapes, dont une que rien ne documente.</p>
 
@@ -135,6 +135,6 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 
 <h2>Ce que j'ai récupéré</h2>
 
-<p>Un <code>nvidia-smi</code> nu, la carte entière sans machine virtuelle en travers, et un nœud qui fait maintenant tourner mon travail de mesure d'énergie Kokkos directement contre le matériel plutôt qu'à travers un invité. Le reste du cluster est toujours sous Proxmox : ces nœuds font le travail de consolidation pour lequel Proxmox est bon. Ultron ne faisait pas ce travail.</p>
+<p>Un <code>nvidia-smi</code> nu, la carte entière sans machine virtuelle en travers, et un nœud qui fait maintenant tourner mon travail de mesure d'énergie Kokkos directement contre le matériel plutôt qu'à travers un invité. Le reste du cluster est toujours sous Proxmox : ces nœuds font le travail de consolidation pour lequel Proxmox est bon. Ce nœud ne faisait pas ce travail.</p>
 
 <p>Reste à câbler la télémétrie de puissance de la machine dans le même tableau de bord que le travail GPU, pour que le nœud rapporte les joules par exécution à côté de l'utilisation. Garder un nœud sur métal nu au milieu d'un cluster Proxmox reste bancal côté supervision : pour l'instant il vit à côté du rang, pas dedans.</p>

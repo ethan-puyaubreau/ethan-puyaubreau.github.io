@@ -1,13 +1,13 @@
 ---
-title: "Tearing Ultron down from Proxmox to bare Debian"
-description: "Ultron was a Proxmox node. I wiped it for bare Debian 13 so the GPU would answer to one machine instead of a hypervisor, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that bit me was Secure Boot."
+title: "Tearing the GPU node down from Proxmox to bare Debian"
+description: "The GPU node ran Proxmox. I wiped it for bare Debian 13 so the GPU would answer to one machine instead of a hypervisor, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that bit me was Secure Boot."
 pubDate: 2026-06-18
 lang: en
-slug: ultron-debian-nvidia
+slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 ---
 
-<p>Ultron is the GPU node in my homelab, a single-socket Xeon workstation that for a year ran Proxmox like the rest of the cluster. Last week I wiped it and reinstalled bare Debian 13 (Trixie), because the one job I actually want from that box, running CUDA workloads against its GPU, is the one job a hypervisor makes harder rather than easier. The reinstall took twenty minutes. Getting the driver to load took the rest of the evening, almost all of it on a single thing nobody warns you about: Secure Boot silently refusing an unsigned module.</p>
+<p>The GPU node in my homelab is a single-socket Xeon workstation that for a year ran Proxmox like the rest of the cluster. Last week I wiped it and reinstalled bare Debian 13 (Trixie), because the one job I actually want from that box, running CUDA workloads against its GPU, is the one job a hypervisor makes harder rather than easier. The reinstall took twenty minutes. Getting the driver to load took the rest of the evening, almost all of it on a single thing nobody warns you about: Secure Boot silently refusing an unsigned module.</p>
 
 <p>The order of operations that actually works on Trixie is only a few steps, one of which is documented nowhere.</p>
 
@@ -135,6 +135,6 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 
 <h2>What I got back</h2>
 
-<p>A bare <code>nvidia-smi</code>, the full card with no virtual machine in the way, and a node that now runs my Kokkos energy-measurement work straight against the hardware instead of through a guest. The rest of the cluster is still Proxmox: those nodes are doing the consolidation job Proxmox is good at. Ultron was not doing that job.</p>
+<p>A bare <code>nvidia-smi</code>, the full card with no virtual machine in the way, and a node that now runs my Kokkos energy-measurement work straight against the hardware instead of through a guest. The rest of the cluster is still Proxmox: those nodes are doing the consolidation job Proxmox is good at. This node was not doing that job.</p>
 
 <p>Still to do: wire the box's power telemetry into the same dashboard as the GPU work, so the node reports joules-per-run alongside utilization. Keeping one bare-metal node inside a Proxmox cluster remains awkward on the monitoring side, so for now it lives beside the fold rather than in it.</p>

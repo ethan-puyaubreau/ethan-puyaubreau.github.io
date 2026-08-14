@@ -20,6 +20,16 @@ export default defineConfig({
     inlineStylesheets: "auto",
     assets: "_assets",
   },
+  // Two posts were renamed when the machine codenames were dropped from the
+  // site. Both URLs were in the published sitemap, so they get redirects
+  // rather than 404s. Static output emits a meta-refresh page with a canonical
+  // link, which is what GitHub Pages can serve.
+  redirects: {
+    "/blog/ultron-debian-nvidia": "/blog/gpu-debian-nvidia",
+    "/fr/blog/ultron-debian-nvidia": "/fr/blog/gpu-debian-nvidia",
+    "/blog/sentinel-status-page": "/blog/status-page-zero-js",
+    "/fr/blog/sentinel-status-page": "/fr/blog/status-page-zero-js",
+  },
   // English at /, French at /fr/. The default locale is not prefixed.
   i18n: {
     defaultLocale: "en",

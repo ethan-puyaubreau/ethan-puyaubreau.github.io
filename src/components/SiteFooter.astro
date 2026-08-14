@@ -35,7 +35,7 @@ const year = new Date().getUTCFullYear();
 // Split the colophon around an optional {cluster} placeholder so the cluster
 // name keeps its highlight when the caller's copy references it; plain text
 // otherwise (this face's colophon does not name the cluster).
-const CLUSTER = "sentinel";
+const CLUSTER = "homelab";
 const hasCluster = colophon.includes("{cluster}");
 const [colophonBefore, colophonAfter] = colophon.split("{cluster}");
 ---

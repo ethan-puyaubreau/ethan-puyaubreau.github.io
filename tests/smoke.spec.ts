@@ -73,7 +73,7 @@ test("no console errors on the home page", async ({ page }) => {
 // ---------- Cluster: a build-time snapshot, not a live feed ----------
 test("cluster page renders the hero, five node cards, and the stack", async ({ page }) => {
   await page.goto("/cluster", { waitUntil: "domcontentloaded" });
-  await expect(page).toHaveTitle(/sentinel cluster/i);
+  await expect(page).toHaveTitle(/homelab cluster/i);
   await expect(page.locator("#nodes article.node")).toHaveCount(5);
   await expect(page.locator("#stack")).toBeVisible();
 });

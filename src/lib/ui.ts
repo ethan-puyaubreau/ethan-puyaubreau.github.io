@@ -227,7 +227,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       hudGravity: "gravity",
     },
     homelabStatus: {
-      heading: "sentinel, a snapshot",
+      heading: "the cluster, a snapshot",
       nodes: "nodes",
       guests: "guests",
       cpu: "CPU",
@@ -336,7 +336,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       hudGravity: "gravité",
     },
     homelabStatus: {
-      heading: "sentinel, un instantané",
+      heading: "le cluster, un instantané",
       nodes: "nœuds",
       guests: "invités",
       cpu: "CPU",

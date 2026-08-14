@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-// A live map of the sentinel cluster, drawn on a 2D canvas: the edge node as a
+// A live map of the homelab cluster, drawn on a 2D canvas: the edge node as a
 // hub, the four other nodes around it, their services as satellites, and
 // traffic flowing ingress -> Traefik -> a backend node -> one of its services
 // (the real request path). Decorative and aria-hidden: the hero's title and
@@ -24,7 +24,7 @@ interface NodeLabel {
 }
 const props = defineProps<{ strings: FieldStrings; nodes: readonly NodeLabel[] }>();
 
-// Visual topology (normalized 0..1). cerberus is the edge/hub; Traefik proxies
+// Visual topology (normalized 0..1). edge is the edge/hub; Traefik proxies
 // to backends on the other four. `svc` is roughly how many services each hosts.
 interface NodeViz {
   id: string;
@@ -35,11 +35,11 @@ interface NodeViz {
   hub?: boolean;
 }
 const TOPOLOGY: Record<string, NodeViz> = {
-  cerberus: { id: "cerberus", x: 0.2, y: 0.52, core: 1.15, svc: 4, hub: true },
-  echelon: { id: "echelon", x: 0.54, y: 0.28, core: 1.0, svc: 3 },
-  mikoshi: { id: "mikoshi", x: 0.5, y: 0.76, core: 0.95, svc: 5 },
-  cynosure: { id: "cynosure", x: 0.81, y: 0.44, core: 1.3, svc: 9 },
-  ultron: { id: "ultron", x: 0.78, y: 0.78, core: 1.05, svc: 2 },
+  edge: { id: "edge", x: 0.2, y: 0.52, core: 1.15, svc: 4, hub: true },
+  apps: { id: "apps", x: 0.54, y: 0.28, core: 1.0, svc: 3 },
+  kube: { id: "kube", x: 0.5, y: 0.76, core: 0.95, svc: 5 },
+  core: { id: "core", x: 0.81, y: 0.44, core: 1.3, svc: 9 },
+  gpu: { id: "gpu", x: 0.78, y: 0.78, core: 1.05, svc: 2 },
 };
 
 const canvas = ref<HTMLCanvasElement | null>(null);
@@ -132,7 +132,7 @@ function layout(): void {
 
   ingress = { x: -0.04 * W, y: 0.52 * H };
 
-  // cerberus (hub) -> every other node: Traefik proxying to backends.
+  // edge (hub) -> every other node: Traefik proxying to backends.
   const hub = nodesR.find((n) => n.hub) ?? nodesR[0];
   edges = nodesR.filter((n) => n !== hub).map((n) => [hub, n] as [Pt, Pt]);
 

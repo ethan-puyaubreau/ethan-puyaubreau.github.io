@@ -53,7 +53,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="console" role="status" aria-live="off">
-    <span class="prompt" aria-hidden="true">sentinel ▸</span>
+    <span class="prompt" aria-hidden="true">homelab ▸</span>
     <span class="cmd">{{ lines[idx] }}</span>
     <span class="cursor" aria-hidden="true"></span>
   </div>

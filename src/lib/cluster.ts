@@ -2,7 +2,7 @@
  * Content for the /cluster page (EN at /cluster, FR at /fr/cluster).
  *
  * Every fact here is real, taken from the cluster's own inventory: five Proxmox
- * nodes (the "sentinel" cluster), the roles they actually serve, the request
+ * nodes (the homelab cluster), the roles they actually serve, the request
  * path traffic takes, and the stack that ties them together. The numbers
  * (CPU, memory, uptime, up or down, services, history) are a build-time
  * snapshot of the telemetry endpoint, captured once and committed, not a live
@@ -118,33 +118,33 @@ export interface ClusterContent {
 }
 
 // Node order on the page; ids match the Proxmox node names the snapshot reports.
-const NODE_ORDER = ["cerberus", "echelon", "mikoshi", "cynosure", "ultron"] as const;
+const NODE_ORDER = ["edge", "apps", "kube", "core", "gpu"] as const;
 
 // Hardware facts, language-neutral, straight from inventory/nodes.md.
 const NODE_SPEC: Record<string, string> = {
-  cerberus: "~8 cores · 3.7 GB",
-  echelon: "11 GB RAM",
-  mikoshi: "7.6 GB RAM",
-  cynosure: "31 GB RAM",
-  ultron: "Xeon E5-1650 v3 · 32 GB · GTX 1050",
+  edge: "~8 cores · 3.7 GB",
+  apps: "11 GB RAM",
+  kube: "7.6 GB RAM",
+  core: "31 GB RAM",
+  gpu: "Xeon E5-1650 v3 · 32 GB · GTX 1050",
 };
 
 // What each node actually runs, localized. No invented duties. None of these
 // name a specific hosted site: the cluster runs several, on more than one domain.
 const NODE_ROLE: Record<Locale, Record<string, string>> = {
   en: {
-    cerberus: "The edge. VyOS router, Traefik, DNS, and uptime monitoring.",
-    echelon: "Self-hosted apps and the sites I run there.",
-    mikoshi: "Apps and Kubernetes. A kube node and a couple of side projects.",
-    cynosure: "The workhorse. A Git forge, the CI runners, Nextcloud, a PaaS.",
-    ultron: "Capacity and GPU. The media stack, with a GPU to pass through.",
+    edge: "The edge. VyOS router, Traefik, DNS, and uptime monitoring.",
+    apps: "Self-hosted apps and the sites I run there.",
+    kube: "Apps and Kubernetes. A kube node and a couple of side projects.",
+    core: "The workhorse. A Git forge, the CI runners, Nextcloud, a PaaS.",
+    gpu: "Capacity and GPU. The media stack, with a GPU to pass through.",
   },
   fr: {
-    cerberus: "La bordure. Routeur VyOS, Traefik, DNS et supervision uptime.",
-    echelon: "Apps auto-hébergées et les sites que j'y fais tourner.",
-    mikoshi: "Apps et Kubernetes. Un nœud kube et quelques projets annexes.",
-    cynosure: "Le cheval de trait. Une forge Git, les runners CI, Nextcloud, un PaaS.",
-    ultron: "Capacité et GPU. La stack média, avec un GPU à passer en VFIO.",
+    edge: "La bordure. Routeur VyOS, Traefik, DNS et supervision uptime.",
+    apps: "Apps auto-hébergées et les sites que j'y fais tourner.",
+    kube: "Apps et Kubernetes. Un nœud kube et quelques projets annexes.",
+    core: "Le cheval de trait. Une forge Git, les runners CI, Nextcloud, un PaaS.",
+    gpu: "Capacité et GPU. La stack média, avec un GPU à passer en VFIO.",
   },
 };
 
@@ -158,7 +158,7 @@ const buildNodes = (locale: Locale): readonly ClusterNode[] =>
 const CONTENT: Record<Locale, ClusterContent> = {
   en: {
     meta: {
-      title: "The sentinel cluster · Ethan Puyaubreau",
+      title: "The homelab cluster · Ethan Puyaubreau",
       description:
         "The five-node Proxmox homelab I run: the nodes, the request path, the services, and the CI/CD pipeline behind them. A point-in-time snapshot, not a live feed.",
     },
@@ -174,9 +174,9 @@ const CONTENT: Record<Locale, ClusterContent> = {
     hero: {
       kicker: "Self-hosted infrastructure",
       lead: "The five machines behind ",
-      em: "sentinel",
+      em: "my homelab",
       tail: ".",
-      lede: "sentinel is the five-node Proxmox cluster I run: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and a couple dozen services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time, not a live feed.",
+      lede: "The homelab is a five-node Proxmox cluster I run: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and a couple dozen services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time, not a live feed.",
       cue: "The nodes",
     },
     nodesHead: {
@@ -204,7 +204,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       { label: "VPS", sub: "WireGuard" },
       { label: "VyOS", sub: "the router" },
       { label: "Traefik", sub: "TLS, routing" },
-      { label: "echelon", sub: "self-hosted apps" },
+      { label: "apps", sub: "self-hosted apps" },
     ],
     pulse: {
       heading: "Cluster pulse",
@@ -284,7 +284,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     ],
     field: {
       canvasLabel:
-        "Map of the sentinel cluster: five nodes, the services they host, and traffic flowing in through the reverse proxy.",
+        "Map of the homelab cluster: five nodes, the services they host, and traffic flowing in through the reverse proxy.",
       legendNode: "node",
       legendService: "service",
       legendTraffic: "traffic",
@@ -294,7 +294,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
 
   fr: {
     meta: {
-      title: "Le cluster sentinel · Ethan Puyaubreau",
+      title: "Le cluster homelab · Ethan Puyaubreau",
       description:
         "Le homelab Proxmox de cinq nœuds que j'exploite : les nœuds, le chemin des requêtes, les services, et la CI/CD derrière. Un instantané, pas un flux en direct.",
     },
@@ -310,9 +310,9 @@ const CONTENT: Record<Locale, ClusterContent> = {
     hero: {
       kicker: "Infrastructure auto-hébergée",
       lead: "Les cinq machines derrière ",
-      em: "sentinel",
+      em: "mon homelab",
       tail: ".",
-      lede: "sentinel, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en bordure, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané capturé au build, pas un flux en direct.",
+      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en bordure, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané capturé au build, pas un flux en direct.",
       cue: "Les nœuds",
     },
     nodesHead: {
@@ -340,7 +340,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       { label: "VPS", sub: "WireGuard" },
       { label: "VyOS", sub: "le routeur" },
       { label: "Traefik", sub: "TLS, routage" },
-      { label: "echelon", sub: "apps auto-hébergées" },
+      { label: "apps", sub: "apps auto-hébergées" },
     ],
     pulse: {
       heading: "Pouls du cluster",
@@ -420,7 +420,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     ],
     field: {
       canvasLabel:
-        "Carte du cluster sentinel : cinq nœuds, les services qu'ils hébergent, et le trafic qui entre par le reverse proxy.",
+        "Carte du cluster homelab : cinq nœuds, les services qu'ils hébergent, et le trafic qui entre par le reverse proxy.",
       legendNode: "nœud",
       legendService: "service",
       legendTraffic: "trafic",

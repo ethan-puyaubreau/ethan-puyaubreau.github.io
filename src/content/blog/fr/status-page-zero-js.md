@@ -1,16 +1,16 @@
 ---
-title: "SENTINEL : une page de statut sans aucun JavaScript"
-description: "SENTINEL est la page de statut de mon homelab, et elle n'embarque aucun JavaScript. L'état est collecté hors bande, figé en HTML statique chaque minute, et servi depuis K3s. Une page de statut devrait être la seule page qui se charge encore quand tout le reste est cassé."
+title: "Une page de statut sans aucun JavaScript"
+description: "La page de statut de mon homelab, et elle n'embarque aucun JavaScript. L'état est collecté hors bande, figé en HTML statique chaque minute, et servi depuis K3s. Une page de statut devrait être la seule page qui se charge encore quand tout le reste est cassé."
 pubDate: 2026-06-15
 lang: fr
-slug: sentinel-status-page
+slug: status-page-zero-js
 tags: ["Homelab", "K3s", "CSS", "zero-JS"]
 ---
 
-<p>La plupart des pages de statut sont des applications monopages qui démarrent un bundle JavaScript puis interrogent une API depuis votre navigateur pour découvrir ce qui tourne. Ça m'a toujours paru à l'envers. La page de statut est celle qu'on charge justement quand les choses sont cassées : elle devrait donc dépendre du moins possible. SENTINEL, la page de statut de mon homelab, prend la position inverse : elle n'embarque aucun JavaScript. Le navigateur reçoit du HTML fini, figé il y a une minute, et rien d'autre. Elle ressemble aussi à un CRT ambré, parce que si je dois la fixer pendant une panne, autant que ce soit agréable.</p>
+<p>La plupart des pages de statut sont des applications monopages qui démarrent un bundle JavaScript puis interrogent une API depuis votre navigateur pour découvrir ce qui tourne. Ça m'a toujours paru à l'envers. La page de statut est celle qu'on charge justement quand les choses sont cassées : elle devrait donc dépendre du moins possible. La page de statut de mon homelab prend la position inverse : elle n'embarque aucun JavaScript. Le navigateur reçoit du HTML fini, figé il y a une minute, et rien d'autre. Elle ressemble aussi à un CRT ambré, parce que si je dois la fixer pendant une panne, autant que ce soit agréable.</p>
 
 <figure>
-<svg viewBox="0 0 720 430" role="img" aria-label="Une maquette de la page de statut SENTINEL stylée en terminal CRT ambré, listant des services du homelab avec un statut actif ou dégradé et des barres de disponibilité, et un pied de page indiquant mis a jour il y a 41 secondes, fige a la generation, zero kilo-octet de JavaScript." xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 720 430" role="img" aria-label="Une maquette de la page de statut stylée en terminal CRT ambré, listant des services du homelab avec un statut actif ou dégradé et des barres de disponibilité, et un pied de page indiquant mis a jour il y a 41 secondes, fige a la generation, zero kilo-octet de JavaScript." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <filter id="phos" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="1.1"/>
@@ -23,8 +23,8 @@ tags: ["Homelab", "K3s", "CSS", "zero-JS"]
   <rect x="6" y="6" width="708" height="418" rx="16" fill="#0d0a05"/>
   <rect x="20" y="20" width="680" height="390" rx="10" fill="#160f04"/>
   <g font-family="ui-monospace,SFMono-Regular,Menlo,monospace">
-    <text x="44" y="62" font-size="18" fill="#f0a93a" filter="url(#phos)">SENTINEL</text>
-    <text x="44" y="62" font-size="18" fill="#ffcf76">SENTINEL</text>
+    <text x="44" y="62" font-size="18" fill="#f0a93a" filter="url(#phos)">STATUS</text>
+    <text x="44" y="62" font-size="18" fill="#ffcf76">STATUS</text>
     <text x="160" y="62" font-size="13" fill="#9a7327">// statut homelab</text>
     <line x1="44" y1="76" x2="676" y2="76" stroke="#5a4416" stroke-width="1"/>
     <text x="44"  y="100" font-size="11" fill="#8a6a2a">SERVICE</text>
@@ -111,7 +111,7 @@ body::after {
 
 <pre><code>apiVersion: batch/v1
 kind: CronJob
-metadata: { name: sentinel-collect }
+metadata: { name: status-collect }
 spec:
   schedule: "* * * * *"            # chaque minute
   jobTemplate:
@@ -121,12 +121,12 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: collect
-              image: registry.example.com/sentinel:latest
+              image: registry.example.com/status-site:latest
               volumeMounts:
                 - { name: site, mountPath: /out }   # écrit index.html ici
           volumes:
             - name: site
-              persistentVolumeClaim: { claimName: sentinel-site }
+              persistentVolumeClaim: { claimName: status-site }
 # nginx monte le même PVC en lecture seule et sert /out. Il n'appelle jamais le collecteur.</code></pre>
 
 <figure>

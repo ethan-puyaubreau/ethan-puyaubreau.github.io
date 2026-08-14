@@ -98,17 +98,17 @@ export const fr: SiteContent = {
     {
       id: "homelab",
       num: "03",
-      kicker: "cluster sentinel · auto-hébergé",
+      kicker: "cluster homelab · auto-hébergé",
       title: "Exploiter ma propre production",
       role: "Architecte et exploitant",
       period: "En cours",
       stack: ["Proxmox", "Traefik", "Docker", "Coolify", "VyOS / WireGuard"],
       summary:
-        "Un cluster Proxmox de cinq nœuds, sentinel, hébergeant une vingtaine de services accessibles publiquement, sur du matériel que j'exploite et automatise moi-même.",
+        "Un cluster Proxmox de cinq nœuds, hébergeant une vingtaine de services accessibles publiquement, sur du matériel que j'exploite et automatise moi-même.",
       body: [
         {
           h: "L'installation",
-          p: "Cinq nœuds Proxmox (cerberus, echelon, mikoshi, cynosure, ultron) derrière une bordure VyOS sur un lien WireGuard. Un seul Traefik termine le TLS Let's Encrypt pour une vingtaine de services auto-hébergés : une forge Gitea, un PaaS Coolify, Nextcloud, une pile média, et plusieurs de mes propres projets. Les runbooks et l'automatisation du cluster sont eux-mêmes un dépôt.",
+          p: "Cinq nœuds Proxmox (edge, apps, kube, core, gpu) derrière une bordure VyOS sur un lien WireGuard. Un seul Traefik termine le TLS Let's Encrypt pour une vingtaine de services auto-hébergés : une forge Gitea, un PaaS Coolify, Nextcloud, une pile média, et plusieurs de mes propres projets. Les runbooks et l'automatisation du cluster sont eux-mêmes un dépôt.",
         },
         {
           h: "Pourquoi c'est là",
@@ -211,7 +211,7 @@ export const fr: SiteContent = {
         "Traefik, TLS et reverse proxy",
         "Docker et CI/CD Gitea",
       ],
-      provenBy: { label: "cluster sentinel", id: "homelab" },
+      provenBy: { label: "cluster homelab", id: "homelab" },
     },
     {
       title: "Full-stack et temps réel",
@@ -229,12 +229,12 @@ export const fr: SiteContent = {
         "Durcissement bordure et reverse proxy",
         "Hygiène des secrets et des accès",
       ],
-      provenBy: { label: "cluster sentinel", id: "homelab" },
+      provenBy: { label: "cluster homelab", id: "homelab" },
     },
   ],
 
   about: [
-    "Tout part du même endroit : un cluster que j'ai monté à la maison, Sentinel. J'y mesure l'énergie des GPU et j'y exploite ma propre production, de l'astreinte aux certificats. La page cluster de ce site en sort.",
+    "Tout part du même endroit : un cluster que j'ai monté à la maison. J'y mesure l'énergie des GPU et j'y exploite ma propre production, de l'astreinte aux certificats. La page cluster de ce site en sort.",
     "Je mène deux pistes de front. La première, c'est le calcul haute performance : le travail GPU et de performance qui rend un code scientifique rapide. La seconde, c'est l'infrastructure qui met le logiciel en production et l'y maintient : conteneurs, pipelines, reverse proxies, et le cluster en dessous. Les deux se rejoignent vite : le code que j'optimise finit sur des machines que quelqu'un doit exploiter, et j'ai tenu les deux bouts.",
     "À Oak Ridge National Laboratory, j'ai construit l'outillage de mesure d'énergie GPU pour Kokkos, la couche de portabilité qui fait tourner les codes du Département de l'Énergie américain sur ses supercalculateurs. Le démon d'échantillonnage périodique est intégré en amont dans Kokkos Tools, et le travail est devenu un poster à la Smoky Mountains Conference 2025.",
     "En parallèle, j'ai passé trois ans en alternance sur le HPC pour la simulation nucléaire chez EDF, et j'exploite mon propre cluster de production de cinq nœuds : une vingtaine de services derrière Traefik et TLS, déployés avec Docker et de la CI/CD, avec scan d'image et rollback automatique. Quand quelque chose casse à trois heures du matin, il n'y a personne d'autre à appeler.",
