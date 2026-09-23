@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import type { TimelineEntry } from "../lib/content";
 import { site } from "../lib/site";
-import portrait from "../assets/ethan-portrait.jpg";
+import portrait from "../assets/avatar.jpg";
 
 interface Props {
   about: readonly string[];
@@ -87,11 +87,6 @@ const { about, timeline, role, timelineLabel } = Astro.props;
     font-family: var(--font-display);
     font-size: var(--step-2);
     color: var(--ink);
-  }
-  .alias {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    color: var(--muted);
   }
   .loc {
     font-family: var(--font-mono);
