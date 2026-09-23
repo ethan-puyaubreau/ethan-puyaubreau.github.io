@@ -84,7 +84,6 @@ export interface ClusterContent {
   readonly pipelineHead: { readonly title: string; readonly intro: string };
   readonly pipeline: {
     readonly stages: readonly PipelineStage[];
-    readonly buildLabel: string;
     readonly note: string;
   };
   readonly opsHead: { readonly title: string; readonly intro: string };
@@ -239,7 +238,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
           approx: "~15s",
         },
       ],
-      buildLabel: "reference build",
       note: "A representative run of the pipeline behind my self-hosted services.",
     },
     opsHead: {
@@ -375,7 +373,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
           approx: "~15s",
         },
       ],
-      buildLabel: "build de référence",
       note: "Une exécution représentative de la pipeline derrière mes services auto-hébergés.",
     },
     opsHead: {

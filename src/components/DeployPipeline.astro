@@ -1,16 +1,14 @@
 ---
-// The CI/CD pipeline that ships this page, as an instrument diagram. Static and
-// self-referential: the build SHA is this page's own, and the three stages with
-// their approximate durations are the real Gitea Actions pipeline.
+// The Gitea Actions pipeline behind the self-hosted projects, as an instrument
+// diagram: the three stages with their approximate durations. This site itself
+// ships through GitHub Actions, so no build SHA is shown here.
 import type { PipelineStage } from "../lib/cluster";
 
 interface Props {
   stages: readonly PipelineStage[];
-  buildLabel: string;
   note: string;
 }
-const { stages, buildLabel, note } = Astro.props;
-const sha = (import.meta.env.PUBLIC_BUILD_SHA ?? "dev").slice(0, 7);
+const { stages, note } = Astro.props;
 ---
 
 <div class="pipeline">
@@ -29,7 +27,6 @@ const sha = (import.meta.env.PUBLIC_BUILD_SHA ?? "dev").slice(0, 7);
     }
   </ol>
   <p class="pipeline-foot">
-    <span class="build">{buildLabel} <code>{sha}</code></span>
     <span class="note">{note}</span>
   </p>
 </div>
@@ -100,18 +97,6 @@ const sha = (import.meta.env.PUBLIC_BUILD_SHA ?? "dev").slice(0, 7);
     align-items: baseline;
     gap: 0.5rem var(--space-m);
     margin-top: var(--space-m);
-  }
-  .build {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--muted);
-  }
-  .build code {
-    color: var(--accent-deep);
-    text-transform: none;
-    letter-spacing: 0;
   }
   .note {
     font-size: var(--step--2);
