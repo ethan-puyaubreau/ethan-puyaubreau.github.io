@@ -19,6 +19,11 @@ export default defineConfig({
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
     command: "npm run build && npm run preview",
+    // Build with CI-shaped stamps so the footer is as wide as it is in production.
+    env: {
+      PUBLIC_BUILD_SHA: "0123456789abcdef0123456789abcdef01234567",
+      PUBLIC_BUILD_TIME: "2026-09-21T18:42:07+02:00",
+    },
     url: BASE,
     timeout: 120_000,
     reuseExistingServer: !process.env.CI,

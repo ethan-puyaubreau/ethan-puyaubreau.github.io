@@ -208,6 +208,18 @@ test("header: with 5 sections the nav retires to the palette and the bar never w
 });
 
 // ---------- 404 ----------
+// A phone widens its layout viewport to fit the widest element, which pushes
+// the header controls off screen: innerWidth must stay at the device width.
+test.describe("phones", () => {
+  test.use({ viewport: { width: 360, height: 780 }, isMobile: true, hasTouch: true });
+  test("no page is wider than a 360px screen", async ({ page }) => {
+    for (const path of ["/", "/fr", "/cluster", "/fr/cluster", "/blog", "/fr/blog"]) {
+      await page.goto(path, { waitUntil: "load" });
+      expect(await page.evaluate(() => window.innerWidth), path).toBe(360);
+    }
+  });
+});
+
 test("the 404 page points back to home", async ({ page }) => {
   await page.goto("/does-not-exist", { waitUntil: "domcontentloaded" });
   await expect(page.locator('a[href="/"]')).toBeVisible();
