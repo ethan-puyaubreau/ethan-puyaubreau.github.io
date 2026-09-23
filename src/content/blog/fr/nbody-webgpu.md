@@ -7,9 +7,9 @@ slug: nbody-webgpu
 tags: ["WebGPU", "GPGPU", "WGSL", "simulation"]
 ---
 
-Je voulais savoir jusqu'où une simulation gravitationnelle N-corps naïve pouvait aller dans un onglet de navigateur, sans serveur et sans images précalculées. La réponse : 65 536 corps à 60 fps, soit quelques milliards de calculs de force par seconde, le tout sur votre GPU via les compute shaders WebGPU.
+Je voulais savoir jusqu'où une simulation gravitationnelle N-corps naïve pouvait aller dans un onglet de navigateur, sans serveur et sans images précalculées. La réponse : 65 536 corps à 60 fps, soit environ 258 milliards de calculs de force par seconde, le tout sur votre GPU via les compute shaders WebGPU.
 
-[Démo live](https://ethan-puyaubreau.github.io/nbody-webgpu/) · [Code source sur GitHub](https://github.com/ethan-puyaubreau/nbody-webgpu) (TypeScript, zéro dépendance runtime)
+[Démo en ligne](https://ethan-puyaubreau.github.io/nbody-webgpu/) · [Code source sur GitHub](https://github.com/ethan-puyaubreau/nbody-webgpu) (TypeScript, zéro dépendance runtime)
 
 ## La forme du problème
 
@@ -51,6 +51,6 @@ L'état initial est un disque en rotation autour d'une masse centrale lourde. La
 
 ## Où ça atterrit
 
-Sur un GPU dédié récent, ça tient 60 fps à 65k corps, ce que le compteur à l'écran rapporte comme quelques milliards d'interactions de paires par seconde. L'ensemble tient en une poignée de fichiers TypeScript et deux shaders WGSL, construit avec Vite, sans dépendance runtime, et se déploie sur GitHub Pages.
+Sur un GPU dédié récent, ça tient 60 fps à 65k corps, ce que le compteur à l'écran rapporte comme environ 258 milliards d'interactions de paires par seconde (N² × fps). La galaxie derrière la page d'accueil de ce site tourne avec 16 384 corps seulement, pour rester fluide sur un portable. L'ensemble tient en une poignée de fichiers TypeScript et deux shaders WGSL, construit avec Vite, sans dépendance runtime, et se déploie sur GitHub Pages.
 
 Casser le plafond en N² demanderait Barnes-Hut ou une méthode multipolaire rapide (FMM), et viserait le million de corps ; semer deux disques et les faire entrer en collision viendrait après. En attendant, la version O(N²) bête et méchante va déjà nettement plus loin que je ne le pensais.
