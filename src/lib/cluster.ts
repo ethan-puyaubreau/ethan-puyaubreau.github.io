@@ -176,7 +176,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       lead: "The five machines behind ",
       em: "my homelab",
       tail: ".",
-      lede: "The homelab is a five-node Proxmox cluster I run: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and about twenty services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time, not a live feed.",
+      lede: "The homelab is a five-node Proxmox cluster I run: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and about twenty services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time.",
       cue: "The nodes",
     },
     nodesHead: {
@@ -222,7 +222,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     services: {
       count: "up",
-      caption: "A snapshot health check of the monitored endpoints, not a live feed.",
+      caption: "A snapshot health check of the monitored endpoints.",
     },
     pipelineHead: {
       title: "How a self-hosted project ships",
@@ -311,7 +311,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       lead: "Les cinq machines derrière ",
       em: "mon homelab",
       tail: ".",
-      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en bordure, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané capturé au build, pas un flux en direct.",
+      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en bordure, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané capturé au moment du build.",
       cue: "Les nœuds",
     },
     nodesHead: {
@@ -358,7 +358,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     services: {
       count: "actifs",
       caption:
-        "Un contrôle de santé instantané des points d'accès surveillés, pas un flux en direct.",
+        "Un contrôle de santé instantané des points d'accès surveillés.",
     },
     pipelineHead: {
       title: "Comment un projet auto-hébergé se déploie",
