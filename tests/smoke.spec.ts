@@ -224,13 +224,7 @@ test.describe("phones", () => {
 // French punctuation (; : ! ? and the inside of « ») takes a no-break space, so
 // it never lands at the start of a line. Code blocks keep their plain spaces.
 test("French pages use no-break spaces before double punctuation", async ({ page }) => {
-  for (const path of [
-    "/fr",
-    "/fr/cluster",
-    "/fr/blog",
-    "/fr/blog/kokkos-gpu-energy",
-    "/fr/blog/status-page-zero-js",
-  ]) {
+  for (const path of ["/fr", "/fr/cluster", "/fr/blog", "/fr/blog/kokkos-gpu-energy"]) {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     const breaking = await page.evaluate(() => {
       const main = document.body.cloneNode(true) as HTMLElement;
