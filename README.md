@@ -23,7 +23,7 @@ npm test              # playwright smoke tests
 
 ## Notes for maintainers
 
-- **Origin**: centralised in [`site.config.mjs`](site.config.mjs), imported by both
+- **Origin**: centralized in [`site.config.mjs`](site.config.mjs), imported by both
   `astro.config.mjs` and `src/lib/site.ts`. A custom domain is a one-line change there.
 - **`build.format: "file"`**: GitHub Pages 301-redirects an extensionless URL to its
   trailing-slash form when it finds a directory (Astro's default `build.format`). This site
@@ -40,4 +40,4 @@ npm test              # playwright smoke tests
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT. See [`LICENSE`](LICENSE).

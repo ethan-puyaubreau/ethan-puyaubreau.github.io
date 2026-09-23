@@ -105,7 +105,7 @@ export const en: SiteContent = {
       num: "04",
       kicker: "Opération Endgame",
       title: "Running an event for 120+ participants",
-      role: "Founder & organiser",
+      role: "Founder & organizer",
       period: "Since 2021",
       stack: ["Project management", "Operations", "Real-time coordination"],
       summary:
