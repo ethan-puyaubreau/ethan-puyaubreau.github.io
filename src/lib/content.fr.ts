@@ -81,7 +81,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Ce que j'ai construit",
-          p: "Deux outils internes d'analyse de performance en C++ : une bibliothèque de profilage mémoire qui intercepte l'allocation via LD_PRELOAD, et un outil de mesure temporelle hiérarchique avec bindings Python via PyBind11. J'ai participé à la refonte des solveurs neutroniques vers un modèle Ports et Composants, et bâti le pipeline de packaging Debian sur GitLab CI/CD et Jenkins.",
+          p: "Deux outils internes d'analyse de performance en C++ : une bibliothèque de profilage mémoire qui intercepte l'allocation via LD_PRELOAD, et un outil de mesure temporelle hiérarchique avec bindings Python via PyBind11. J'ai développé un prototype du calcul de cœur sur un modèle Ports et Composants, validé avec ces deux outils : résultats identiques bit à bit à la référence, jusqu'à 12 % plus rapide, avec 40 % de mémoire en moins au pic. J'ai aussi bâti le pipeline de packaging Debian sur GitLab CI/CD et Jenkins.",
         },
       ],
       caveat:
@@ -103,8 +103,8 @@ export const fr: SiteContent = {
           p: "Cinq nœuds Proxmox (edge, apps, aux, core, gpu) derrière une bordure VyOS sur un lien WireGuard. Un seul Traefik termine le TLS Let's Encrypt pour une vingtaine de services auto-hébergés : une forge Gitea, un PaaS Coolify, Nextcloud, une pile média, et plusieurs de mes propres projets. Les runbooks et l'automatisation du cluster sont eux-mêmes un dépôt.",
         },
         {
-          h: "Pourquoi c'est là",
-          p: "Je suis la seule astreinte : disponibilité, sauvegardes, renouvellement des certificats, supervision, et les modes de défaillance ingrats qu'on ne rencontre qu'en exploitant sa propre infrastructure un dimanche soir. Mes projets auto-hébergés y arrivent par une chaîne CI/CD qui construit une image versionnée, la scanne, et fait un rollback automatique si le contrôle de santé échoue.",
+          h: "Pourquoi ce cluster",
+          p: "Je suis seul d'astreinte : disponibilité, sauvegardes, renouvellement des certificats, supervision, et les modes de défaillance ingrats qu'on ne rencontre qu'en exploitant sa propre infrastructure. Mes projets auto-hébergés y arrivent par une chaîne CI/CD qui construit une image versionnée, la scanne, et fait un rollback automatique si le contrôle de santé échoue.",
         },
       ],
       links: [{ label: "Explorer le cluster", href: "/cluster" }],
@@ -113,16 +113,16 @@ export const fr: SiteContent = {
       id: "endgame",
       num: "04",
       kicker: "Opération Endgame",
-      title: "Livrer un événement pour plus de 120 participants",
+      title: "Organiser un événement pour plus de 120 participants",
       role: "Fondateur et organisateur",
-      period: "Depuis 2020",
+      period: "Depuis 2021",
       stack: ["Gestion de projet", "Opérations", "Coordination temps réel"],
       summary:
-        "Une opération annuelle en ligne que j'organise depuis 2020 : planification, coordination temps réel et logistique pour plus de 120 participants simultanés, plus de 150 inscrits cette édition.",
+        "Une opération annuelle en ligne que j'organise depuis 2021 : planification, coordination en temps réel et logistique pour plus de 120 participants simultanés, plus de 150 inscrits à la dernière édition.",
       body: [
         {
           h: "L'organiser",
-          p: "L'Opération Endgame est le rendez-vous annuel que je conçois et organise depuis 2020 : quatre heures, une heure de départ fixe, plus de 120 participants actifs en même temps (plus de 150 inscrits cette édition), répartis sur plusieurs rôles coordonnés pour la durée de l'événement. Briefing, canaux de communication, ordre de déroulement et plan de bascule en cas d'incident technique se préparent en amont. Le jour J, l'heure de départ ne bouge pas.",
+          p: "L'Opération Endgame est le rendez-vous annuel que je conçois et organise depuis 2021 : quatre heures, une heure de départ fixe, plus de 120 participants actifs en même temps (plus de 150 inscrits à la dernière édition), répartis sur plusieurs rôles coordonnés pour la durée de l'événement. Briefing, canaux de communication, ordre de déroulement et plan de bascule en cas d'incident technique se préparent en amont. Le jour J, l'heure de départ ne bouge pas.",
         },
       ],
     },
@@ -163,7 +163,7 @@ export const fr: SiteContent = {
     {
       name: "vireli",
       blurb:
-        "Une PWA d'empreinte carbone gamifiée construite avec un partenaire client, avec une API séparée et des environnements dev/prod.",
+        "Une PWA d'empreinte carbone gamifiée pour un partenaire industriel. J'ai dirigé l'équipe de six : architecture, backend et déploiement.",
       noLinkLabel: "en maintenance",
     },
   ],
@@ -226,11 +226,10 @@ export const fr: SiteContent = {
   ],
 
   about: [
-    "Tout part du même endroit : un cluster que j'ai monté à la maison. J'y mesure l'énergie des GPU et j'y exploite ma propre production, de l'astreinte aux certificats. La page cluster de ce site en sort.",
     "Je mène deux pistes de front. La première, c'est le calcul haute performance : le travail GPU et de performance qui rend un code scientifique rapide. La seconde, c'est l'infrastructure qui met le logiciel en production et l'y maintient : conteneurs, pipelines, reverse proxies, et le cluster en dessous. Les deux se rejoignent vite : le code que j'optimise finit sur des machines que quelqu'un doit exploiter, et j'ai tenu les deux bouts.",
     "À Oak Ridge National Laboratory, j'ai construit l'outillage de mesure d'énergie GPU pour Kokkos, la couche de portabilité qui fait tourner les codes du Département de l'Énergie américain sur ses supercalculateurs. Le démon d'échantillonnage périodique est intégré en amont dans Kokkos Tools, et le travail est devenu un poster, cosigné avec mes encadrants de l'ORNL, Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, à la Smoky Mountains Conference 2025.",
     "En parallèle, j'ai passé trois ans en alternance sur le HPC pour la simulation nucléaire chez EDF, et j'exploite mon propre cluster de production de cinq nœuds : une vingtaine de services derrière Traefik et TLS, déployés avec Docker et de la CI/CD, avec scan d'image et rollback automatique. Quand quelque chose casse à trois heures du matin, il n'y a personne d'autre à appeler.",
-    "Je termine mon diplôme d'ingénieur à Polytech Paris-Saclay en septembre 2026 et je cherche un CDI à partir de janvier 2027. Les laboratoires HPC sont un terrain naturel, la Bay Area (Berkeley Lab, LLNL) et Paris, le CEA parmi eux, mais l'infrastructure, le DevOps, le SRE et le platform engineering m'intéressent tout autant, sur site ou dans le cloud ; idéalement un poste qui touche aux deux.",
+    "Je sors diplômé de Polytech Paris-Saclay (diplôme d'ingénieur, septembre 2026) et je cherche un CDI à partir de janvier 2027. Les laboratoires HPC sont un terrain naturel, dans la Bay Area (Berkeley Lab, LLNL) comme à Paris (le CEA, par exemple), mais l'infrastructure, le DevOps, le SRE et le platform engineering m'intéressent tout autant, sur site ou dans le cloud ; idéalement un poste qui touche aux deux.",
   ],
 
   timeline: [

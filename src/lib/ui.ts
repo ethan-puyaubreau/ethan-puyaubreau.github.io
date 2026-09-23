@@ -153,12 +153,12 @@ const STRINGS: Record<Locale, UIStrings> = {
     },
     sectionHeads: {
       work: {
-        title: "Things I built, and what they cost",
+        title: "Things I built",
         intro: "Case studies below, the flagship first.",
       },
       expertise: {
         title: "By domain",
-        intro: "Five areas, and where each one actually got used.",
+        intro: "Five areas, each tied to the project where I used it.",
       },
       about: { title: "Polytech → EDF → Oak Ridge" },
       contact: { title: "The short version" },
@@ -199,7 +199,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       readArticle: "Read",
       published: "Published",
       tagsLabel: "Tags",
-      authorTagline: "HPC & infrastructure engineer, ex-Oak Ridge National Laboratory.",
+      authorTagline: "HPC & infrastructure engineer; research intern at Oak Ridge National Laboratory in 2025.",
       authorAvailable: "Open to HPC and infrastructure roles from January 2027.",
       contactCta: "Get in touch",
       talkHead: "Questions, corrections, or work: my address is below.",
@@ -260,12 +260,12 @@ const STRINGS: Record<Locale, UIStrings> = {
     },
     sectionHeads: {
       work: {
-        title: "Ce que j'ai construit, et ce que ça coûte",
+        title: "Ce que j'ai construit",
         intro: "Les études de cas suivent, le projet phare d'abord.",
       },
       expertise: {
         title: "Par domaine",
-        intro: "Cinq domaines, et là où chacun a réellement servi.",
+        intro: "Cinq domaines, chacun relié au projet où je l'ai pratiqué.",
       },
       about: { title: "Polytech → EDF → Oak Ridge" },
       contact: { title: "La version courte" },
@@ -308,7 +308,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       readArticle: "Lire",
       published: "Publié le",
       tagsLabel: "Étiquettes",
-      authorTagline: "Ingénieur HPC & infrastructure, ex-Oak Ridge National Laboratory.",
+      authorTagline: "Ingénieur HPC et infrastructure ; stagiaire de recherche à l'Oak Ridge National Laboratory en 2025.",
       authorAvailable: "Ouvert aux postes HPC et infrastructure dès janvier 2027.",
       contactCta: "Me contacter",
       talkHead: "Questions, corrections ou propositions : mon adresse est en dessous.",

@@ -76,7 +76,7 @@ export const en: SiteContent = {
         },
         {
           h: "What I built",
-          p: "Two internal C++ performance-analysis tools: a memory-profiling library that intercepts allocation through LD_PRELOAD, and a hierarchical CPU-timing tool with Python bindings via PyBind11. I took part in refactoring the neutronic solvers toward a Ports and Components model, and built the Debian packaging pipeline on GitLab CI/CD and Jenkins.",
+          p: "Two internal C++ performance-analysis tools: a memory-profiling library that intercepts allocation through LD_PRELOAD, and a hierarchical CPU-timing tool with Python bindings via PyBind11. I built a prototype of the core computation on a Ports and Components model, validated with those two tools: bit-for-bit identical to the reference, up to 12% faster, with 40% lower peak memory. I also built the Debian packaging pipeline on GitLab CI/CD and Jenkins.",
         },
       ],
       caveat:
@@ -99,7 +99,7 @@ export const en: SiteContent = {
         },
         {
           h: "Why it's here",
-          p: "I am the only person on call: uptime, backups, certificate renewal, monitoring, and the unglamorous failure modes you only meet running your own infrastructure on a Sunday night. My self-hosted projects ship to it through a CI/CD pipeline that builds a versioned image, scans it for vulnerabilities, and rolls back automatically on a failed health check.",
+          p: "I am the only person on call: uptime, backups, certificate renewal, monitoring, and the unglamorous failure modes you only meet running your own infrastructure. My self-hosted projects ship to it through a CI/CD pipeline that builds a versioned image, scans it for vulnerabilities, and rolls back automatically on a failed health check.",
         },
       ],
       links: [{ label: "Explore the cluster", href: "/cluster" }],
@@ -108,16 +108,16 @@ export const en: SiteContent = {
       id: "endgame",
       num: "04",
       kicker: "Opération Endgame",
-      title: "Delivering an event for 120+ participants",
+      title: "Running an event for 120+ participants",
       role: "Founder & organiser",
-      period: "Since 2020",
+      period: "Since 2021",
       stack: ["Project management", "Operations", "Real-time coordination"],
       summary:
-        "An annual online operation I've run since 2020: planning, real-time coordination, and logistics for 120+ simultaneous participants, 150+ registered this edition.",
+        "An annual online operation I've run since 2021: planning, real-time coordination, and logistics for 120+ simultaneous participants, 150+ registered for the latest edition.",
       body: [
         {
           h: "Running it",
-          p: "Opération Endgame is the annual event I have designed and run since 2020: four hours, a fixed start time, 120+ participants active at once (150+ registered this edition), split across several coordinated roles for the duration. Briefings, communication channels, the running order, and the fallback plan for a technical failure are all prepared in advance. On the day, the start time does not move.",
+          p: "Opération Endgame is the annual event I have designed and run since 2021: four hours, a fixed start time, 120+ participants active at once (150+ registered for the latest edition), split across several coordinated roles for the duration. Briefings, communication channels, the running order, and the fallback plan for a technical failure are all prepared in advance. On the day, the start time does not move.",
         },
       ],
     },
@@ -158,7 +158,7 @@ export const en: SiteContent = {
     {
       name: "vireli",
       blurb:
-        "A gamified carbon-footprint PWA built with a client partner, with a separate API and dev/prod environments.",
+        "A gamified carbon-footprint PWA for an industry partner. I led the team of six: architecture, backend, and deployment.",
       noLinkLabel: "in maintenance",
     },
   ],
@@ -219,11 +219,10 @@ export const en: SiteContent = {
   ],
 
   about: [
-    "It all comes from one place: a cluster I built at home. I measure GPU energy and run my own production on it, from on-call to certificates. This site's cluster page comes off it.",
     "I work two tracks at once. One is high-performance computing: the GPU and performance work that makes scientific code fast. The other is the infrastructure that puts software into production and keeps it there: containers, pipelines, reverse proxies, and the cluster underneath. The two meet quickly: the code I tune ends up on machines someone has to operate, and I have worked both ends.",
     "At Oak Ridge National Laboratory I built GPU energy-measurement tooling for Kokkos, the portability layer that runs US Department of Energy codes on its supercomputers. The periodic-sampling daemon is merged upstream into Kokkos Tools, and the work became a poster with my ORNL mentors, Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, at the 2025 Smoky Mountains Conference.",
     "Alongside that I spent three years as an apprentice on HPC for nuclear simulation at EDF, and I run a five-node production cluster of my own: around twenty services behind Traefik and TLS, deployed with Docker and CI/CD, with image scanning and automatic rollback. When something breaks at three in the morning, there is nobody else to call.",
-    "I finish my engineering degree at Polytech Paris-Saclay in September 2026 and am looking for a permanent role from January 2027. HPC labs are a natural fit, the Bay Area (Berkeley Lab, LLNL) and Paris with the CEA among them, but I am just as interested in infrastructure, DevOps, SRE, and platform engineering, on-prem or in the cloud; ideally a role that touches both.",
+    "I am graduating from Polytech Paris-Saclay (engineering degree, September 2026) and am looking for a permanent role from January 2027. HPC labs are a natural fit, in the Bay Area (Berkeley Lab, LLNL) as in Paris (the CEA, for one), but I am just as interested in infrastructure, DevOps, SRE, and platform engineering, on-prem or in the cloud; ideally a role that touches both.",
   ],
 
   timeline: [

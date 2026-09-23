@@ -247,7 +247,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     ops: {
       oncall:
-        "On call for my own infrastructure: backups, certificate renewal, monitoring, and the failure modes you only meet at the wrong hour.",
+        "On call for my own infrastructure: backups, certificate renewal, monitoring, and incident response.",
       monitoring: "Monitored by Uptime Kuma, and by Gatus from outside the cluster",
       runbooksTitle: "Runbooks as a repo",
       runbooksBody:
@@ -382,7 +382,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     ops: {
       oncall:
-        "D'astreinte sur ma propre infrastructure : sauvegardes, renouvellement de certificats, supervision, et les modes de défaillance qu'on ne rencontre qu'à la mauvaise heure.",
+        "D'astreinte sur ma propre infrastructure : sauvegardes, renouvellement des certificats, supervision et réponse aux incidents.",
       monitoring: "Supervisé par Uptime Kuma, et par Gatus depuis l'extérieur du cluster",
       runbooksTitle: "Les runbooks dans un dépôt",
       runbooksBody:
