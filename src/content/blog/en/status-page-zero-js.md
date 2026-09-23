@@ -72,10 +72,10 @@ tags: ["Homelab", "K3s", "CSS", "zero-JS"]
   </g>
   <rect x="20" y="20" width="680" height="390" rx="10" fill="url(#scan)"/>
 </svg>
-<figcaption>The page itself: monospace, amber, a glow and scanlines done entirely in CSS. A green dot is an old habit, but the whole palette lives on the amber side.</figcaption>
+<figcaption>A mock of the page: monospace, amber, a glow and scanlines done entirely in CSS. The ninety-day column is where the page is heading, not what it shows today (see the last section). A green dot is an old habit, but the whole palette lives on the amber side.</figcaption>
 </figure>
 
-<h2>A status page is a photograph, not a video</h2>
+<h2>A status page is a photograph</h2>
 
 <p>So collection and display have to be decoupled. The browser should not be the thing that discovers state, because the moment it is, your status page depends on a working API, on a correct cross-origin (CORS) policy, on a JavaScript runtime, and on the user's network all cooperating at exactly the time something is already wrong. So instead a collector runs on a schedule, probes each service, and writes the results to a small JSON file, and a template step bakes that JSON into <code>index.html</code>. The page the browser receives is a photograph of the system as of the last run, not a live feed it has to assemble. The cost is staleness, bounded by how often the collector runs, and the page prints its own age so that staleness is never hidden.</p>
 
@@ -105,7 +105,7 @@ body::after {
     0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
 }</code></pre>
 
-<h2>Where it lives, and why it fails gracefully</h2>
+<h2>Where it lives and how it fails</h2>
 
 <p>There are two pieces on the cluster. A CronJob runs the probe-and-template step every minute and writes <code>index.html</code> to a small persistent volume. An nginx Deployment mounts that same volume read-only and exposes it through an Ingress, the Kubernetes resource that publishes a service to the outside. An nginx pod serving a static file has very little reason to fall over, and it has no dependency on the collector being alive. If the collector dies, the page does not go down, it goes stale, and the timestamp makes that obvious at a glance. You get a slightly old photograph instead of a blank screen.</p>
 
@@ -121,7 +121,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: collect
-              image: registry.example.com/status-site:latest
+              image: registry.example.com/status-site:2026.06.3
               volumeMounts:
                 - { name: site, mountPath: /out }   # writes index.html here
           volumes:

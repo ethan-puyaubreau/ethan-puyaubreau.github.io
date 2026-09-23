@@ -10,7 +10,7 @@ tags: ["Homelab", "K3s", "CSS", "zero-JS"]
 <p>La plupart des pages de statut sont des applications monopages qui démarrent un bundle JavaScript puis interrogent une API depuis votre navigateur pour découvrir ce qui tourne. Ça m'a toujours paru à l'envers. La page de statut est celle qu'on charge justement quand les choses sont cassées : elle devrait donc dépendre du moins possible. La page de statut de mon homelab prend la position inverse : elle n'embarque aucun JavaScript. Le navigateur reçoit du HTML fini, figé il y a une minute, et rien d'autre. Elle ressemble aussi à un CRT ambré, parce que si je dois la fixer pendant une panne, autant que ce soit agréable.</p>
 
 <figure>
-<svg viewBox="0 0 720 430" role="img" aria-label="Une maquette de la page de statut stylée en terminal CRT ambré, listant des services du homelab avec un statut actif ou dégradé et des barres de disponibilité, et un pied de page indiquant mis a jour il y a 41 secondes, fige a la generation, zero kilo-octet de JavaScript." xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 720 430" role="img" aria-label="Une maquette de la page de statut stylée en terminal CRT ambré, listant des services du homelab avec un statut actif ou dégradé et des barres de disponibilité, et un pied de page indiquant mis à jour il y a 41 secondes, figé à la génération, zéro kilo-octet de JavaScript." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <filter id="phos" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="1.1"/>
@@ -36,48 +36,48 @@ tags: ["Homelab", "K3s", "CSS", "zero-JS"]
       <text x="360" y="129" fill="#7fdca0">ACTIF</text>
       <rect x="470" y="121" width="206" height="9" rx="2" fill="#3a2c10"/>
       <rect x="470" y="121" width="205" height="9" rx="2" fill="#46d27a"/>
-      <text x="470" y="148" font-size="10" fill="#8a6a2a">99.98%</text>
+      <text x="470" y="148" font-size="10" fill="#8a6a2a">99,98 %</text>
       <circle cx="50" cy="170" r="5" fill="#46d27a"/>
       <text x="66" y="175">nextcloud</text>
       <text x="360" y="175" fill="#7fdca0">ACTIF</text>
       <rect x="470" y="167" width="206" height="9" rx="2" fill="#3a2c10"/>
       <rect x="470" y="167" width="204" height="9" rx="2" fill="#46d27a"/>
-      <text x="470" y="194" font-size="10" fill="#8a6a2a">99.95%</text>
+      <text x="470" y="194" font-size="10" fill="#8a6a2a">99,95 %</text>
       <circle cx="50" cy="216" r="5" fill="#46d27a"/>
       <text x="66" y="221">k3s-ingress</text>
       <text x="360" y="221" fill="#7fdca0">ACTIF</text>
       <rect x="470" y="213" width="206" height="9" rx="2" fill="#3a2c10"/>
       <rect x="470" y="213" width="206" height="9" rx="2" fill="#46d27a"/>
-      <text x="470" y="240" font-size="10" fill="#8a6a2a">100%</text>
+      <text x="470" y="240" font-size="10" fill="#8a6a2a">100 %</text>
       <circle cx="50" cy="262" r="5" fill="#f0a93a"/>
       <text x="66" y="267">jellyfin</text>
       <text x="360" y="267" fill="#f0a93a">DÉGRADÉ</text>
       <rect x="470" y="259" width="206" height="9" rx="2" fill="#3a2c10"/>
       <rect x="470" y="259" width="183" height="9" rx="2" fill="#f0a93a"/>
-      <text x="470" y="286" font-size="10" fill="#8a6a2a">98.71%</text>
+      <text x="470" y="286" font-size="10" fill="#8a6a2a">98,71 %</text>
       <circle cx="50" cy="308" r="5" fill="#46d27a"/>
       <text x="66" y="313">gitea</text>
       <text x="360" y="313" fill="#7fdca0">ACTIF</text>
       <rect x="470" y="305" width="206" height="9" rx="2" fill="#3a2c10"/>
       <rect x="470" y="305" width="203" height="9" rx="2" fill="#46d27a"/>
-      <text x="470" y="332" font-size="10" fill="#8a6a2a">99.90%</text>
+      <text x="470" y="332" font-size="10" fill="#8a6a2a">99,90 %</text>
       <circle cx="50" cy="354" r="5" fill="#46d27a"/>
       <text x="66" y="359">restic-backups</text>
       <text x="360" y="359" fill="#7fdca0">ACTIF</text>
       <rect x="470" y="351" width="206" height="9" rx="2" fill="#3a2c10"/>
       <rect x="470" y="351" width="206" height="9" rx="2" fill="#46d27a"/>
-      <text x="470" y="378" font-size="10" fill="#8a6a2a">99.99%</text>
+      <text x="470" y="378" font-size="10" fill="#8a6a2a">99,99 %</text>
     </g>
     <text x="44" y="398" font-size="11.5" fill="#9a7327">mis à jour il y a 41 s · figé à la génération · 0 Ko de JavaScript</text>
   </g>
   <rect x="20" y="20" width="680" height="390" rx="10" fill="url(#scan)"/>
 </svg>
-<figcaption>La page elle-même : monospace, ambre, une lueur et des lignes de balayage entièrement en CSS. Le point vert est une vieille habitude, mais toute la palette vit du côté ambré.</figcaption>
+<figcaption>Une maquette de la page : monospace, ambre, une lueur et des lignes de balayage entièrement en CSS. La colonne à quatre-vingt-dix jours montre la cible, pas ce que la page affiche aujourd'hui (voir la dernière section). Le point vert est une vieille habitude, mais toute la palette vit du côté ambré.</figcaption>
 </figure>
 
-<h2>Une page de statut est une photographie, pas une vidéo</h2>
+<h2>Une page de statut est une photographie</h2>
 
-<p>La collecte et l'affichage doivent donc être découplés. Le navigateur ne devrait pas être ce qui découvre l'état, car dès l'instant où il l'est, votre page de statut dépend d'une API qui marche, d'une politique de partage entre origines (CORS) correctement configurée, d'un runtime JavaScript et du réseau de l'utilisateur, tous coopérant exactement au moment où quelque chose ne va déjà pas. À la place, un collecteur tourne sur une planification, sonde chaque service, et écrit les résultats dans un petit fichier JSON, puis une étape de gabarit fige ce JSON dans <code>index.html</code>. La page que reçoit le navigateur est une photographie du système au moment de la dernière exécution, pas un flux en direct qu'il doit assembler. Le coût, c'est la fraîcheur, bornée par la fréquence du collecteur, et la page affiche son propre âge pour que cette latence ne soit jamais cachée.</p>
+<p>La collecte et l'affichage doivent donc être découplés. Le navigateur ne devrait pas être ce qui découvre l'état, car dès l'instant où il l'est, votre page de statut dépend d'une API qui marche, d'une politique de partage entre origines (CORS) correctement configurée, d'un runtime JavaScript et du réseau de l'utilisateur, tous coopérant exactement au moment où quelque chose ne va déjà pas. À la place, un collecteur tourne sur une planification, sonde chaque service, et écrit les résultats dans un petit fichier JSON, puis une étape de gabarit fige ce JSON dans <code>index.html</code>. La page que reçoit le navigateur est une photographie du système au moment de la dernière exécution, pas un flux en direct qu'il doit assembler. Le prix, c'est un léger retard, borné par la fréquence du collecteur, et la page affiche son propre âge pour que cette latence ne soit jamais cachée.</p>
 
 <h2>Rafraîchir sans JavaScript</h2>
 
@@ -105,7 +105,7 @@ body::after {
     0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
 }</code></pre>
 
-<h2>Où elle vit, et pourquoi elle échoue en douceur</h2>
+<h2>Où elle vit et comment elle tombe en panne</h2>
 
 <p>Il y a deux pièces sur le cluster. Un CronJob exécute l'étape de sonde-et-gabarit chaque minute et écrit <code>index.html</code> sur un petit volume persistant. Un Deployment nginx monte ce même volume en lecture seule et l'expose via un Ingress, la ressource Kubernetes qui publie un service vers l'extérieur. Un pod nginx qui sert un fichier statique a très peu de raisons de tomber, et il ne dépend pas du collecteur pour vivre. Si le collecteur meurt, la page ne tombe pas, elle vieillit, et l'horodatage le rend évident d'un coup d'œil. On lit alors une photographie un peu ancienne au lieu d'un écran blanc.</p>
 
@@ -121,7 +121,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: collect
-              image: registry.example.com/status-site:latest
+              image: registry.example.com/status-site:2026.06.3
               volumeMounts:
                 - { name: site, mountPath: /out }   # écrit index.html ici
           volumes:
