@@ -44,7 +44,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Ce que j'ai construit",
-          p: "Un ensemble de connecteurs Kokkos Tools qui échantillonnent la puissance pendant l'exécution des noyaux et attribuent l'énergie intégrée aux régions Kokkos qui l'ont causée : un backend NVML pour les GPU NVIDIA, un backend Variorum pour la puissance au niveau nœud, un démon d'arrière-plan échantillonnant à intervalle fixe, et un export CSV. Par-dessus, un tableau de bord Python transforme ces sorties en analyse d'énergie par noyau. L'outil s'accroche à l'interface de profilage de Kokkos : le code applicatif reste intact.",
+          p: "Un ensemble de connecteurs Kokkos Tools qui échantillonnent la puissance pendant l'exécution des noyaux et attribuent l'énergie intégrée aux régions Kokkos qui l'ont causée : un backend NVML pour les GPU NVIDIA, un backend Variorum pour la puissance au niveau nœud, un démon d'arrière-plan échantillonnant à intervalle fixe, et un export CSV. Par-dessus, un tableau de bord Grafana, alimenté par une étape d'agrégation en Python, transforme ces sorties en analyse d'énergie par région. L'outil s'accroche à l'interface de profilage de Kokkos : le code applicatif reste intact.",
         },
         {
           h: "Où ça en est",

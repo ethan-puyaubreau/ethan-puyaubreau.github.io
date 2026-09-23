@@ -1,30 +1,31 @@
 ---
-title: "Charging GPU energy to the kernel that spent it"
-description: "A profiler tells you where a GPU kernel spends time. I wanted to know where it spends joules. So I built a Kokkos Tools connector that samples power on a side thread and integrates it over each profiled region, with NVML for the precise per-GPU number and Variorum for the whole node."
+title: "Charging GPU energy to the code that spent it"
+description: "A profiler tells you where GPU code spends time. I wanted to know where it spends joules, so I built a Kokkos Tools connector that samples power on a side thread and integrates it over each profiled region. On ArborX DBSCAN, two implementations with the same runtime differ by 15% in energy."
 pubDate: 2026-06-12
+updatedDate: 2026-09-23
 lang: en
 slug: kokkos-gpu-energy
 tags: ["HPC", "GPU", "Kokkos", "NVML"]
 ---
 
-<p>I spent a summer at Oak Ridge working on this, and the question that started it is short: the kernel that took the most wall-clock time in my run was not the kernel that cost the most energy. The profiler ranked everything by time and was confident about it, and that ranking was simply the wrong one if the thing you are being asked to reduce is the power bill. Clusters increasingly run under a power cap rather than a clock-rate target, so energy-to-solution is becoming the number that matters, and almost nothing in a normal HPC workflow reports it per kernel. So I built a tool that does, as a Kokkos Tools connector that attributes joules to each profiled region without touching the application it measures.</p>
+<p>I spent the summer of 2025 at Oak Ridge on this, and the question behind it is short: does the fastest way to compute something also cost the least energy? A profiler ranks code by time and is confident about it, but clusters increasingly run under a power cap rather than a clock-rate target, so energy-to-solution is becoming the number that matters, and almost nothing in a normal HPC workflow reports it per region. So I built a tool that does, as a Kokkos Tools connector that attributes joules to each profiled region without touching the application it measures.</p>
 
-<p>Start with the table it produces.</p>
+<p>Start with the result that ended up on the poster. ArborX ships two DBSCAN implementations, <code>fdbscan</code> and <code>fdbscan-dense</code>. On the same input and the same NVIDIA H100 NVL, they return the same clusters in the same time: the runtimes agree to within 0.03 s. The energy does not.</p>
 
-<pre><code>$ export KOKKOS_TOOLS_LIBS=/opt/kp/libkp_gpu_energy.so
-$ ./solver --mesh big.h5
+<pre><code>variant         total     in regions   outside regions
+------------------------------------------------------
+fdbscan         925.1 J   772.8 J      152.4 J (16.5%)
+fdbscan-dense   784.8 J   615.6 J      169.2 J (21.6%)</code></pre>
 
-region            calls     time(s)   energy(J)   J/call   avg(W)
------------------------------------------------------------------
-gemm_apply        12480       8.42      1936.1     0.155      230
-spmv_matvec       49920      11.07      1421.8     0.028      128
-halo_exchange     49920       3.91       402.7     0.008      103
------------------------------------------------------------------
-device idle baseline ~ 61 W  (subtracted for the J/call column)</code></pre>
+<figure>
+  <img src="/blog/kokkos/fdbscan.png" alt="GPU power over time for ArborX fdbscan on an H100 NVL, a plateau near 300 W under a 350 W cap. Total estimated energy 925.1 J, of which 772.8 J inside kernel regions." width="1200" height="898" loading="lazy" />
+  <img src="/blog/kokkos/fdbscan-dense.png" alt="GPU power over time for ArborX fdbscan-dense on the same GPU and input, a similar plateau. Total estimated energy 784.8 J, of which 615.6 J inside kernel regions." width="1200" height="898" loading="lazy" />
+  <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time.</figcaption>
+</figure>
 
-<p>The sparse mat-vec ran the longest, eleven seconds against the dense block's eight, and still cost a third less energy, because it is memory bound and leaves the GPU drawing roughly half the power. Time told me to optimize <code>spmv_matvec</code>. Energy told me to look at <code>gemm_apply</code> first. Those are different instructions, and until this connector existed I could only see the first one.</p>
+<p>A time profile calls these two equivalent. The energy profile says one of them costs 140 J less for the same answer, about 15%. A stopwatch cannot see that gap, and it is the whole argument for measuring energy per region instead of inferring it from time.</p>
 
-<h2>Kokkos Tools, or instrumentation you do not have to compile in</h2>
+<h2>Instrumentation you do not have to compile in</h2>
 
 <p>Kokkos already announces what it is doing. Every <code>parallel_for</code>, <code>parallel_reduce</code> and <code>parallel_scan</code> fires a begin callback before it launches and an end callback after it finishes, and you can wrap arbitrary spans in named regions with push and pop markers. A Kokkos Tools connector is just a shared library that implements those callbacks, and you attach it by pointing an environment variable at it. There is no recompile of the application, no annotation in its source, no fork of the code. You set <code>KOKKOS_TOOLS_LIBS</code> to the path of the library and the runtime loads it.</p>
 
@@ -32,12 +33,12 @@ device idle baseline ~ 61 W  (subtracted for the J/call column)</code></pre>
 
 <h2>You cannot read energy, only watch power</h2>
 
-<p>The obvious first version reads the power sensor at the begin callback, reads it again at the end, and reports the average times the duration. It does not work, and the reason it does not work is the heart of the problem. NVIDIA's management library, NVML, exposes <code>nvmlDeviceGetPowerUsage</code>, which returns the board's instantaneous power draw in milliwatts. The catch is twofold. That sensor updates at a modest rate, on the order of tens of hertz, and a GPU kernel can easily be shorter than the interval between two updates, so begin and end frequently return the same stale reading and the duration tells you nothing. And even when the kernel is long enough to span several updates, two point readings cannot describe a curve that rises and falls across the kernel's lifetime.</p>
+<p>The obvious first version reads the power sensor at the begin callback, reads it again at the end, and reports the average times the duration. It does not work, and the reason it does not work is the heart of the problem. NVIDIA's management library, NVML, exposes <code>nvmlDeviceGetPowerUsage</code>, which returns the board's instantaneous power draw in milliwatts. The catch is twofold. That value is refreshed only every 100 ms, and it averages just the last 25 ms of each interval (Yang et al., 2023), so most of what the board does is never observed at all. Most HPC kernels run in under 10 ms: begin and end frequently return the same stale reading, and the duration tells you nothing. And even when the kernel is long enough to span several updates, two point readings cannot describe a curve that rises and falls across the kernel's lifetime.</p>
 
 <p>The deeper issue is that power is the wrong quantity to sample at the boundaries. Power is instantaneous, watts, a rate. What you are paying for is energy, joules, and energy is the integral of power over time. Two readings give you two heights of a curve. The bill is the area under it. My first version reported nonsense on short kernels, sometimes even a negative delta when the two readings landed on opposite sides of a sensor update, and that was the signal to stop sampling on the kernel's schedule and start sampling on the clock's.</p>
 
 <figure>
-<svg viewBox="0 0 720 380" role="img" aria-label="A power-versus-time trace for three GPU kernels. The dense block kernel runs near 230 watts, the sparse mat-vec near 128 watts for longer, and the halo exchange near 103 watts. Sample dots sit at a fixed cadence along the curve. A dashed line marks the idle baseline at about 61 watts, and the area under the first kernel is shaded and labelled energy equals the integral of power over time." xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 720 380" role="img" aria-label="A schematic power-versus-time trace for three GPU kernels, A, B and C, each drawing a different power level. Sample dots sit at a fixed cadence along the curve. A dashed line marks the idle floor, and the area under the first kernel is shaded and labeled energy equals the integral of power over time." xmlns="http://www.w3.org/2000/svg">
   <g stroke="#cdc3b1" stroke-width="1">
     <line x1="70" y1="50" x2="70" y2="300"/>
     <line x1="70" y1="300" x2="700" y2="300"/>
@@ -54,14 +55,14 @@ device idle baseline ~ 61 W  (subtracted for the J/call column)</code></pre>
     <rect x="95"  y="50" width="160" height="250" fill="#c8821e" opacity="0.05"/>
     <rect x="300" y="50" width="170" height="250" fill="#5f8a3a" opacity="0.06"/>
     <rect x="510" y="50" width="140" height="250" fill="#b3563a" opacity="0.05"/>
-    <text x="175" y="64" fill="#7a4e10">gemm</text>
-    <text x="385" y="64" fill="#3f6326">spmv</text>
-    <text x="580" y="64" fill="#8a3a22">halo</text>
+    <text x="175" y="64" fill="#7a4e10">kernel A</text>
+    <text x="385" y="64" fill="#3f6326">kernel B</text>
+    <text x="580" y="64" fill="#8a3a22">kernel C</text>
   </g>
   <polygon points="99,108 255,112 255,249 99,249" fill="#c8821e" opacity="0.22"/>
   <polygon points="99,249 255,249 255,300 99,300" fill="#6b6258" opacity="0.10"/>
   <line x1="70" y1="249" x2="700" y2="249" stroke="#8a7d63" stroke-width="1.2" stroke-dasharray="6 4"/>
-  <text x="700" y="245" text-anchor="end" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#8a7d63">idle ~ 61 W</text>
+  <text x="700" y="245" text-anchor="end" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#8a7d63">idle floor</text>
   <polyline fill="none" stroke="#2b2620" stroke-width="2"
     points="70,249 95,249 99,108 255,112 259,249 300,249 304,193 470,196 474,249 510,249 514,214 540,205 562,221 586,208 612,220 640,210 650,214 654,249 700,249"/>
   <g fill="#c8821e">
@@ -79,18 +80,18 @@ device idle baseline ~ 61 W  (subtracted for the J/call column)</code></pre>
   <text x="177" y="180" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#7a4e10">Energy = &#8747; P dt</text>
   <text x="177" y="198" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#9a6a1e">area above idle = marginal cost</text>
 </svg>
-<figcaption>One region's energy is the area under its power curve. The dashed line is the idle floor; the marginal cost of a kernel is the part of the area that sits above it. The dots are the side thread sampling at a fixed cadence, not at the kernel boundaries.</figcaption>
+<figcaption>A schematic, not a measurement. One region's energy is the area under its power curve. The dashed line is the idle floor; the marginal cost of a kernel is the part of the area that sits above it. The dots are the side thread sampling at a fixed cadence, not at the kernel boundaries.</figcaption>
 </figure>
 
 <h2>A side thread, a fixed cadence, and a trapezoid</h2>
 
-<p>So sampling has to be separated from the kernels entirely. A background thread polls the power sensor on a fixed interval, a few milliseconds apart, and timestamps every reading, building a continuous trace of how the board's draw moved through the whole run. The begin and end callbacks no longer read power at all. They record a wall-clock window, the moment the region opened and the moment it closed. To get a region's energy, the connector integrates the power trace over that window with the trapezoidal rule, summing the little trapezoids between consecutive samples that fall inside it. Because the same region is entered thousands of times, its joules accumulate across every call, which is the <code>energy(J)</code> column above and the only workable way to talk about a kernel that runs in tens of microseconds.</p>
+<p>So sampling has to be separated from the kernels entirely. A background thread polls the power sensor on a fixed interval, a few milliseconds apart, and timestamps every reading, building a continuous trace of how the board's draw moved through the whole run. The begin and end callbacks no longer read power at all. They record a wall-clock window, the moment the region opened and the moment it closed. To get a region's energy, the connector integrates the power trace over that window with the trapezoidal rule, summing the little trapezoids between consecutive samples that fall inside it. Because the same region is entered many times, its joules accumulate across every call.</p>
 
-<p>Sampling on the clock instead of on the kernel is what makes short kernels measurable. A single launch may be too brief to catch even one fresh sensor reading, but ten thousand launches under a steadily polled trace land enough samples that the aggregate is sound. The trade is a little overhead from the polling thread and a resolution floor set by the sample interval, and both are small and, more to the point, bounded and known.</p>
+<p>Sampling on the clock instead of on the kernel gives a continuous trace, but it cannot beat the sensor. With a 25 ms window every 100 ms, a single short kernel is effectively invisible, and adding up many launches does not fix a blind spot that recurs at the same phase. What the trace does measure reliably is a region much longer than the refresh interval: a solver phase, or a whole algorithm, like the two DBSCAN runs above. The poster pushes resolution a little further by repeating a run 64 times, shifting its start by 5 ms each time and keeping the highest reading, but the honest conclusion is that per-kernel energy on current NVIDIA GPUs is out of reach through NVML.</p>
 
-<h2>What the number is, and what it is not</h2>
+<h2>The limits of the number</h2>
 
-<p>The table implies more precision than it has. NVML reports power for the whole board, not per streaming multiprocessor, so this is whole-GPU attribution. If two kernels run concurrently on the same device, on separate streams, the trace cannot tell you which one drew which watt, and the energy of the overlap cannot be split cleanly between them. The figure also includes the device's idle draw, the tens of watts a powered-on GPU spends doing nothing, so for the marginal cost of a kernel you measure an idle baseline with the device quiet and subtract it, which is the line under the table and the floor in the diagram. None of this makes the measurement wrong: it is whole-device, which is enough for ranking kernels by energy.</p>
+<p>NVML reports power for the whole board, not per streaming multiprocessor, so this is whole-GPU attribution. If two kernels run concurrently on the same device, on separate streams, the trace cannot tell you which one drew which watt, and the energy of the overlap cannot be split cleanly between them. The total also includes whatever the board draws between regions: in the DBSCAN runs above, 16.5% and 21.6% of the energy falls outside any Kokkos region, which is why the connector reports both numbers. Whole-device attribution is enough to compare algorithms by energy, and not enough to rank individual kernels.</p>
 
 <h2>Two backends, two different questions</h2>
 
@@ -149,13 +150,8 @@ device idle baseline ~ 61 W  (subtracted for the J/call column)</code></pre>
 <figcaption>The callbacks only mark when each region opens and closes. The energy comes from a separate power trace the connector integrates over those windows, with NVML or Variorum underneath the sampler depending on whether you are asking about the card or the node.</figcaption>
 </figure>
 
-<figure>
-  <img src="/blog/kokkos/smoky-poster.jpg" alt="Ethan Puyaubreau standing beside his poster, Understanding GPU Energy Dynamics in HPC Applications, at the Smoky Mountains Conference 2025." loading="lazy" />
-  <figcaption>The connector started as a summer project and turned into the thing I presented at the Smoky Mountains Conference.</figcaption>
-</figure>
+<h2>What per-region joules buy you</h2>
 
-<h2>What per-kernel joules buy you</h2>
+<p>Once energy is attributed to the kernel that spent it, you can finally optimize the quantity you are actually billed for instead of using time as a stand-in and hoping the two agree. They do not always agree: the fastest kernel is frequently not the most energy-efficient one, because going fast can mean running the silicon at its power ceiling, and a slower memory-bound kernel can be the cheaper one to run a million times. Even at equal runtime, as with the two DBSCAN variants, the energy can differ by 15%. A timeline shows none of that; the joules next to each region do.</p>
 
-<p>Once energy is attributed to the kernel that spent it, you can finally optimize the quantity you are actually billed for instead of using time as a stand-in and hoping the two agree. They do not always agree: the fastest kernel is frequently not the most energy-efficient one, because going fast can mean running the silicon at its power ceiling, and a slower memory-bound kernel can be the cheaper one to run a million times. A timeline shows none of that; the joules sitting next to the call count do.</p>
-
-<p>The connector lives as a small PR stack open upstream on <code>kokkos/kokkos-tools</code>, the NVML backend and the Variorum one, and on my own machines the per-kernel joules feed the same dashboard that the rest of my GPU work reports into, so a run shows energy-to-solution beside utilization rather than in a separate log nobody opens. What is still missing is resolution below the whole board: device-level attribution stays coarse, and I have no clean answer for concurrent streams.</p>
+<p>The sampling daemon is merged into <code>kokkos/kokkos-tools</code> (#300); the core, NVML and Variorum connectors are open upstream as a small PR stack. The CSV output loads into <a href="https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos">a Grafana and PostgreSQL dashboard</a>, so a run shows energy beside utilization rather than in a separate log nobody opens. The full results are on <a href="https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/">the poster page</a>, written with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié. What is still missing is resolution below the whole board and below the 100 ms refresh: device-level attribution stays coarse, and I have no clean answer for concurrent streams.</p>
