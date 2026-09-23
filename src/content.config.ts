@@ -1,5 +1,6 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
+import { frenchSpacing } from "./lib/french-spacing.mjs";
 
 // Bilingual blog. One Markdown file per language in a per-locale folder
 // (src/content/blog/en/<slug>.md and fr/<slug>.md), paired by the `slug` field
@@ -14,19 +15,26 @@ const blog = defineCollection({
     base: "./src/content/blog",
     generateId: ({ entry }) => entry.replace(/\.md$/i, ""),
   }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
-    /** Optional last-updated date; feeds dateModified in the article schema. */
-    updatedDate: z.coerce.date().optional(),
-    lang: z.enum(["en", "fr"]),
-    slug: z.string(),
-    tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
-    /** Override the canonical URL (defaults to the post's own URL on this site). */
-    canonical: z.string().optional(),
-  }),
+  schema: z
+    .object({
+      title: z.string(),
+      description: z.string(),
+      pubDate: z.coerce.date(),
+      /** Optional last-updated date; feeds dateModified in the article schema. */
+      updatedDate: z.coerce.date().optional(),
+      lang: z.enum(["en", "fr"]),
+      slug: z.string(),
+      tags: z.array(z.string()).default([]),
+      draft: z.boolean().default(false),
+      /** Override the canonical URL (defaults to the post's own URL on this site). */
+      canonical: z.string().optional(),
+    })
+    // Title and description come from the frontmatter, outside the remark pass.
+    .transform((d) =>
+      d.lang === "fr"
+        ? { ...d, title: frenchSpacing(d.title), description: frenchSpacing(d.description) }
+        : d,
+    ),
 });
 
 export const collections = { blog };

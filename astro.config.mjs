@@ -2,6 +2,7 @@ import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
 import sitemap from "@astrojs/sitemap";
 import { SITE_ORIGIN } from "./site.config.mjs";
+import { remarkFrenchSpacing } from "./src/lib/french-spacing.mjs";
 
 // Static-first: Astro ships zero JS by default; Vue runs only inside the
 // interactive islands (hero, command palette, cluster panels).
@@ -34,6 +35,9 @@ export default defineConfig({
       filter: (page) => !page.includes("/og"),
     }),
   ],
+  markdown: {
+    remarkPlugins: [remarkFrenchSpacing],
+  },
   prefetch: {
     defaultStrategy: "hover",
   },

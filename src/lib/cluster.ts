@@ -11,6 +11,7 @@
  * request to that domain on every visit. House style: no em dashes, EN or FR.
  */
 import type { Locale } from "./i18n";
+import { withFrenchSpacing } from "./french-spacing.mjs";
 
 export interface ClusterNavSection {
   readonly id: string;
@@ -143,7 +144,7 @@ const NODE_ROLE: Record<Locale, Record<string, string>> = {
     apps: "Apps et sites auto-hébergés, plus le DNS du LAN et Home Assistant.",
     aux: "Un petit nœud d'appoint : une seconde VM routeur et les gabarits de VM.",
     core: "Le cheval de trait. Une forge Git, les runners CI, Nextcloud, un PaaS.",
-    gpu: "Capacité et GPU. La pile média, la VM Kubernetes et l'inférence LLM locale.",
+    gpu: "Capacité et GPU. Les services multimédias, la VM Kubernetes et l'inférence LLM locale.",
   },
 };
 
@@ -230,12 +231,12 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     pipeline: {
       stages: [
-        { name: "verify", detail: "lint, types, build, and the smoke tests", approx: "~45s" },
-        { name: "image", detail: "build, scan with Trivy, push to the registry", approx: "~50s" },
+        { name: "verify", detail: "lint, types, build, and the smoke tests", approx: "~45 s" },
+        { name: "image", detail: "build, scan with Trivy, push to the registry", approx: "~50 s" },
         {
           name: "deploy",
           detail: "pull, smoke test the live URL, roll back on failure",
-          approx: "~15s",
+          approx: "~15 s",
         },
       ],
       note: "A representative run of the pipeline behind my self-hosted services.",
@@ -301,7 +302,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       { id: "path", num: "02", label: "Chemin" },
       { id: "services", num: "03", label: "Services" },
       { id: "pipeline", num: "04", label: "Pipeline" },
-      { id: "stack", num: "05", label: "Pile" },
+      { id: "stack", num: "05", label: "Outils" },
       { id: "operations", num: "06", label: "Ops" },
     ],
     backHome: "Accueil",
@@ -325,7 +326,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       uptime: "uptime",
       online: "en ligne",
       offline: "hors ligne",
-      asOf: "relevé à",
+      asOf: "relevé le",
     },
     pathHead: {
       title: "Comment une requête atteint un service",
@@ -347,7 +348,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       cpu: "CPU",
       mem: "mémoire",
       window: "fenêtre glissante, instantané",
-      asOf: "relevé à",
+      asOf: "relevé le",
     },
     servicesHead: {
       title: "Ce qui tourne",
@@ -356,7 +357,8 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     services: {
       count: "actifs",
-      caption: "Un contrôle de santé instantané des points d'accès surveillés, pas un flux en direct.",
+      caption:
+        "Un contrôle de santé instantané des points d'accès surveillés, pas un flux en direct.",
     },
     pipelineHead: {
       title: "Comment un projet auto-hébergé se déploie",
@@ -365,15 +367,15 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     pipeline: {
       stages: [
-        { name: "verify", detail: "lint, types, build et les tests de fumée", approx: "~45s" },
-        { name: "image", detail: "build, scan Trivy, push vers le registre", approx: "~50s" },
+        { name: "verify", detail: "lint, types, build et les tests de fumée", approx: "~45 s" },
+        { name: "image", detail: "build, scan Trivy, push vers le registre", approx: "~50 s" },
         {
           name: "deploy",
           detail: "pull, test de fumée de l'URL live, rollback si échec",
-          approx: "~15s",
+          approx: "~15 s",
         },
       ],
-      note: "Une exécution représentative de la pipeline derrière mes services auto-hébergés.",
+      note: "Une exécution représentative du pipeline derrière mes services auto-hébergés.",
     },
     opsHead: {
       title: "Exploité de bout en bout",
@@ -400,7 +402,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       cta: "Me contacter",
     },
     stackHead: {
-      title: "La pile qui tient l'ensemble",
+      title: "Les outils qui tiennent l'ensemble",
       intro: "Des outils éprouvés, câblés ensemble et exploités de bout en bout.",
     },
     stack: [
@@ -426,7 +428,12 @@ const CONTENT: Record<Locale, ClusterContent> = {
   },
 };
 
+const SPACED: Record<Locale, ClusterContent> = {
+  en: CONTENT.en,
+  fr: withFrenchSpacing(CONTENT.fr),
+};
+
 /** Resolve the cluster page content for a locale. */
 export function getClusterContent(locale: Locale): ClusterContent {
-  return CONTENT[locale];
+  return SPACED[locale];
 }

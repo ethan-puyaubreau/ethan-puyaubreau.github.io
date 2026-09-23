@@ -6,6 +6,7 @@
  * House style: no em dashes anywhere, EN or FR. Voice stays dry and precise.
  */
 import type { Locale } from "./i18n";
+import { withFrenchSpacing } from "./french-spacing.mjs";
 
 export interface PaletteStrings {
   readonly trigger: string;
@@ -199,7 +200,8 @@ const STRINGS: Record<Locale, UIStrings> = {
       readArticle: "Read",
       published: "Published",
       tagsLabel: "Tags",
-      authorTagline: "HPC & infrastructure engineer; research intern at Oak Ridge National Laboratory in 2025.",
+      authorTagline:
+        "HPC & infrastructure engineer; research intern at Oak Ridge National Laboratory in 2025.",
       authorAvailable: "Open to HPC and infrastructure roles from January 2027.",
       contactCta: "Get in touch",
       talkHead: "Questions, corrections, or work: my address is below.",
@@ -255,7 +257,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
         " à Oak Ridge, le HPC pour la simulation nucléaire chez EDF, et un cluster de cinq nœuds qui fait tourner une vingtaine de services en production, exploité de bout en bout, de Docker à la CI/CD.",
-      cue: "Travaux choisis",
+      cue: "Réalisations",
       proof: "ORNL · EDF · cluster 5 nœuds en production",
     },
     sectionHeads: {
@@ -273,9 +275,9 @@ const STRINGS: Record<Locale, UIStrings> = {
     factRole: "Rôle",
     factWhen: "Quand",
     flagship: "Projet phare",
-    stackLabel: "Pile",
+    stackLabel: "Technologies",
     provenBy: "Utilisé sur",
-    moreWorkHead: "Aussi sur l'établi",
+    moreWorkHead: "Autres projets",
     moreWorkLabel: "Autres travaux",
     cv: "CV",
     cvKind: "PDF",
@@ -297,18 +299,19 @@ const STRINGS: Record<Locale, UIStrings> = {
     notFoundDescription: "Page introuvable.",
     blog: {
       kicker: "Écrits",
-      indexTitle: "Notes d'établi",
+      indexTitle: "Notes techniques",
       indexIntro:
         "Des articles sur le HPC, le calcul GPU, l'infrastructure, et les projets derrière.",
       metaDescription:
         "Des articles sur le calcul haute performance, le calcul GPU, l'infrastructure, et les projets derrière, par Ethan Puyaubreau.",
-      empty: "Pas encore d'articles. Reviens bientôt.",
+      empty: "Pas encore d'articles. Revenez bientôt.",
       backToIndex: "Tous les articles",
       seeAll: "Lire tous les articles",
       readArticle: "Lire",
       published: "Publié le",
       tagsLabel: "Étiquettes",
-      authorTagline: "Ingénieur HPC et infrastructure ; stagiaire de recherche à l'Oak Ridge National Laboratory en 2025.",
+      authorTagline:
+        "Ingénieur HPC et infrastructure ; stagiaire de recherche à l'Oak Ridge National Laboratory en 2025.",
       authorAvailable: "Ouvert aux postes HPC et infrastructure dès janvier 2027.",
       contactCta: "Me contacter",
       talkHead: "Questions, corrections ou propositions : mon adresse est en dessous.",
@@ -351,6 +354,8 @@ const STRINGS: Record<Locale, UIStrings> = {
 };
 
 /** Resolve the UI chrome strings for a locale. */
+const SPACED: Record<Locale, UIStrings> = { en: STRINGS.en, fr: withFrenchSpacing(STRINGS.fr) };
+
 export function getUI(locale: Locale): UIStrings {
-  return STRINGS[locale];
+  return SPACED[locale];
 }

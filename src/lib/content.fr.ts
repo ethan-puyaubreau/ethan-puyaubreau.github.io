@@ -9,7 +9,7 @@ import type { SiteContent } from "./content.types";
 
 export const fr: SiteContent = {
   sections: [
-    { id: "work", num: "01", label: "Travaux choisis" },
+    { id: "work", num: "01", label: "Réalisations" },
     { id: "expertise", num: "02", label: "Expertise" },
     { id: "writing", num: "03", label: "Écrits" },
     { id: "about", num: "04", label: "Parcours" },
@@ -31,7 +31,7 @@ export const fr: SiteContent = {
       body: [
         {
           h: "Le problème",
-          p: "Kokkos permet de faire tourner une même source C++ sur des GPU NVIDIA, AMD et Intel, et c'est précisément pour cela que l'énergie est difficile à raisonner : le même noyau consomme une puissance différente sur chaque backend, et les équipes applicatives n'avaient aucun moyen portable de la voir. Sur les machines du DOE, où la puissance est désormais une contrainte de premier ordre, cet angle mort compte.",
+          p: "Kokkos permet de faire tourner une même source C++ sur des GPU NVIDIA, AMD et Intel, et c'est précisément pour cela que l'énergie est difficile à évaluer : le même noyau consomme une puissance différente sur chaque backend, et les équipes applicatives n'avaient aucun moyen portable de la voir. Sur les machines du DOE, où la puissance est désormais une contrainte de premier ordre, cet angle mort compte.",
         },
         {
           h: "Ce que j'ai construit",
@@ -51,7 +51,10 @@ export const fr: SiteContent = {
           label: "Tableau de bord d'énergie",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
-        { label: "Poster SMC 2025", href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/" },
+        {
+          label: "Poster SMC 2025",
+          href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
+        },
         { label: "Rapport S4PST (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
       ],
     },
@@ -198,7 +201,7 @@ export const fr: SiteContent = {
     },
     {
       title: "Full-stack et temps réel",
-      blurb: "Interfaces et systèmes vivants, dont celui qui rend cette page.",
+      blurb: "Interfaces et systèmes temps réel, dont celui qui affiche cette page.",
       items: ["Vue 3 / Nuxt 3", "TypeScript", "Auto-hébergement et déploiement", "Astro"],
       provenBy: { label: "annuaire communautaire", id: "commus" },
     },

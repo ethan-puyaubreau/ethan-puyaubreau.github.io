@@ -12,7 +12,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 
 <p>L'ordre des opérations qui marche réellement sur Trixie tient en quelques étapes, dont une facile à manquer.</p>
 
-<p><em>Mise à jour, septembre 2026 : le nœud a depuis rejoint le cluster Proxmox, où il fait tourner la pile média, la VM Kubernetes et l'inférence LLM locale. Proxmox VE 9 repose sur Debian 13 : les étapes du pilote ci-dessous s'appliquent telles quelles sur l'hôte.</em></p>
+<p><em>Mise à jour, septembre 2026 : le nœud a depuis rejoint le cluster Proxmox, où il fait tourner les services multimédias, la VM Kubernetes et l'inférence LLM locale. Proxmox VE 9 repose sur Debian 13 : les étapes du pilote ci-dessous s'appliquent telles quelles sur l'hôte.</em></p>
 
 <h2>Pourquoi un hyperviseur était la mauvaise couche ici</h2>
 

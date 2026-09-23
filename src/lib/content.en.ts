@@ -48,7 +48,10 @@ export const en: SiteContent = {
           label: "Energy dashboard",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
-        { label: "SMC 2025 poster", href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/" },
+        {
+          label: "SMC 2025 poster",
+          href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
+        },
         { label: "S4PST report (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
       ],
     },
