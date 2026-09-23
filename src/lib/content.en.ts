@@ -19,7 +19,7 @@ export const en: SiteContent = {
       num: "01",
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Measuring where the energy goes on the GPU",
-      role: "Research intern",
+      role: "Graduate Research Fellow (GRO program)",
       period: "Summer 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Python"],
       flagship: true,
@@ -36,7 +36,7 @@ export const en: SiteContent = {
         },
         {
           h: "Where it stands",
-          p: "The periodic-sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302), with ROCm SMI sketched for AMD. The results became a poster with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, 'Understanding GPU Energy Dynamics in HPC Applications', presented at the 2025 Smoky Mountains Conference and cited in the S4PST 2024–2025 project report (ORNL/SPR-2026/4406).",
+          p: "The periodic-sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302), with ROCm SMI sketched for AMD: nine pull requests to kokkos-tools and LAMMPS in all, three merged. The results were presented as two posters, at an ORNL internal session and at the 2025 Smoky Mountains Conference, the latter with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, 'Understanding GPU Energy Dynamics in HPC Applications', cited in the S4PST 2024–2025 project report (ORNL/SPR-2026/4406).",
         },
       ],
       links: [

@@ -201,7 +201,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       published: "Published",
       tagsLabel: "Tags",
       authorTagline:
-        "HPC & infrastructure engineer; research intern at Oak Ridge National Laboratory in 2025.",
+        "HPC & infrastructure engineer; Graduate Research Fellow at Oak Ridge National Laboratory in 2025.",
       authorAvailable: "Open to HPC and infrastructure roles from January 2027.",
       contactCta: "Get in touch",
       talkHead: "Questions, corrections, or work: my address is below.",
@@ -311,7 +311,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       published: "Publié le",
       tagsLabel: "Étiquettes",
       authorTagline:
-        "Ingénieur HPC et infrastructure ; stagiaire de recherche à l'Oak Ridge National Laboratory en 2025.",
+        "Ingénieur HPC et infrastructure ; Graduate Research Fellow à l'Oak Ridge National Laboratory en 2025.",
       authorAvailable: "Ouvert aux postes HPC et infrastructure dès janvier 2027.",
       contactCta: "Me contacter",
       talkHead: "Questions, corrections ou propositions : mon adresse est en dessous.",
