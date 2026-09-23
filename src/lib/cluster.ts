@@ -118,33 +118,33 @@ export interface ClusterContent {
 }
 
 // Node order on the page; ids match the Proxmox node names the snapshot reports.
-const NODE_ORDER = ["edge", "apps", "kube", "core", "gpu"] as const;
+const NODE_ORDER = ["edge", "apps", "aux", "core", "gpu"] as const;
 
-// Hardware facts, language-neutral, straight from inventory/nodes.md.
+// Hardware facts, language-neutral, as the Proxmox API reports them.
 const NODE_SPEC: Record<string, string> = {
-  edge: "~8 cores · 3.7 GB",
-  apps: "11 GB RAM",
-  kube: "7.6 GB RAM",
-  core: "31 GB RAM",
-  gpu: "Xeon E5-1650 v3 · 32 GB · GTX 1050",
+  edge: "2 CPU · 3.7 GB",
+  apps: "2 CPU · 11.6 GB",
+  aux: "2 CPU · 7.6 GB",
+  core: "4 CPU · 31 GB",
+  gpu: "12 CPU · 32 GB · GTX 1050",
 };
 
 // What each node actually runs, localized. No invented duties. None of these
 // name a specific hosted site: the cluster runs several, on more than one domain.
 const NODE_ROLE: Record<Locale, Record<string, string>> = {
   en: {
-    edge: "The edge. VyOS router, Traefik, DNS, and uptime monitoring.",
-    apps: "Self-hosted apps and the sites I run there.",
-    kube: "Apps and Kubernetes. A kube node and a couple of side projects.",
+    edge: "The edge. The VyOS router, Traefik, and uptime monitoring.",
+    apps: "Self-hosted apps and sites, plus LAN DNS and Home Assistant.",
+    aux: "A small spare node: a second router VM and the VM templates.",
     core: "The workhorse. A Git forge, the CI runners, Nextcloud, a PaaS.",
-    gpu: "Capacity and GPU. The media stack, with a GPU to pass through.",
+    gpu: "Capacity and GPU. The media stack, the Kubernetes VM, and local LLM inference.",
   },
   fr: {
-    edge: "La bordure. Routeur VyOS, Traefik, DNS et supervision uptime.",
-    apps: "Apps auto-hébergées et les sites que j'y fais tourner.",
-    kube: "Apps et Kubernetes. Un nœud kube et quelques projets annexes.",
+    edge: "La bordure. Le routeur VyOS, Traefik et la supervision de disponibilité.",
+    apps: "Apps et sites auto-hébergés, plus le DNS du LAN et Home Assistant.",
+    aux: "Un petit nœud d'appoint : une seconde VM routeur et les gabarits de VM.",
     core: "Le cheval de trait. Une forge Git, les runners CI, Nextcloud, un PaaS.",
-    gpu: "Capacité et GPU. La stack média, avec un GPU à passer en VFIO.",
+    gpu: "Capacité et GPU. La pile média, la VM Kubernetes et l'inférence LLM locale.",
   },
 };
 
@@ -176,7 +176,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       lead: "The five machines behind ",
       em: "my homelab",
       tail: ".",
-      lede: "The homelab is a five-node Proxmox cluster I run: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and a couple dozen services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time, not a live feed.",
+      lede: "The homelab is a five-node Proxmox cluster I run: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and about twenty services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time, not a live feed.",
       cue: "The nodes",
     },
     nodesHead: {
@@ -218,11 +218,11 @@ const CONTENT: Record<Locale, ClusterContent> = {
     servicesHead: {
       title: "What runs there",
       intro:
-        "The public services this cluster runs, health-checked at the moment the snapshot above was captured.",
+        "The public endpoints of those services, health-checked at the moment the snapshot above was captured.",
     },
     services: {
       count: "up",
-      caption: "A snapshot health check, not a live feed. A small, curated set of services.",
+      caption: "A snapshot health check of the monitored endpoints, not a live feed.",
     },
     pipelineHead: {
       title: "How a self-hosted project ships",
@@ -250,14 +250,14 @@ const CONTENT: Record<Locale, ClusterContent> = {
     ops: {
       oncall:
         "On call for my own infrastructure: backups, certificate renewal, monitoring, and the failure modes you only meet at the wrong hour.",
-      monitoring: "Monitored by Uptime Kuma",
+      monitoring: "Monitored by Uptime Kuma, and by Gatus from outside the cluster",
       runbooksTitle: "Runbooks as a repo",
       runbooksBody:
         "The cluster's setup, runbooks, and automation live in a versioned repo, operated like code. Adding a node or restoring a service follows a written procedure.",
     },
     console: {
       nodesOnline: "nodes online",
-      servicesUp: "services up",
+      servicesUp: "endpoints up",
       uptime: "uptime",
     },
     talk: {
@@ -354,11 +354,11 @@ const CONTENT: Record<Locale, ClusterContent> = {
     servicesHead: {
       title: "Ce qui tourne",
       intro:
-        "Les services publics de ce cluster, vérifiés au moment où l'instantané ci-dessus a été capturé.",
+        "Les points d'accès publics de ces services, vérifiés au moment où l'instantané ci-dessus a été capturé.",
     },
     services: {
       count: "actifs",
-      caption: "Un contrôle de santé instantané, pas un flux en direct. Un petit ensemble choisi.",
+      caption: "Un contrôle de santé instantané des points d'accès surveillés, pas un flux en direct.",
     },
     pipelineHead: {
       title: "Comment un projet auto-hébergé se déploie",
@@ -386,14 +386,14 @@ const CONTENT: Record<Locale, ClusterContent> = {
     ops: {
       oncall:
         "D'astreinte sur ma propre infrastructure : sauvegardes, renouvellement de certificats, supervision, et les modes de défaillance qu'on ne rencontre qu'à la mauvaise heure.",
-      monitoring: "Supervisé par Uptime Kuma",
+      monitoring: "Supervisé par Uptime Kuma, et par Gatus depuis l'extérieur du cluster",
       runbooksTitle: "Les runbooks dans un dépôt",
       runbooksBody:
         "La configuration, les runbooks et l'automatisation du cluster vivent dans un dépôt versionné, exploités comme du code. Ajouter un nœud ou restaurer un service suit une procédure écrite.",
     },
     console: {
       nodesOnline: "nœuds en ligne",
-      servicesUp: "services actifs",
+      servicesUp: "points d'accès en ligne",
       uptime: "uptime",
     },
     talk: {

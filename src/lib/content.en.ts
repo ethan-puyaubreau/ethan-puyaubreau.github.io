@@ -94,7 +94,7 @@ export const en: SiteContent = {
       body: [
         {
           h: "The setup",
-          p: "Five Proxmox nodes (edge, apps, kube, core, gpu) behind a VyOS edge over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 self-hosted services: a Gitea forge, a Coolify PaaS, Nextcloud, a media stack, and several of my own projects. The cluster's runbooks and automation are themselves a repo.",
+          p: "Five Proxmox nodes (edge, apps, aux, core, gpu) behind a VyOS edge over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 self-hosted services: a Gitea forge, a Coolify PaaS, Nextcloud, a media stack, and several of my own projects. The cluster's runbooks and automation are themselves a repo.",
         },
         {
           h: "Why it's here",

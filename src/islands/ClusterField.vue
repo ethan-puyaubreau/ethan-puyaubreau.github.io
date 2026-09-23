@@ -35,11 +35,11 @@ interface NodeViz {
   hub?: boolean;
 }
 const TOPOLOGY: Record<string, NodeViz> = {
-  edge: { id: "edge", x: 0.2, y: 0.52, core: 1.15, svc: 4, hub: true },
-  apps: { id: "apps", x: 0.54, y: 0.28, core: 1.0, svc: 3 },
-  kube: { id: "kube", x: 0.5, y: 0.76, core: 0.95, svc: 5 },
-  core: { id: "core", x: 0.81, y: 0.44, core: 1.3, svc: 9 },
-  gpu: { id: "gpu", x: 0.78, y: 0.78, core: 1.05, svc: 2 },
+  edge: { id: "edge", x: 0.2, y: 0.52, core: 1.15, svc: 3, hub: true },
+  apps: { id: "apps", x: 0.54, y: 0.28, core: 1.0, svc: 5 },
+  aux: { id: "aux", x: 0.5, y: 0.76, core: 0.95, svc: 1 },
+  core: { id: "core", x: 0.81, y: 0.44, core: 1.3, svc: 8 },
+  gpu: { id: "gpu", x: 0.78, y: 0.78, core: 1.05, svc: 3 },
 };
 
 const canvas = ref<HTMLCanvasElement | null>(null);
