@@ -179,7 +179,8 @@ test("no page is noindexed and the sitemap lists the real routes", async ({ page
   const r = await page.request.get("/sitemap-0.xml");
   expect(r.ok()).toBeTruthy();
   const xml = await r.text();
-  expect(xml).toContain("<loc>https://ethan-puyaubreau.github.io</loc>");
+  // The origin with or without its trailing slash: the same URL.
+  expect(xml).toMatch(/<loc>https:\/\/ethan-puyaubreau\.github\.io\/?<\/loc>/);
   expect(xml).toContain("ethan-puyaubreau.github.io/cluster");
   expect(xml).toContain("ethan-puyaubreau.github.io/blog");
 });
