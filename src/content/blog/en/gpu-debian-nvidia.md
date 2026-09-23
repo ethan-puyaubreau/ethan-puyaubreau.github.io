@@ -2,6 +2,7 @@
 title: "Tearing the GPU node down from Proxmox to bare Debian"
 description: "The GPU node ran Proxmox. I wiped it for bare Debian 13 so the GPU would answer to one machine instead of a hypervisor, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that bit me was Secure Boot."
 pubDate: 2026-06-18
+updatedDate: 2026-09-23
 lang: en
 slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
@@ -9,7 +10,9 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 
 <p>The GPU node in my homelab is a single-socket Xeon workstation that for a year ran Proxmox like the rest of the cluster. Last week I wiped it and reinstalled bare Debian 13 (Trixie), because the one job I actually want from that box, running CUDA workloads against its GPU, is the one job a hypervisor makes harder rather than easier. The reinstall took twenty minutes. Getting the driver to load took the rest of the evening, almost all of it on a single thing nobody warns you about: Secure Boot silently refusing an unsigned module.</p>
 
-<p>The order of operations that actually works on Trixie is only a few steps, one of which is documented nowhere.</p>
+<p>The order of operations that actually works on Trixie is only a few steps, one of which is easy to miss.</p>
+
+<p><em>Update, September 2026: the node has since rejoined the Proxmox cluster, where it runs the media stack, the Kubernetes VM, and local LLM inference. Proxmox VE 9 is built on Debian 13, so the driver steps below apply unchanged on the host.</em></p>
 
 <h2>Why a hypervisor was the wrong layer here</h2>
 
@@ -24,17 +27,17 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
       <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2620"/>
     </marker>
   </defs>
-  <text x="180" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">Before — Proxmox node</text>
-  <text x="540" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">After — bare Debian 13</text>
+  <text x="180" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">Before: Proxmox node</text>
+  <text x="540" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">After: bare Debian 13</text>
   <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620" text-anchor="middle">
     <rect x="60" y="54"  width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
     <text x="180" y="79">CUDA workload (inside the guest)</text>
     <rect x="60" y="106" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
-    <text x="180" y="131">VM — guest OS + NVIDIA driver</text>
+    <text x="180" y="131">VM: guest OS + NVIDIA driver</text>
     <rect x="60" y="158" width="240" height="40" rx="7" fill="#f3e2db" stroke="#b3563a" stroke-width="1.3"/>
     <text x="180" y="183" fill="#8a3a22">VFIO passthrough</text>
     <rect x="60" y="210" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
-    <text x="180" y="235">Proxmox host — kernel + KVM</text>
+    <text x="180" y="235">Proxmox host: kernel + KVM</text>
     <rect x="60" y="262" width="240" height="40" rx="7" fill="#e7e1d4" stroke="#2b2620" stroke-width="1.3"/>
     <text x="180" y="287">GPU</text>
   </g>
@@ -56,9 +59,9 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 <figcaption>The same hardware, two stacks. Passthrough buys flexibility a single-purpose GPU node never uses.</figcaption>
 </figure>
 
-<h2>Blacklisting nouveau, the part that is easy to forget</h2>
+<h2>Keeping nouveau off the card</h2>
 
-<p>Debian ships <code>nouveau</code>, the open-source driver, and loads it at boot. The proprietary module will not bind while nouveau is holding the card, so the first move is to blacklist it and rebuild the initramfs, so the change is in place from early boot rather than after the kernel has already claimed the GPU.</p>
+<p>Debian ships <code>nouveau</code>, the open-source driver, and loads it at boot. The proprietary module will not bind while nouveau is holding the card. The <code>nvidia-driver</code> package installs its own blacklist for it, so the file below is belt and braces; the step that matters is rebuilding the initramfs, so nouveau stays out from early boot rather than after the kernel has already claimed the GPU.</p>
 
 <pre><code># /etc/modprobe.d/blacklist-nouveau.conf
 blacklist nouveau
@@ -75,7 +78,7 @@ sudo update-initramfs -u</code></pre>
 sudo apt update
 sudo apt install linux-headers-amd64 nvidia-driver</code></pre>
 
-<h2>Secure Boot, or why nvidia-smi lied to me</h2>
+<h2>Secure Boot: why nvidia-smi lied to me</h2>
 
 <p>After the reboot I ran <code>nvidia-smi</code> and got this:</p>
 
@@ -84,13 +87,13 @@ NVIDIA-SMI has failed because it couldn't communicate with the
 NVIDIA driver. Make sure that the latest NVIDIA driver is installed
 and running.</code></pre>
 
-<p>The card was fine and the module had built without complaint. The kernel was simply refusing to load it, because Secure Boot was on and a DKMS-built module is unsigned. There are two ways out. You can turn Secure Boot off in firmware, or you can enroll a Machine Owner Key, sign the module with it, and keep the chain of trust intact. I kept Secure Boot and enrolled a key, which is a one-time dance through the firmware on the next reboot.</p>
+<p>The card was fine and the module had built without complaint. The kernel was simply refusing to load it, because Secure Boot was on and a DKMS-built module is unsigned. There are two ways out. You can turn Secure Boot off in firmware, or you can enroll a Machine Owner Key, sign the module with it, and keep the chain of trust intact. I kept Secure Boot and enrolled a key, which is a one-time step in the firmware on the next reboot.</p>
 
 <pre><code># enroll the DKMS signing key, set a one-time password, then reboot
 sudo mokutil --import /var/lib/dkms/mok.pub
 # at the blue MOK manager on reboot: Enroll MOK, enter the password, reboot</code></pre>
 
-<p>After that, <code>nvidia-smi</code> came up clean with the card and driver version. No install log mentions that step.</p>
+<p>After that, <code>nvidia-smi</code> came up clean with the card and driver version. Nothing in the install fails loudly when that step is skipped.</p>
 
 <figure>
 <svg viewBox="0 0 720 560" role="img" aria-label="A vertical flowchart of the driver install: add sources, blacklist nouveau, install headers and driver via DKMS, then a Secure Boot decision that either enrolls a MOK or proceeds straight to reboot, ending at a working nvidia-smi." xmlns="http://www.w3.org/2000/svg">
@@ -135,6 +138,6 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 
 <h2>What I got back</h2>
 
-<p>A bare <code>nvidia-smi</code>, the full card with no virtual machine in the way, and a node that now runs my Kokkos energy-measurement work straight against the hardware instead of through a guest. The rest of the cluster is still Proxmox: those nodes are doing the consolidation job Proxmox is good at. This node was not doing that job.</p>
+<p>A bare <code>nvidia-smi</code>, the full card with no virtual machine in the way, and a node that runs my CUDA and Kokkos builds straight against the hardware instead of through a guest. The rest of the cluster is still Proxmox: those nodes are doing the consolidation job Proxmox is good at. This node was not doing that job.</p>
 
-<p>Still to do: wire the box's power telemetry into the same dashboard as the GPU work, so the node reports joules-per-run alongside utilization. Keeping one bare-metal node inside a Proxmox cluster remains awkward on the monitoring side, so for now it lives beside the fold rather than in it.</p>
+<p>Keeping one bare-metal node beside a Proxmox cluster was awkward on the monitoring side: it had to be watched on its own, outside the tools that cover every other node. The node has since gone back to Proxmox (see the update at the top).</p>

@@ -1,7 +1,8 @@
 ---
 title: "Démonter le nœud GPU, de Proxmox à un Debian nu"
-description: "Ce nœud tournait sous Proxmox. Je l'ai effacé pour un Debian 13 nu afin que le GPU réponde à une seule machine plutôt qu'à un hyperviseur, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a mordu, c'est le Secure Boot."
+description: "Ce nœud tournait sous Proxmox. Je l'ai effacé pour un Debian 13 nu afin que le GPU réponde à une seule machine plutôt qu'à un hyperviseur, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a piégé, c'est le Secure Boot."
 pubDate: 2026-06-18
+updatedDate: 2026-09-23
 lang: fr
 slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
@@ -9,7 +10,9 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 
 <p>Le nœud GPU de mon homelab est une station de travail Xeon mono-socket qui, pendant un an, a fait tourner Proxmox comme le reste du cluster. La semaine dernière, je l'ai effacé et j'ai réinstallé un Debian 13 (Trixie) nu, parce que la seule tâche que je veux vraiment de cette machine, faire tourner des charges CUDA sur son GPU, est justement celle qu'un hyperviseur rend plus difficile plutôt que plus simple. La réinstallation a pris vingt minutes. Faire charger le pilote a pris le reste de la soirée, presque entièrement sur une seule chose dont personne ne vous prévient : le Secure Boot refusant en silence un module non signé.</p>
 
-<p>L'ordre des opérations qui marche réellement sur Trixie tient en quelques étapes, dont une que rien ne documente.</p>
+<p>L'ordre des opérations qui marche réellement sur Trixie tient en quelques étapes, dont une facile à manquer.</p>
+
+<p><em>Mise à jour, septembre 2026 : le nœud a depuis rejoint le cluster Proxmox, où il fait tourner la pile média, la VM Kubernetes et l'inférence LLM locale. Proxmox VE 9 repose sur Debian 13 : les étapes du pilote ci-dessous s'appliquent telles quelles sur l'hôte.</em></p>
 
 <h2>Pourquoi un hyperviseur était la mauvaise couche ici</h2>
 
@@ -24,17 +27,17 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
       <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2620"/>
     </marker>
   </defs>
-  <text x="180" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">Avant — nœud Proxmox</text>
-  <text x="540" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">Après — Debian 13 nu</text>
+  <text x="180" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">Avant : nœud Proxmox</text>
+  <text x="540" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">Après : Debian 13 nu</text>
   <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620" text-anchor="middle">
     <rect x="60" y="54"  width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
     <text x="180" y="79">Charge CUDA (dans l'invité)</text>
     <rect x="60" y="106" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
-    <text x="180" y="131">VM — OS invité + pilote NVIDIA</text>
+    <text x="180" y="131">VM : OS invité + pilote NVIDIA</text>
     <rect x="60" y="158" width="240" height="40" rx="7" fill="#f3e2db" stroke="#b3563a" stroke-width="1.3"/>
     <text x="180" y="183" fill="#8a3a22">passthrough VFIO</text>
     <rect x="60" y="210" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
-    <text x="180" y="235">Hôte Proxmox — noyau + KVM</text>
+    <text x="180" y="235">Hôte Proxmox : noyau + KVM</text>
     <rect x="60" y="262" width="240" height="40" rx="7" fill="#e7e1d4" stroke="#2b2620" stroke-width="1.3"/>
     <text x="180" y="287">GPU</text>
   </g>
@@ -56,9 +59,9 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 <figcaption>Le même matériel, deux piles. Le passthrough achète une flexibilité qu'un nœud GPU à usage unique n'emploie jamais.</figcaption>
 </figure>
 
-<h2>Mettre nouveau en liste noire, la partie facile à oublier</h2>
+<h2>Écarter nouveau de la carte</h2>
 
-<p>Debian fournit <code>nouveau</code>, le pilote open source, et le charge au démarrage. Le module propriétaire ne s'attachera pas tant que nouveau tient la carte : le premier geste est donc de le mettre en liste noire et de reconstruire l'initramfs, pour que le changement soit en place dès le début du démarrage plutôt qu'après que le noyau a déjà réclamé le GPU.</p>
+<p>Debian fournit <code>nouveau</code>, le pilote open source, et le charge au démarrage. Le module propriétaire ne s'attachera pas tant que nouveau tient la carte. Le paquet <code>nvidia-driver</code> installe déjà sa propre liste noire, donc le fichier ci-dessous n'est qu'une précaution ; l'étape qui compte, c'est de reconstruire l'initramfs, pour que nouveau reste écarté dès le début du démarrage et pas seulement après que le noyau a réclamé le GPU.</p>
 
 <pre><code># /etc/modprobe.d/blacklist-nouveau.conf
 blacklist nouveau
@@ -75,7 +78,7 @@ sudo update-initramfs -u</code></pre>
 sudo apt update
 sudo apt install linux-headers-amd64 nvidia-driver</code></pre>
 
-<h2>Le Secure Boot, ou pourquoi nvidia-smi m'a menti</h2>
+<h2>Le Secure Boot : pourquoi nvidia-smi m'a menti</h2>
 
 <p>Après le redémarrage, j'ai lancé <code>nvidia-smi</code> et j'ai obtenu ceci :</p>
 
@@ -84,13 +87,13 @@ NVIDIA-SMI has failed because it couldn't communicate with the
 NVIDIA driver. Make sure that the latest NVIDIA driver is installed
 and running.</code></pre>
 
-<p>La carte allait bien et le module s'était compilé sans broncher. Le noyau refusait simplement de le charger, parce que le Secure Boot était activé et qu'un module compilé par DKMS n'est pas signé. Il y a deux issues. On peut désactiver le Secure Boot dans le firmware, ou bien enrôler une clé propriétaire de la machine (Machine Owner Key), signer le module avec, et garder la chaîne de confiance intacte. J'ai gardé le Secure Boot et enrôlé une clé, ce qui est une danse unique à travers le firmware au redémarrage suivant.</p>
+<p>La carte allait bien et le module s'était compilé sans broncher. Le noyau refusait simplement de le charger, parce que le Secure Boot était activé et qu'un module compilé par DKMS n'est pas signé. Il y a deux issues. On peut désactiver le Secure Boot dans le firmware, ou bien enrôler une clé propriétaire de la machine (Machine Owner Key), signer le module avec, et garder la chaîne de confiance intacte. J'ai gardé le Secure Boot et enrôlé une clé, une manipulation à faire une seule fois dans le firmware, au redémarrage suivant.</p>
 
 <pre><code># enrôler la clé de signature DKMS, définir un mot de passe unique, puis redémarrer
 sudo mokutil --import /var/lib/dkms/mok.pub
 # au gestionnaire MOK bleu au redémarrage : Enroll MOK, saisir le mot de passe, redémarrer</code></pre>
 
-<p>Après ça, <code>nvidia-smi</code> est remonté proprement avec la carte et la version du pilote. Aucun log d'installation ne mentionne cette étape.</p>
+<p>Après ça, <code>nvidia-smi</code> est remonté proprement avec la carte et la version du pilote. Rien dans l'installation n'échoue bruyamment quand on saute cette étape.</p>
 
 <figure>
 <svg viewBox="0 0 720 560" role="img" aria-label="Un organigramme vertical de l'installation du pilote : ajouter les sources, mettre nouveau en liste noire, installer les en-têtes et le pilote via DKMS, puis une décision Secure Boot qui soit enrôle une MOK, soit passe directement au redémarrage, pour finir sur un nvidia-smi qui fonctionne." xmlns="http://www.w3.org/2000/svg">
@@ -135,6 +138,6 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 
 <h2>Ce que j'ai récupéré</h2>
 
-<p>Un <code>nvidia-smi</code> nu, la carte entière sans machine virtuelle en travers, et un nœud qui fait maintenant tourner mon travail de mesure d'énergie Kokkos directement contre le matériel plutôt qu'à travers un invité. Le reste du cluster est toujours sous Proxmox : ces nœuds font le travail de consolidation pour lequel Proxmox est bon. Ce nœud ne faisait pas ce travail.</p>
+<p>Un <code>nvidia-smi</code> nu, la carte entière sans machine virtuelle en travers, et un nœud qui fait tourner mes builds CUDA et Kokkos directement sur le matériel plutôt qu'à travers un invité. Le reste du cluster est toujours sous Proxmox : ces nœuds font le travail de consolidation pour lequel Proxmox est bon. Ce nœud ne faisait pas ce travail.</p>
 
-<p>Reste à câbler la télémétrie de puissance de la machine dans le même tableau de bord que le travail GPU, pour que le nœud rapporte les joules par exécution à côté de l'utilisation. Garder un nœud sur métal nu au milieu d'un cluster Proxmox reste bancal côté supervision : pour l'instant il vit à côté du rang, pas dedans.</p>
+<p>Garder un nœud sur métal nu à côté d'un cluster Proxmox restait bancal côté supervision : il fallait le surveiller à part, hors des outils qui couvrent tous les autres nœuds. Le nœud est depuis revenu sous Proxmox (voir la mise à jour en tête d'article).</p>
