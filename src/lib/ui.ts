@@ -83,7 +83,7 @@ export interface BlogStrings {
   readonly authorTagline: string;
   readonly authorAvailable: string;
   readonly contactCta: string;
-  /** Recruiter call to action closing the blog index. */
+  /** Call to action closing the blog index. */
   readonly talkHead: string;
 }
 
@@ -91,7 +91,7 @@ export interface UIStrings {
   readonly skipToContent: string;
   /** Default <title> and meta description for the layout. */
   readonly metaDescription: string;
-  /** Shared recruiter-oriented subject for sitewide contact mailto links. */
+  /** Shared subject for sitewide contact mailto links. */
   readonly contactMailSubject: string;
   readonly hero: HeroStrings;
   /** Keyed by section id (work, expertise, about, contact). */

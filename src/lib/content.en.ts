@@ -1,13 +1,6 @@
 /**
  * English site content (the default locale, served at /).
  * Shape defined by SiteContent in content.types.ts. House style: no em dashes.
- *
- * Tone rules. The reader is often a recruiter: never say so.
- * - Do not name the reader ("an employer", "your team").
- * - Do not award yourself the verdict ("proof of", "and it is real",
- *   "not just X"): state the fact, let the reader conclude.
- * - No "concrete fact, then It is [abstract label]".
- * - No HR franglais (delivery, leadership, ownership, impact).
  */
 import type { SiteContent } from "./content.types";
 

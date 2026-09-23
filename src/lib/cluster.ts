@@ -98,7 +98,7 @@ export interface ClusterContent {
     readonly servicesUp: string;
     readonly uptime: string;
   };
-  /** Recruiter call to action closing the page (no dead end). */
+  /** Call to action closing the page (no dead end). */
   readonly talk: {
     readonly kicker: string;
     readonly head: string;

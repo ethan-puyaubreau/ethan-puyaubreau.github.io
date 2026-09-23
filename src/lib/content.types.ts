@@ -68,7 +68,7 @@ export interface Availability {
   readonly cta: string;
   /** Label for the low-friction contact button, e.g. "Get in touch". */
   readonly contactLabel: string;
-  /** Pre-filled subject for the contact mailto, recruiter-oriented. */
+  /** Pre-filled subject for the contact mailto. */
   readonly mailSubject: string;
 }
 

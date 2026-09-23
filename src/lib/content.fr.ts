@@ -3,16 +3,7 @@
  * Forme définie par SiteContent dans content.types.ts. Style maison : aucun
  * tiret cadratin (—) dans le texte visible ; virgules, deux-points, parenthèses.
  *
- * Traduction tenue, pas littérale : voix sobre, précise, à la première
- * personne. Termes techniques et noms propres inchangés (CUDA, Kokkos, GPU,
- * HPC, etc.).
- *
- * Règles de ton. Le lecteur est souvent un recruteur : ne jamais le dire.
- * - Ne pas nommer le lecteur (« un employeur », « votre équipe »).
- * - Ne pas s'auto-décerner de verdict (« une preuve de », « et c'est réel »,
- *   « pas seulement X ») : poser le fait, laisser conclure.
- * - Pas de « fait concret, puis C'est [étiquette abstraite] ».
- * - Pas de franglais RH (delivery, leadership, ownership, impact).
+ * Termes techniques et noms propres inchangés (CUDA, Kokkos, GPU, HPC, etc.).
  */
 import type { SiteContent } from "./content.types";
 
