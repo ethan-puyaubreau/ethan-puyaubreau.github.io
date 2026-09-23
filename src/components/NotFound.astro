@@ -1,0 +1,66 @@
+---
+// Shared 404 composition, rendered by both /404 (EN) and /fr/404 (FR).
+// Minimal by design (no nav), matching the original. House style: no em dashes.
+import Base from "../layouts/Base.astro";
+import { site } from "../lib/site";
+import { getUI } from "../lib/ui";
+import { type Locale, localeHome } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const ui = getUI(locale);
+const home = localeHome(locale);
+---
+
+<Base
+  locale={locale}
+  title={`${ui.notFoundTitle} · ${site.name}`}
+  description={ui.notFoundDescription}
+>
+  <main id="main" class="container nf">
+    <p class="label">{ui.notFoundKicker}</p>
+    <h1>{ui.notFoundTitle}</h1>
+    <p class="nf-lede">{ui.notFoundLede}</p>
+    <a class="nf-back" href={home}>
+      <span aria-hidden="true">←</span>
+      {ui.notFoundBack}
+    </a>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-s);
+  }
+  .nf h1 {
+    font-size: var(--step-7);
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .nf-lede {
+    color: var(--ink-dim);
+    max-width: 44ch;
+  }
+  .nf-back {
+    margin-top: var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 2px;
+    align-self: flex-start;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .nf-back:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+</style>

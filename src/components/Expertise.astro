@@ -1,0 +1,100 @@
+---
+import type { Domain } from "../lib/content";
+
+interface Props {
+  domains: readonly Domain[];
+  provenByLabel: string;
+}
+const { domains, provenByLabel } = Astro.props;
+---
+
+<div class="domains">
+  {
+    domains.map((d) => (
+      <section class="domain" data-reveal>
+        <div class="domain-head">
+          <h3>{d.title}</h3>
+          <a class="proven" href={`#${d.provenBy.id}`}>
+            <span class="label">{provenByLabel}</span> {d.provenBy.label}{" "}
+            <span aria-hidden="true">↘</span>
+          </a>
+        </div>
+        <p class="domain-blurb">{d.blurb}</p>
+        <ul class="domain-items">
+          {d.items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .domains {
+    display: grid;
+    gap: 0;
+  }
+  .domain {
+    display: grid;
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    gap: clamp(1rem, 4vw, 3rem);
+    padding-block: var(--space-m);
+    border-top: 1px solid var(--hairline);
+    align-items: start;
+  }
+  .domain-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+  .domain-head h3 {
+    font-size: var(--step-2);
+  }
+  .proven {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--ink-dim);
+    align-self: start;
+    border-bottom: 1px solid transparent;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .proven .label {
+    color: var(--muted);
+  }
+  .proven:hover {
+    color: var(--accent);
+  }
+  .domain-blurb {
+    color: var(--ink-dim);
+    grid-column: 2;
+    margin-bottom: var(--space-s);
+  }
+  .domain-items {
+    grid-column: 2;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.5rem;
+  }
+  .domain-items li {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 0.25rem 0.6rem;
+  }
+
+  @media (max-width: 720px) {
+    .domain {
+      grid-template-columns: 1fr;
+      gap: var(--space-xs);
+    }
+    .domain-blurb,
+    .domain-items {
+      grid-column: 1;
+    }
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+import { getCollection } from "astro:content";
+import BlogPost from "../../components/BlogPost.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", (p) => p.data.lang === "en" && !p.data.draft);
+  const slugs = posts.map((p) => p.data.slug);
+  const dup = slugs.find((s, i) => slugs.indexOf(s) !== i);
+  if (dup) throw new Error(`Duplicate EN blog slug: ${dup}`);
+  return posts.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+
+<BlogPost locale="en" entry={entry} />

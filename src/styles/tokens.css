@@ -1,0 +1,109 @@
+/*
+ * Design tokens — "technical journal × scientific instrument".
+ * Light by default: warm paper, near-black ink, one warm-red accent held with
+ * discipline. The hero is a dark plate — see `.theme-dark`, which re-scopes the
+ * same semantic tokens so every component works on both grounds unchanged.
+ */
+:root {
+  color-scheme: light;
+
+  /* ---------- color (paper) ---------- */
+  --bg: #f3efe6; /* warm paper */
+  --bg-raised: #fbf8f1; /* cards, palette, wells that lift */
+  --bg-sunken: #e8e3d6; /* recessed wells, code */
+  --ink: #1b1813; /* near-black, warm */
+  --ink-dim: #494438; /* secondary prose (AA on paper) */
+  --muted: #645d4f; /* meta / small caps labels (AA) */
+  --faint: #ada592; /* ticks, disabled, hairline marks */
+  --accent: #8a5e00; /* the accent: a warm gold, AA on paper (~5:1) */
+  --accent-soft: #b5822a; /* decorative only (borders/hover); never carries text */
+  --accent-deep: #6e4b00; /* darker gold for kickers / hover (~6.8:1 on paper) */
+  --line: rgb(27 24 19 / 0.16); /* hairline rules, ink-tinted */
+  --line-strong: rgb(27 24 19 / 0.32);
+  --hairline: rgb(27 24 19 / 0.09); /* faintest divider */
+  --ok: #2f7d4f;
+  --warn: #b06a14;
+  --down: #c0392b;
+
+  /* ---------- type ---------- */
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Archivo Variable", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* fluid modular scale, ~1.25 (minor third), clamped 320 → 1280px */
+  --step--2: clamp(0.69rem, 0.66rem + 0.13vw, 0.76rem);
+  --step--1: clamp(0.83rem, 0.79rem + 0.2vw, 0.95rem);
+  --step-0: clamp(1rem, 0.94rem + 0.3vw, 1.19rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.49vw, 1.48rem);
+  --step-2: clamp(1.44rem, 1.29rem + 0.74vw, 1.85rem);
+  --step-3: clamp(1.73rem, 1.51rem + 1.1vw, 2.31rem);
+  --step-4: clamp(2.07rem, 1.75rem + 1.61vw, 2.89rem);
+  --step-5: clamp(2.49rem, 2.02rem + 2.33vw, 3.62rem);
+  --step-6: clamp(2.99rem, 2.33rem + 3.3vw, 4.52rem);
+  --step-7: clamp(3.58rem, 2.66rem + 4.62vw, 5.65rem);
+
+  --tracking-label: 0.16em;
+  --tracking-wide: 0.03em;
+  --tracking-tight: -0.014em;
+  --leading-tight: 1.05;
+  --leading-snug: 1.28;
+  --leading-prose: 1.6;
+  --measure: 66ch;
+
+  /* ---------- space (8px base; fluid gutter) ---------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6.5rem;
+  --space-3xl: 9.5rem;
+  --gutter: clamp(1.125rem, 0.6rem + 2.6vw, 2.75rem);
+  --content-max: 78rem;
+  --prose-max: 42rem;
+  /* The header bar runs wider than the content column so the brand, the section
+     nav, two pills, the language switch and the palette never crowd or wrap. */
+  --header-max: 92rem;
+  --header-gutter: clamp(1.125rem, 0.6rem + 3.4vw, 4rem);
+
+  /* ---------- motion ---------- */
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 560ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---------- structure ---------- */
+  --radius: 1px; /* near-sharp; an instrument, not a bubble */
+  --border: 1px;
+  --z-nav: 50;
+  --z-overlay: 40;
+  --z-palette: 100;
+}
+
+/*
+ * Dark plate — the hero, and the nav while it floats over the hero. Re-scopes
+ * the same semantic tokens to a near-black ground with a warm accent that sits
+ * with the amber galaxy. Components inside need no special-casing.
+ */
+.theme-dark {
+  color-scheme: dark;
+  color: var(--ink);
+  background-color: var(--bg);
+
+  --bg: #08090c;
+  --bg-raised: #12141b;
+  --bg-sunken: #050609;
+  --ink: #f1ede3;
+  --ink-dim: #cbc6b8;
+  --muted: #8c8779;
+  --faint: #565249;
+  --accent: #f0b429; /* bright gold on the dark plate (~10.6:1) */
+  --accent-soft: #ffd76a;
+  --accent-deep: #c98427;
+  --line: rgb(241 237 227 / 0.14);
+  --line-strong: rgb(241 237 227 / 0.3);
+  --hairline: rgb(241 237 227 / 0.1);
+}

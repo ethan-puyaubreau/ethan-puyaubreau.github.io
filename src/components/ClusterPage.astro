@@ -1,0 +1,420 @@
+---
+// Shared composition for the cluster page. Both routes (src/pages/cluster.astro
+// EN, src/pages/fr/cluster.astro FR) render this with their locale, so the
+// structure lives in one place. House style: no em dashes.
+import Base from "../layouts/Base.astro";
+import SiteHeader from "./SiteHeader.astro";
+import SiteFooter from "./SiteFooter.astro";
+import SectionHeader from "./SectionHeader.astro";
+import ClusterField from "../islands/ClusterField.vue";
+import ClusterNodes from "../islands/ClusterNodes.vue";
+import ClusterPulse from "../islands/ClusterPulse.vue";
+import ClusterServices from "../islands/ClusterServices.vue";
+import ClusterConsole from "../islands/ClusterConsole.vue";
+import RequestPath from "./RequestPath.astro";
+import DeployPipeline from "./DeployPipeline.astro";
+import { getUI } from "../lib/ui";
+import { getClusterContent } from "../lib/cluster";
+import { site } from "../lib/site";
+import { localeHome, blogHome, type Locale } from "../lib/i18n";
+import snapshot from "../data/cluster-snapshot.json";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const ui = getUI(locale);
+const c = getClusterContent(locale);
+
+// Per-locale URL so the language switch stays on this page.
+const langPaths: Partial<Record<Locale, string>> = { en: "/cluster", fr: "/fr/cluster" };
+
+// Hero title carries one accented word, assembled as HTML to keep exact spacing.
+const esc = (s: string): string =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const heroTitle = `${esc(c.hero.lead)}<em>${esc(c.hero.em)}</em>${esc(c.hero.tail)}`;
+
+const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
+  locale === "fr" ? "fr-FR" : "en-US",
+  {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  },
+);
+---
+
+<Base locale={locale} title={c.meta.title} description={c.meta.description}>
+  <SiteHeader
+    locale={locale}
+    sections={c.sections}
+    ui={ui}
+    brandHref={localeHome(locale)}
+    langPaths={langPaths}
+  />
+
+  <main id="main" tabindex="-1">
+    <section id="top" class="hero theme-dark">
+      <ClusterField client:only="vue" strings={c.field} nodes={c.nodes} />
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-overlay container">
+        <p class="label hero-kicker">{c.hero.kicker}</p>
+        <h1 class="hero-title" set:html={heroTitle} />
+        <p class="hero-lede">{c.hero.lede}</p>
+        <a class="hero-cue" href="#nodes">
+          <span>{c.hero.cue}</span>
+          <span class="arrow" aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="container">
+      <section id="nodes">
+        <SectionHeader num="01" label={c.sections[0].label} title={c.nodesHead.title}>
+          {c.nodesHead.intro}
+        </SectionHeader>
+        <div class="pulse-wrap" data-reveal>
+          <ClusterPulse
+            client:visible
+            strings={c.pulse}
+            agg={snapshot.cluster}
+            cpuHist={snapshot.history.map((h) => h.cpuPct)}
+            memHist={snapshot.history.map((h) => h.memPct)}
+            asOf={asOf}
+          />
+        </div>
+        <ClusterNodes
+          client:visible
+          strings={c.live}
+          nodes={c.nodes}
+          snapshot={snapshot.nodes}
+          asOf={asOf}
+        />
+      </section>
+
+      <section id="path">
+        <SectionHeader num="02" label={c.sections[1].label} title={c.pathHead.title}>
+          {c.pathHead.intro}
+        </SectionHeader>
+        <RequestPath stages={c.path} label={c.pathHead.title} />
+      </section>
+
+      <section id="services">
+        <SectionHeader num="03" label={c.sections[2].label} title={c.servicesHead.title}>
+          {c.servicesHead.intro}
+        </SectionHeader>
+        <ClusterServices
+          client:visible
+          strings={c.services}
+          up={snapshot.servicesUp}
+          total={snapshot.servicesTotal}
+        />
+      </section>
+
+      <section id="pipeline">
+        <SectionHeader num="04" label={c.sections[3].label} title={c.pipelineHead.title}>
+          {c.pipelineHead.intro}
+        </SectionHeader>
+        <DeployPipeline
+          stages={c.pipeline.stages}
+          buildLabel={c.pipeline.buildLabel}
+          note={c.pipeline.note}
+        />
+      </section>
+
+      <section id="stack">
+        <SectionHeader num="05" label={c.sections[4].label} title={c.stackHead.title}>
+          {c.stackHead.intro}
+        </SectionHeader>
+        <ul class="stack-grid" aria-label={c.stackHead.title}>
+          {
+            c.stack.map((s, i) => (
+              <li class="stack-item" data-reveal style={`--ri:${i}`}>
+                <span class="stack-name">{s.name}</span>
+                <span class="stack-note">{s.note}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="field-note">{c.field.note}</p>
+      </section>
+
+      <section id="operations">
+        <SectionHeader num="06" label={c.sections[5].label} title={c.opsHead.title}>
+          {c.opsHead.intro}
+        </SectionHeader>
+        <div class="ops" data-reveal>
+          <p class="ops-oncall">{c.ops.oncall}</p>
+          <p class="ops-monitor">{c.ops.monitoring}</p>
+          <div class="ops-runbooks">
+            <h3 class="ops-rb-title">{c.ops.runbooksTitle}</h3>
+            <p>{c.ops.runbooksBody}</p>
+          </div>
+        </div>
+        <ClusterConsole
+          client:visible
+          strings={c.console}
+          nodesOnline={snapshot.cluster.nodesOnline}
+          nodesTotal={snapshot.cluster.nodesTotal}
+          servicesUp={snapshot.servicesUp}
+          servicesTotal={snapshot.servicesTotal}
+          uptimeDays={snapshot.uptimeDays}
+          nodes={snapshot.nodes}
+        />
+      </section>
+
+      <aside id="hire" class="talk" data-reveal>
+        <p class="talk-kicker">{c.talk.kicker}</p>
+        <h2 class="talk-head">{c.talk.head}</h2>
+        <p class="talk-body">{c.talk.body}</p>
+        <a
+          class="talk-cta"
+          href={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}
+          >{c.talk.cta} <span class="arrow" aria-hidden="true">&#8594;</span></a
+        >
+      </aside>
+    </div>
+  </main>
+
+  <SiteFooter
+    colophon={ui.colophon}
+    buildLabel={ui.footerBuildLabel}
+    commitLabel={ui.footerCommit}
+    builtLabel={ui.footerBuilt}
+    contactHref={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}
+    contactLabel={ui.blog.contactCta}
+    owner={site.name}
+    blogHref={blogHome(locale)}
+  />
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(80deg, rgb(6 7 10 / 0.86) 0%, rgb(6 7 10 / 0.4) 34%, transparent 62%),
+      linear-gradient(to top, rgb(6 7 10 / 0.78) 0%, rgb(6 7 10 / 0.14) 30%, transparent 56%);
+  }
+  .hero-overlay {
+    position: relative;
+    z-index: 2;
+    padding-bottom: var(--space-2xl);
+    padding-top: calc(3.5rem + var(--space-xl));
+    pointer-events: none;
+  }
+  .hero-overlay a {
+    pointer-events: auto;
+  }
+  .hero-kicker {
+    margin-bottom: var(--space-m);
+  }
+  .hero-title {
+    font-size: var(--step-7);
+    max-width: 15ch;
+    font-weight: 480;
+    text-shadow: 0 2px 34px rgb(0 0 0 / 0.55);
+  }
+  .hero-title :global(em) {
+    font-style: italic;
+    font-weight: 460;
+    color: var(--accent);
+  }
+  .hero-lede {
+    margin-top: var(--space-l);
+    max-width: 56ch;
+    color: var(--ink-dim);
+    font-size: var(--step-1);
+    text-shadow: 0 1px 24px rgb(0 0 0 / 0.6);
+  }
+  .hero-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: var(--space-l);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--ink-dim);
+  }
+  .hero-cue:hover {
+    color: var(--accent);
+  }
+  .hero-cue .arrow {
+    animation: nudge 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes nudge {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(3px);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-overlay > * {
+      animation: reveal var(--dur-slow) var(--ease-out) backwards;
+    }
+    .hero-kicker {
+      animation-delay: 0.1s;
+    }
+    .hero-title {
+      animation-delay: 0.22s;
+    }
+    .hero-lede {
+      animation-delay: 0.5s;
+    }
+    .hero-cue {
+      animation-delay: 0.72s;
+    }
+  }
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cue .arrow {
+      animation: none;
+    }
+  }
+
+  main > .container > section {
+    scroll-margin-top: 4.5rem;
+  }
+  .pulse-wrap {
+    max-width: 42rem;
+    margin-top: var(--space-l);
+  }
+  #operations {
+    padding-bottom: var(--space-xl);
+  }
+  .ops {
+    margin-top: var(--space-l);
+    display: grid;
+    gap: var(--space-m);
+    max-width: var(--measure);
+  }
+  .ops-oncall {
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+  .ops-monitor {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent-deep);
+  }
+  .ops-runbooks {
+    border-left: 2px solid var(--accent);
+    padding-left: var(--space-m);
+  }
+  .ops-rb-title {
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+    margin-bottom: var(--space-2xs);
+  }
+  .ops-runbooks p {
+    color: var(--ink-dim);
+  }
+
+  .stack-grid {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-l) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .stack-item {
+    background: var(--bg);
+    padding: var(--space-s) var(--space-m);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .stack-name {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink);
+    letter-spacing: var(--tracking-wide);
+  }
+  .stack-note {
+    font-size: var(--step--2);
+    color: var(--muted);
+  }
+  .field-note {
+    margin-top: var(--space-l);
+    max-width: var(--measure);
+    font-size: var(--step--2);
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Recruiter call to action: closes the page instead of dead-ending on the console. */
+  .talk {
+    margin-block: var(--space-2xl) var(--space-xl);
+    padding: var(--space-l);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
+    max-width: var(--measure);
+  }
+  .talk-kicker {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent-deep);
+  }
+  .talk-head {
+    margin-top: var(--space-2xs);
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    color: var(--ink);
+    max-width: 22ch;
+  }
+  .talk-body {
+    margin-top: var(--space-s);
+    color: var(--ink-dim);
+    max-width: 52ch;
+  }
+  .talk-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+    color: var(--accent);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 3px;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .talk-cta:hover {
+    border-color: var(--accent);
+  }
+  .talk-cta .arrow {
+    transition: transform var(--dur) var(--ease-smooth);
+  }
+  .talk-cta:hover .arrow {
+    transform: translateX(4px);
+  }
+</style>

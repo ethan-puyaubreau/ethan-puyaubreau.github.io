@@ -1,0 +1,139 @@
+---
+import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/fraunces/full-italic.css";
+import "@fontsource-variable/archivo";
+import "@fontsource-variable/jetbrains-mono";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { site, links, getSiteCopy } from "../lib/site";
+import {
+  type Locale,
+  toLocale,
+  HTML_LANG,
+  OG_LOCALE,
+  isPairedPath,
+  logicalPath,
+  cleanPathname,
+} from "../lib/i18n";
+import { getUI } from "../lib/ui";
+
+interface Props {
+  locale?: Locale;
+  title?: string;
+  description?: string;
+  /** og:type. Blog posts pass "article"; everything else stays "website". */
+  ogType?: "website" | "article";
+  /** Override locale pairing for hreflang/og alternates. An EN-only blog post
+      sets this false so we never emit an alternate to a 404. Defaults to
+      path-based detection (isPairedPath). */
+  paired?: boolean;
+}
+
+const locale = Astro.props.locale ?? toLocale(Astro.currentLocale);
+const copy = getSiteCopy(locale);
+const ui = getUI(locale);
+
+const {
+  title = `${site.name} · ${copy.role}`,
+  description = ui.metaDescription,
+  ogType = "website",
+  paired,
+} = Astro.props;
+
+const ogImageUrl = new URL("/og.png", site.url).href;
+const ogImageAlt = `${site.name}, ${copy.role}`;
+
+// Strip the root's trailing slash so the canonical matches the hreflang
+// alternates (getAbsoluteLocaleUrl yields no slash under trailingSlash: never).
+// cleanPathname also drops the on-disk ".html" suffix build.format: "file"
+// leaves in Astro.url.pathname (see its doc comment in lib/i18n.ts).
+const canonical =
+  new URL(cleanPathname(Astro.url.pathname), Astro.site ?? site.url).href.replace(/\/$/, "") ||
+  site.url;
+const buildSha = (import.meta.env.PUBLIC_BUILD_SHA ?? "dev").slice(0, 7);
+
+// Canonical + hreflang for every locale-paired route (/, /cluster). 404 and
+// /og are not paired, so they get neither.
+const logical = logicalPath(Astro.url.pathname);
+const isPaired = paired ?? isPairedPath(logical);
+const alternates = isPaired
+  ? [
+      { hreflang: "en", href: getAbsoluteLocaleUrl("en", logical) },
+      { hreflang: "fr", href: getAbsoluteLocaleUrl("fr", logical) },
+      { hreflang: "x-default", href: getAbsoluteLocaleUrl("en", logical) },
+    ]
+  : [];
+
+// Scroll reveal: tag html.reveal, then reveal [data-reveal] elements as they
+// enter view (one-shot, unobserved after). Runs in both motion modes (the CSS
+// makes it a plain opacity fade under reduced motion, fade + rise otherwise);
+// a no-op without JS, so content is never trapped hidden. CSS in global.css.
+const revealScript = `(function(){try{var d=document;d.documentElement.classList.add('reveal');var run=function(){var els=d.querySelectorAll('[data-reveal]');if(!('IntersectionObserver'in window)){els.forEach(function(el){el.classList.add('in-view');});return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in-view');io.unobserve(e.target);}});},{rootMargin:'0px 0px -15% 0px',threshold:0.12});els.forEach(function(el){io.observe(el);});};if(d.readyState!=='loading')run();else d.addEventListener('DOMContentLoaded',run);}catch(e){}})();`;
+
+// Structured data ties this domain to the ORCID and Google Scholar records.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${site.url}#person`,
+  name: site.name,
+  url: site.url,
+  email: `mailto:${site.email}`,
+  jobTitle: copy.role,
+  sameAs: links.filter((l) => l.confirmed && l.href).map((l) => l.href),
+};
+---
+
+<!doctype html>
+<html lang={HTML_LANG[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} blog`}
+      href={locale === "fr" ? "/fr/rss.xml" : "/rss.xml"}
+    />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f3efe6" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={OG_LOCALE[locale]} />
+    {
+      isPaired &&
+        (Object.keys(OG_LOCALE) as Locale[])
+          .filter((l) => l !== locale)
+          .map((l) => <meta property="og:locale:alternate" content={OG_LOCALE[l]} />)
+    }
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <meta name="generator" content={Astro.generator} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline set:html={revealScript} />
+  </head>
+  <body data-build={buildSha} data-locale={locale}>
+    <a class="skip-link" href="#main">{ui.skipToContent}</a>
+    <slot />
+  </body>
+</html>

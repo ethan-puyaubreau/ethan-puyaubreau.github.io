@@ -1,0 +1,140 @@
+---
+title: "Tearing the GPU node down from Proxmox to bare Debian"
+description: "The GPU node ran Proxmox. I wiped it for bare Debian 13 so the GPU would answer to one machine instead of a hypervisor, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that bit me was Secure Boot."
+pubDate: 2026-06-18
+lang: en
+slug: gpu-debian-nvidia
+tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
+---
+
+<p>The GPU node in my homelab is a single-socket Xeon workstation that for a year ran Proxmox like the rest of the cluster. Last week I wiped it and reinstalled bare Debian 13 (Trixie), because the one job I actually want from that box, running CUDA workloads against its GPU, is the one job a hypervisor makes harder rather than easier. The reinstall took twenty minutes. Getting the driver to load took the rest of the evening, almost all of it on a single thing nobody warns you about: Secure Boot silently refusing an unsigned module.</p>
+
+<p>The order of operations that actually works on Trixie is only a few steps, one of which is documented nowhere.</p>
+
+<h2>Why a hypervisor was the wrong layer here</h2>
+
+<p>Proxmox earns its place when you are consolidating many guests onto one machine. GPU compute is the opposite shape. To give a virtual machine a real GPU you go through VFIO passthrough, the mechanism that detaches a device from the host and hands it to a guest. That means sorting out IOMMU groups, the device blocks the hardware refuses to separate, blacklisting the host from ever binding the card, then handing the whole device to exactly one guest. You end up talking to your GPU through a virtual machine, the card can only ever belong to one VM at a time anyway, and you are carrying all of that machinery for a node that does precisely one thing.</p>
+
+<p>A box whose entire purpose is one GPU does not need a hypervisor sitting between me and <code>nvidia-smi</code>. Remove the layer and the card is back on bare metal, with the passthrough tax gone along with it.</p>
+
+<figure>
+<svg viewBox="0 0 720 340" role="img" aria-label="Two software stacks compared. The Proxmox stack has five layers with VFIO passthrough as friction; the bare Debian stack has four layers with the GPU directly under the kernel." xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ar-u1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2620"/>
+    </marker>
+  </defs>
+  <text x="180" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">Before — Proxmox node</text>
+  <text x="540" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">After — bare Debian 13</text>
+  <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620" text-anchor="middle">
+    <rect x="60" y="54"  width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="180" y="79">CUDA workload (inside the guest)</text>
+    <rect x="60" y="106" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="180" y="131">VM — guest OS + NVIDIA driver</text>
+    <rect x="60" y="158" width="240" height="40" rx="7" fill="#f3e2db" stroke="#b3563a" stroke-width="1.3"/>
+    <text x="180" y="183" fill="#8a3a22">VFIO passthrough</text>
+    <rect x="60" y="210" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="180" y="235">Proxmox host — kernel + KVM</text>
+    <rect x="60" y="262" width="240" height="40" rx="7" fill="#e7e1d4" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="180" y="287">GPU</text>
+  </g>
+  <text x="180" y="322" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#8a3a22">one VM owns the card · the driver lives in the guest</text>
+  <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620" text-anchor="middle">
+    <rect x="420" y="80"  width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="540" y="105">CUDA workload</text>
+    <rect x="420" y="132" width="240" height="40" rx="7" fill="#e7efe0" stroke="#5f8a3a" stroke-width="1.3"/>
+    <text x="540" y="157" fill="#3f6326">nvidia.ko (DKMS-built)</text>
+    <rect x="420" y="184" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="540" y="209">Debian 13 kernel</text>
+    <rect x="420" y="236" width="240" height="40" rx="7" fill="#e7e1d4" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="540" y="261">GPU</text>
+  </g>
+  <text x="540" y="300" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#3f6326">the card answers to the kernel directly</text>
+  <line x1="314" y1="162" x2="404" y2="162" stroke="#2b2620" stroke-width="3" marker-end="url(#ar-u1)"/>
+  <text x="359" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-style="italic" fill="#6b6258">collapse the stack</text>
+</svg>
+<figcaption>The same hardware, two stacks. Passthrough buys flexibility a single-purpose GPU node never uses.</figcaption>
+</figure>
+
+<h2>Blacklisting nouveau, the part that is easy to forget</h2>
+
+<p>Debian ships <code>nouveau</code>, the open-source driver, and loads it at boot. The proprietary module will not bind while nouveau is holding the card, so the first move is to blacklist it and rebuild the initramfs, so the change is in place from early boot rather than after the kernel has already claimed the GPU.</p>
+
+<pre><code># /etc/modprobe.d/blacklist-nouveau.conf
+blacklist nouveau
+options nouveau modeset=0
+
+# then regenerate the initramfs so it sticks at boot
+sudo update-initramfs -u</code></pre>
+
+<h2>The driver itself: let DKMS do the building</h2>
+
+<p>Trixie keeps the NVIDIA driver in the <code>non-free</code> component and its firmware in <code>non-free-firmware</code>, so the sources have to be widened before any of it is installable. Then you install the kernel headers and the driver package, and Debian uses DKMS, the mechanism that rebuilds kernel modules on every upgrade, to compile the module against your running kernel. Hence the packaged driver rather than the <code>.run</code> installer: DKMS rebuilds the module automatically on the next kernel upgrade, so an <code>apt upgrade</code> does not quietly leave you with a black screen.</p>
+
+<pre><code># add  contrib non-free non-free-firmware  to your apt sources, then:
+sudo apt update
+sudo apt install linux-headers-amd64 nvidia-driver</code></pre>
+
+<h2>Secure Boot, or why nvidia-smi lied to me</h2>
+
+<p>After the reboot I ran <code>nvidia-smi</code> and got this:</p>
+
+<pre><code>$ nvidia-smi
+NVIDIA-SMI has failed because it couldn't communicate with the
+NVIDIA driver. Make sure that the latest NVIDIA driver is installed
+and running.</code></pre>
+
+<p>The card was fine and the module had built without complaint. The kernel was simply refusing to load it, because Secure Boot was on and a DKMS-built module is unsigned. There are two ways out. You can turn Secure Boot off in firmware, or you can enroll a Machine Owner Key, sign the module with it, and keep the chain of trust intact. I kept Secure Boot and enrolled a key, which is a one-time dance through the firmware on the next reboot.</p>
+
+<pre><code># enroll the DKMS signing key, set a one-time password, then reboot
+sudo mokutil --import /var/lib/dkms/mok.pub
+# at the blue MOK manager on reboot: Enroll MOK, enter the password, reboot</code></pre>
+
+<p>After that, <code>nvidia-smi</code> came up clean with the card and driver version. No install log mentions that step.</p>
+
+<figure>
+<svg viewBox="0 0 720 560" role="img" aria-label="A vertical flowchart of the driver install: add sources, blacklist nouveau, install headers and driver via DKMS, then a Secure Boot decision that either enrolls a MOK or proceeds straight to reboot, ending at a working nvidia-smi." xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ar-u2" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2620"/>
+    </marker>
+  </defs>
+  <g font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="12" fill="#2b2620" text-anchor="middle">
+    <rect x="120" y="36" width="360" height="56" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="300" y="60">add contrib non-free non-free-firmware</text>
+    <text x="300" y="78">to /etc/apt/sources.list</text>
+    <rect x="120" y="110" width="360" height="48" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="300" y="139">blacklist nouveau, update-initramfs -u</text>
+    <rect x="120" y="184" width="360" height="56" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="300" y="208">apt install linux-headers-amd64 nvidia-driver</text>
+    <text x="300" y="226" fill="#6b6258">(DKMS builds against your kernel)</text>
+  </g>
+  <polygon points="300,258 382,300 300,342 218,300" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+  <text x="300" y="304" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620">Secure Boot on?</text>
+  <rect x="475" y="274" width="206" height="52" rx="8" fill="#f6ead2" stroke="#c8821e" stroke-width="1.4"/>
+  <text x="578" y="296" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12.5" fill="#7a4e10">enroll a MOK, sign the module</text>
+  <text x="578" y="313" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" font-style="italic" fill="#9a6a1e">the step that bites you</text>
+  <rect x="190" y="400" width="220" height="48" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+  <text x="300" y="429" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620">reboot</text>
+  <rect x="120" y="476" width="360" height="48" rx="8" fill="#e7efe0" stroke="#5f8a3a" stroke-width="1.4"/>
+  <text x="300" y="505" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#3f6326">nvidia-smi shows the card + driver version</text>
+  <g stroke="#2b2620" stroke-width="1.5" fill="none">
+    <line x1="300" y1="92"  x2="300" y2="108" marker-end="url(#ar-u2)"/>
+    <line x1="300" y1="158" x2="300" y2="182" marker-end="url(#ar-u2)"/>
+    <line x1="300" y1="240" x2="300" y2="256" marker-end="url(#ar-u2)"/>
+    <line x1="300" y1="342" x2="300" y2="398" marker-end="url(#ar-u2)"/>
+    <line x1="382" y1="300" x2="473" y2="300" marker-end="url(#ar-u2)"/>
+    <polyline points="578,326 578,372 300,372"/>
+    <line x1="300" y1="448" x2="300" y2="474" marker-end="url(#ar-u2)"/>
+  </g>
+  <text x="284" y="362" text-anchor="end" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11.5" fill="#6b6258">no</text>
+  <text x="425" y="292" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11.5" fill="#6b6258">yes</text>
+</svg>
+<figcaption>The whole sequence. Every box except the amber one is mechanical; the amber one is where a clean build still gives you a dead <code>nvidia-smi</code>.</figcaption>
+</figure>
+
+<h2>What I got back</h2>
+
+<p>A bare <code>nvidia-smi</code>, the full card with no virtual machine in the way, and a node that now runs my Kokkos energy-measurement work straight against the hardware instead of through a guest. The rest of the cluster is still Proxmox: those nodes are doing the consolidation job Proxmox is good at. This node was not doing that job.</p>
+
+<p>Still to do: wire the box's power telemetry into the same dashboard as the GPU work, so the node reports joules-per-run alongside utilization. Keeping one bare-metal node inside a Proxmox cluster remains awkward on the monitoring side, so for now it lives beside the fold rather than in it.</p>

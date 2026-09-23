@@ -1,0 +1,272 @@
+---
+// Blog index for a locale. Lists published posts in that language, newest first.
+// House style: no em dashes.
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import SiteHeader from "./SiteHeader.astro";
+import SiteFooter from "./SiteFooter.astro";
+import { getUI } from "../lib/ui";
+import { site } from "../lib/site";
+import { type Locale, localeHome, blogHome, blogPost } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const ui = getUI(locale);
+
+const posts = (await getCollection("blog", (p) => p.data.lang === locale && !p.data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+const langPaths: Partial<Record<Locale, string>> = {
+  en: blogHome("en"),
+  fr: blogHome("fr"),
+};
+const fmt = (d: Date): string =>
+  d.toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+---
+
+<Base
+  locale={locale}
+  title={`${ui.blog.indexTitle} · ${site.name}`}
+  description={ui.blog.metaDescription}
+>
+  <SiteHeader
+    locale={locale}
+    sections={[]}
+    ui={ui}
+    brandHref={localeHome(locale)}
+    langPaths={langPaths}
+    solid
+  />
+
+  <main id="main" tabindex="-1" class="index-main">
+    <div class="container">
+      <header class="index-head" data-reveal>
+        <p class="label">{ui.blog.kicker}</p>
+        <h1 class="index-title">{ui.blog.indexTitle}</h1>
+        <p class="index-intro">{ui.blog.indexIntro}</p>
+      </header>
+
+      {
+        posts.length === 0 ? (
+          <p class="empty">{ui.blog.empty}</p>
+        ) : (
+          <Fragment>
+            <a class="featured" href={blogPost(locale, posts[0].data.slug)} data-reveal>
+              <span class="feat-date">{fmt(posts[0].data.pubDate)}</span>
+              <span class="feat-title">{posts[0].data.title}</span>
+              <span class="feat-desc">{posts[0].data.description}</span>
+              <span class="feat-cta">
+                {ui.blog.readArticle}{" "}
+                <span class="arrow" aria-hidden="true">
+                  →
+                </span>
+              </span>
+            </a>
+            {posts.length > 1 && (
+              <ul class="post-list">
+                {posts.slice(1).map((p, i) => (
+                  <li class="post-row" data-reveal style={`--ri:${i}`}>
+                    <a href={blogPost(locale, p.data.slug)}>
+                      <span class="row-date">{fmt(p.data.pubDate)}</span>
+                      <span class="row-title">{p.data.title}</span>
+                      <span class="row-desc">{p.data.description}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Fragment>
+        )
+      }
+
+      <aside class="talk" data-reveal>
+        <h2 class="talk-head">{ui.blog.talkHead}</h2>
+        <a
+          class="talk-cta"
+          href={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}
+          >{ui.blog.contactCta} <span class="arrow" aria-hidden="true">&#8594;</span></a
+        >
+      </aside>
+    </div>
+  </main>
+
+  <SiteFooter
+    colophon={ui.colophon}
+    buildLabel={ui.footerBuildLabel}
+    commitLabel={ui.footerCommit}
+    builtLabel={ui.footerBuilt}
+    contactHref={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}
+    contactLabel={ui.blog.contactCta}
+    owner={site.name}
+    blogHref={blogHome(locale)}
+  />
+</Base>
+
+<style>
+  .index-main {
+    padding-top: calc(3.5rem + var(--space-xl));
+    padding-bottom: var(--space-2xl);
+  }
+  .index-title {
+    font-family: var(--font-display);
+    font-size: var(--step-5);
+    font-weight: 480;
+    margin-top: var(--space-s);
+  }
+  .index-intro {
+    margin-top: var(--space-m);
+    max-width: 52ch;
+    color: var(--ink-dim);
+    font-size: var(--step-1);
+  }
+  .empty {
+    margin-top: var(--space-xl);
+    color: var(--muted);
+  }
+
+  /* Featured: the newest post as a full-width card, so a young blog still reads
+     as active rather than a single lonely row. */
+  .featured {
+    display: block;
+    margin-top: var(--space-2xl);
+    padding: var(--space-l);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .featured:hover {
+    border-color: var(--accent);
+  }
+  .feat-date {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--muted);
+  }
+  .feat-title {
+    display: block;
+    margin-top: var(--space-s);
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    font-weight: 480;
+    color: var(--ink);
+    max-width: 24ch;
+  }
+  .feat-desc {
+    display: block;
+    margin-top: var(--space-s);
+    max-width: 60ch;
+    color: var(--ink-dim);
+    font-size: var(--step-1);
+  }
+  .feat-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+  }
+  .featured:hover .feat-cta .arrow {
+    transform: translateX(4px);
+  }
+  .feat-cta .arrow {
+    transition: transform var(--dur) var(--ease-smooth);
+  }
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-xl) 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .post-row a {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 0.25rem var(--space-l);
+    padding: var(--space-l) 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .post-row a:hover .row-title {
+    color: var(--accent);
+  }
+  .row-date {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--muted);
+  }
+  .row-title {
+    grid-column: 2;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--ink);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .row-desc {
+    grid-column: 2;
+    margin-top: 0.3rem;
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+  }
+  /* Recruiter call to action: a way to reach out from the blog, not a dead end. */
+  .talk {
+    margin-block: var(--space-2xl) 0;
+    padding: var(--space-l);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+  .talk-head {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--ink);
+    max-width: 30ch;
+  }
+  .talk-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+    color: var(--accent);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 3px;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .talk-cta:hover {
+    border-color: var(--accent);
+  }
+  .talk-cta .arrow {
+    transition: transform var(--dur) var(--ease-smooth);
+  }
+  .talk-cta:hover .arrow {
+    transform: translateX(4px);
+  }
+  @media (max-width: 640px) {
+    .post-row a {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+    .row-title,
+    .row-desc {
+      grid-column: 1;
+    }
+  }
+</style>
