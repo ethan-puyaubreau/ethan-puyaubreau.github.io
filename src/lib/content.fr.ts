@@ -36,7 +36,7 @@ export const fr: SiteContent = {
       stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Python"],
       flagship: true,
       summary:
-        "Outillage de mesure d'énergie pour Kokkos, le cadre de portabilité des performances du Département de l'Énergie américain. Connecteurs intégrés à Kokkos Tools, avec un tableau de bord d'analyse.",
+        "Outillage de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs NVML et Variorum proposés en amont, et un tableau de bord d'analyse.",
       body: [
         {
           h: "Le problème",
@@ -48,7 +48,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Où ça en est",
-          p: "Le démon d'échantillonnage périodique est intégré à kokkos-tools, fait l'objet d'un rapport ORNL et a été présenté sous forme de poster, « Understanding GPU Energy Dynamics in HPC Applications », à la Smoky Mountains Conference 2025. Les connecteurs NVML et Variorum sont en revue, avec ROCm SMI esquissé pour AMD.",
+          p: "Le démon d'échantillonnage périodique est intégré à kokkos-tools (#300) ; le cœur et les connecteurs NVML et Variorum sont proposés en amont (#299, #301, #302), avec ROCm SMI esquissé pour AMD. Les résultats ont donné un poster cosigné avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, « Understanding GPU Energy Dynamics in HPC Applications », présenté à la Smoky Mountains Conference 2025 et cité dans le rapport de projet S4PST 2024–2025 (ORNL/SPR-2026/4406).",
         },
       ],
       links: [
@@ -60,7 +60,8 @@ export const fr: SiteContent = {
           label: "Tableau de bord d'énergie",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
-        { label: "Rapport ORNL", href: "https://www.osti.gov/biblio/3016977" },
+        { label: "Poster SMC 2025", href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/" },
+        { label: "Rapport S4PST (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
       ],
     },
     {
@@ -227,7 +228,7 @@ export const fr: SiteContent = {
   about: [
     "Tout part du même endroit : un cluster que j'ai monté à la maison. J'y mesure l'énergie des GPU et j'y exploite ma propre production, de l'astreinte aux certificats. La page cluster de ce site en sort.",
     "Je mène deux pistes de front. La première, c'est le calcul haute performance : le travail GPU et de performance qui rend un code scientifique rapide. La seconde, c'est l'infrastructure qui met le logiciel en production et l'y maintient : conteneurs, pipelines, reverse proxies, et le cluster en dessous. Les deux se rejoignent vite : le code que j'optimise finit sur des machines que quelqu'un doit exploiter, et j'ai tenu les deux bouts.",
-    "À Oak Ridge National Laboratory, j'ai construit l'outillage de mesure d'énergie GPU pour Kokkos, la couche de portabilité qui fait tourner les codes du Département de l'Énergie américain sur ses supercalculateurs. Le démon d'échantillonnage périodique est intégré en amont dans Kokkos Tools, et le travail est devenu un poster à la Smoky Mountains Conference 2025.",
+    "À Oak Ridge National Laboratory, j'ai construit l'outillage de mesure d'énergie GPU pour Kokkos, la couche de portabilité qui fait tourner les codes du Département de l'Énergie américain sur ses supercalculateurs. Le démon d'échantillonnage périodique est intégré en amont dans Kokkos Tools, et le travail est devenu un poster, cosigné avec mes encadrants de l'ORNL, Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, à la Smoky Mountains Conference 2025.",
     "En parallèle, j'ai passé trois ans en alternance sur le HPC pour la simulation nucléaire chez EDF, et j'exploite mon propre cluster de production de cinq nœuds : une vingtaine de services derrière Traefik et TLS, déployés avec Docker et de la CI/CD, avec scan d'image et rollback automatique. Quand quelque chose casse à trois heures du matin, il n'y a personne d'autre à appeler.",
     "Je termine mon diplôme d'ingénieur à Polytech Paris-Saclay en septembre 2026 et je cherche un CDI à partir de janvier 2027. Les laboratoires HPC sont un terrain naturel, la Bay Area (Berkeley Lab, LLNL) et Paris, le CEA parmi eux, mais l'infrastructure, le DevOps, le SRE et le platform engineering m'intéressent tout autant, sur site ou dans le cloud ; idéalement un poste qui touche aux deux.",
   ],

@@ -31,7 +31,7 @@ export const en: SiteContent = {
       stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Python"],
       flagship: true,
       summary:
-        "Energy-measurement tooling for Kokkos, the US Department of Energy's performance-portability framework. Connectors merged into Kokkos Tools, plus an analysis dashboard.",
+        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, NVML and Variorum connectors open upstream, and an analysis dashboard.",
       body: [
         {
           h: "The problem",
@@ -43,7 +43,7 @@ export const en: SiteContent = {
         },
         {
           h: "Where it stands",
-          p: "The periodic-sampling daemon is merged into kokkos-tools, written up in an ORNL report, and presented as a poster, 'Understanding GPU Energy Dynamics in HPC Applications', at the 2025 Smoky Mountains Conference. The NVML and Variorum connectors are in review, with ROCm SMI sketched for AMD.",
+          p: "The periodic-sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302), with ROCm SMI sketched for AMD. The results became a poster with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, 'Understanding GPU Energy Dynamics in HPC Applications', presented at the 2025 Smoky Mountains Conference and cited in the S4PST 2024–2025 project report (ORNL/SPR-2026/4406).",
         },
       ],
       links: [
@@ -55,7 +55,8 @@ export const en: SiteContent = {
           label: "Energy dashboard",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
-        { label: "ORNL report", href: "https://www.osti.gov/biblio/3016977" },
+        { label: "SMC 2025 poster", href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/" },
+        { label: "S4PST report (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
       ],
     },
     {
@@ -220,7 +221,7 @@ export const en: SiteContent = {
   about: [
     "It all comes from one place: a cluster I built at home. I measure GPU energy and run my own production on it, from on-call to certificates. This site's cluster page comes off it.",
     "I work two tracks at once. One is high-performance computing: the GPU and performance work that makes scientific code fast. The other is the infrastructure that puts software into production and keeps it there: containers, pipelines, reverse proxies, and the cluster underneath. The two meet quickly: the code I tune ends up on machines someone has to operate, and I have worked both ends.",
-    "At Oak Ridge National Laboratory I built GPU energy-measurement tooling for Kokkos, the portability layer that runs US Department of Energy codes on its supercomputers. The periodic-sampling daemon is merged upstream into Kokkos Tools, and the work became a poster at the 2025 Smoky Mountains Conference.",
+    "At Oak Ridge National Laboratory I built GPU energy-measurement tooling for Kokkos, the portability layer that runs US Department of Energy codes on its supercomputers. The periodic-sampling daemon is merged upstream into Kokkos Tools, and the work became a poster with my ORNL mentors, Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, at the 2025 Smoky Mountains Conference.",
     "Alongside that I spent three years as an apprentice on HPC for nuclear simulation at EDF, and I run a five-node production cluster of my own: around twenty services behind Traefik and TLS, deployed with Docker and CI/CD, with image scanning and automatic rollback. When something breaks at three in the morning, there is nobody else to call.",
     "I finish my engineering degree at Polytech Paris-Saclay in September 2026 and am looking for a permanent role from January 2027. HPC labs are a natural fit, the Bay Area (Berkeley Lab, LLNL) and Paris with the CEA among them, but I am just as interested in infrastructure, DevOps, SRE, and platform engineering, on-prem or in the cloud; ideally a role that touches both.",
   ],
