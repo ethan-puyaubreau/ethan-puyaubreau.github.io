@@ -98,7 +98,7 @@ fdbscan-dense   784.8 J   615.6 J      169.2 J (21.6%)</code></pre>
 <p>NVML answers one question: what this NVIDIA GPU drew. It reports per board, in milliwatts, NVIDIA only, and sees nothing outside the card. So the connector has a second backend built on Variorum, which is vendor-neutral and reads power at the node and socket level, including the CPU (through RAPL, the power counters built into Intel and AMD processors), the DRAM, and some non-NVIDIA GPUs. NVML gives you what the GPU drew, Variorum what the whole node drew. A region that looks cheap on the card can still be shuffling enough data to light up the CPU and the memory controllers around it, and only the node-level view catches that. You reach for NVML when the question is what the GPU itself spent, and for Variorum when you want the energy bill the machine room actually sees.</p>
 
 <figure>
-<svg viewBox="0 0 760 340" role="img" aria-label="The connector pipeline. The Kokkos application fires Tools callbacks at every parallel region; the energy connector receives a power trace from a sampler thread that reads power out of band at a fixed interval; NVML and Variorum feed the sampler; the connector integrates the trace per region into joules, which flow to a dashboard." xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 760 340" role="img" aria-label="The connector pipeline. The Kokkos application fires Tools callbacks at every parallel region; the energy connector receives a power trace from a sampler thread that reads power out of band at a fixed interval; NVML and Variorum feed the sampler; the connector integrates the trace per region into joules, which flow to kokkos-energy, the analysis tool." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-k1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
       <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2620"/>
@@ -118,8 +118,8 @@ fdbscan-dense   784.8 J   615.6 J      169.2 J (21.6%)</code></pre>
     <text x="531" y="82">joules per region</text>
     <text x="531" y="99" font-size="10.5" fill="#6b6258">summed over calls</text>
     <rect x="622" y="60" width="122" height="52" rx="8" fill="#e7efe0" stroke="#5f8a3a" stroke-width="1.4"/>
-    <text x="683" y="82" fill="#3f6326">dashboard</text>
-    <text x="683" y="99" font-size="10.5" fill="#4d7030">joules / run</text>
+    <text x="683" y="82" fill="#3f6326">kokkos-energy</text>
+    <text x="683" y="99" font-size="10.5" fill="#4d7030">table · trace · HTML</text>
   </g>
   <g stroke="#2b2620" stroke-width="1.5" fill="none">
     <line x1="148" y1="86" x2="170" y2="86" marker-end="url(#ar-k1)"/>
@@ -154,4 +154,4 @@ fdbscan-dense   784.8 J   615.6 J      169.2 J (21.6%)</code></pre>
 
 <p>Once energy is attributed to the region that spent it, you can finally optimize the quantity you are actually billed for instead of using time as a stand-in and hoping the two agree. They do not always agree: the fastest code is not always the most energy-efficient, because going fast can mean running the silicon at its power ceiling, and a slower memory-bound phase can be the cheaper one to run a million times. Even at equal runtime, as with the two DBSCAN variants, the energy can differ by 15%.</p>
 
-<p>The sampling daemon is merged into <code>kokkos/kokkos-tools</code> (#300); the core, NVML and Variorum connectors (#299, #301, #302) are still open upstream. The CSV output loads into <a href="https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos">a Grafana and PostgreSQL dashboard</a>, so a run shows energy beside utilization. The full results are on the page of <a href="https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/">the poster I co-authored with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié</a> (SMC 2025). What is still missing is resolution finer than the whole board and than the 100 ms refresh: attribution stays at the scale of the GPU, and I have no clean answer for concurrent streams.</p>
+<p>The sampling daemon is merged into <code>kokkos/kokkos-tools</code> (#300); the core, NVML and Variorum connectors (#299, #301, #302) are still open upstream. The CSV trace first fed a Grafana and PostgreSQL dashboard; it now goes to <a href="https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos">kokkos-energy</a>, a single Rust binary with no daemon and no Docker, which prints a per-region energy table, exports a Perfetto timeline, and writes a standalone HTML report. The full results are on the page of <a href="https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/">the poster I co-authored with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié</a> (SMC 2025). What is still missing is resolution finer than the whole board and than the 100 ms refresh: attribution stays at the scale of the GPU, and I have no clean answer for concurrent streams.</p>

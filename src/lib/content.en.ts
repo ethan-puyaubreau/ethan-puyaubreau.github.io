@@ -21,10 +21,10 @@ export const en: SiteContent = {
       title: "Measuring where the energy goes on the GPU",
       role: "Graduate Research Fellow (GRO program)",
       period: "Summer 2025",
-      stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Python"],
+      stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Rust"],
       flagship: true,
       summary:
-        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, NVML and Variorum connectors open upstream, and an analysis dashboard.",
+        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, NVML and Variorum connectors open upstream, and kokkos-energy, a command-line analysis tool.",
       body: [
         {
           h: "The problem",
@@ -32,7 +32,7 @@ export const en: SiteContent = {
         },
         {
           h: "What I built",
-          p: "A set of Kokkos Tools connectors that sample power while kernels run and attribute the integrated energy to the Kokkos regions that caused it: an NVML backend for NVIDIA GPUs, a Variorum backend for node-level power, a background daemon sampling on a fixed interval, and CSV export. On top, a Grafana dashboard, fed by a Python aggregation step, turns that output into per-region energy analysis. It hooks the Kokkos profiling interface, so application code is untouched.",
+          p: "A set of Kokkos Tools connectors that sample power while kernels run and attribute the integrated energy to the Kokkos regions that caused it: an NVML backend for NVIDIA GPUs, a Variorum backend for node-level power, a background daemon sampling on a fixed interval, and CSV export. The analysis side, first a Grafana and PostgreSQL dashboard, is now kokkos-energy: a single Rust binary that turns the trace into a per-region energy table, a Perfetto timeline, and a standalone HTML report. It hooks the Kokkos profiling interface, so application code is untouched.",
         },
         {
           h: "Where it stands",
@@ -45,7 +45,7 @@ export const en: SiteContent = {
           href: "https://github.com/kokkos/kokkos-tools/pull/300",
         },
         {
-          label: "Energy dashboard",
+          label: "kokkos-energy",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
         {

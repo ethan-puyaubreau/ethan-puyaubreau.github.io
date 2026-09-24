@@ -24,10 +24,10 @@ export const fr: SiteContent = {
       title: "Mesurer où part l'énergie sur le GPU",
       role: "Graduate Research Fellow (programme GRO)",
       period: "Été 2025",
-      stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Python"],
+      stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Rust"],
       flagship: true,
       summary:
-        "Outillage de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs NVML et Variorum proposés en amont, et un tableau de bord d'analyse.",
+        "Outillage de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs NVML et Variorum proposés en amont, et kokkos-energy, un outil d'analyse en ligne de commande.",
       body: [
         {
           h: "Le problème",
@@ -35,7 +35,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Ce que j'ai construit",
-          p: "Un ensemble de connecteurs Kokkos Tools qui échantillonnent la puissance pendant l'exécution des noyaux et attribuent l'énergie intégrée aux régions Kokkos qui l'ont causée : un backend NVML pour les GPU NVIDIA, un backend Variorum pour la puissance au niveau nœud, un démon d'arrière-plan échantillonnant à intervalle fixe, et un export CSV. Par-dessus, un tableau de bord Grafana, alimenté par une étape d'agrégation en Python, transforme ces sorties en analyse d'énergie par région. L'outil s'accroche à l'interface de profilage de Kokkos : le code applicatif reste intact.",
+          p: "Un ensemble de connecteurs Kokkos Tools qui échantillonnent la puissance pendant l'exécution des noyaux et attribuent l'énergie intégrée aux régions Kokkos qui l'ont causée : un backend NVML pour les GPU NVIDIA, un backend Variorum pour la puissance au niveau nœud, un démon d'arrière-plan échantillonnant à intervalle fixe, et un export CSV. Côté analyse, un tableau de bord Grafana et PostgreSQL a d'abord fait le travail ; c'est désormais kokkos-energy, un binaire Rust unique qui transforme la trace en tableau d'énergie par région, en chronologie Perfetto et en rapport HTML autonome. L'outil s'accroche à l'interface de profilage de Kokkos : le code applicatif reste intact.",
         },
         {
           h: "Où ça en est",
@@ -48,7 +48,7 @@ export const fr: SiteContent = {
           href: "https://github.com/kokkos/kokkos-tools/pull/300",
         },
         {
-          label: "Tableau de bord d'énergie",
+          label: "kokkos-energy",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
         {
