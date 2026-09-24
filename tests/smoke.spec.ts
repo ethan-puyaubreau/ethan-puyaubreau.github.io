@@ -238,6 +238,9 @@ test("the 404 page points back to home", async ({ page }) => {
 });
 
 test("french typography helper", () => {
+  expect(frenchSpacing("2,69 s et 777 J en 2 semaines")).toBe(
+    "2,69\u00A0s et 777\u00A0J en 2 semaines",
+  );
   expect(frenchSpacing("500 000 lignes d'outils : 19 %")).toBe(
     "500\u202F000 lignes d\u2019outils\u00A0: 19\u00A0%",
   );

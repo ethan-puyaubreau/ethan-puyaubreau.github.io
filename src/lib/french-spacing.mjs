@@ -3,7 +3,8 @@
  * the space before : and inside « » a no-break space, and the one between a
  * number and % likewise, so that punctuation never starts a line. Digit
  * groups are joined by a narrow no-break space (500 000) and the straight
- * apostrophe between letters becomes a typographic one.
+ * apostrophe between letters becomes a typographic one; a number and its unit
+ * (2,69 s, 777 J) stay on one line.
  * Shared by the French data (content, UI, cluster page) and, through the
  * remark plugin below, by the French blog posts.
  */
@@ -17,7 +18,8 @@ export function frenchSpacing(text) {
     .replace(/ »/g, " »")
     .replace(/(\d) %/g, "$1 %")
     .replace(/(\d)[ \u00A0](?=\d{3}(?!\d))/g, "$1\u202F")
-    .replace(/(\p{L})'(?=\p{L})/gu, "$1\u2019");
+    .replace(/(\p{L})'(?=\p{L})/gu, "$1\u2019")
+    .replace(/(\d) (?=(?:ms|s|min|h|J|kJ|W|kW|Mo|Go|To|°C)(?![\p{L}\d]))/gu, "$1\u00A0");
 }
 
 /**

@@ -95,7 +95,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     contactMailSubject: "Research software engineer role: getting in touch (available Jan 2027)",
     hero: {
       title: "I build research software that measures what scientific computing costs.",
-      availability: "Paris · engineering degree 2026 · available from January 2027",
+      availability: "Paris-Saclay · engineering degree 2026 · available from January 2027",
       ledeBeforeLink: "Open-source energy tooling for ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
@@ -163,7 +163,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     hero: {
       title:
         "Je développe des logiciels de recherche qui mesurent ce que coûte le calcul scientifique.",
-      availability: "Paris · diplômé en 2026 · disponible dès janvier 2027",
+      availability: "Paris-Saclay · diplômé en 2026 · disponible dès janvier 2027",
       ledeBeforeLink: "Des outils open source de mesure d'énergie pour ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:

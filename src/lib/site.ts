@@ -11,7 +11,7 @@ export const site = {
   name: "Ethan Puyaubreau",
   url: SITE_ORIGIN,
   email: "ethan.puyaubreau@gmail.com",
-  location: "Paris, France",
+  location: "Paris-Saclay, France",
 } as const;
 
 export interface SiteCopy {

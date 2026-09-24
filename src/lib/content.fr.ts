@@ -32,7 +32,7 @@ export const fr: SiteContent = {
       period: "Été 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs de mesure soumis en amont, des outils testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en 2026.",
+        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage fusionné dans Kokkos Tools, des connecteurs de mesure soumis en amont, des outils testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en 2026.",
       body: [
         {
           h: "Le problème",
@@ -44,7 +44,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Où ça en est",
-          p: "Le démon d'échantillonnage est intégré à kokkos-tools (#300). Le cœur qui l'accueille (#299) est en revue avec les mainteneurs, et le connecteur NVML (#301) et le connecteur Variorum (#302, à l'état de brouillon) reposent dessus. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
+          p: "Le démon d'échantillonnage est fusionné dans kokkos-tools (#300). Le cœur qui l'accueille (#299) est en cours de relecture par les mainteneurs, et le connecteur NVML (#301) et le connecteur Variorum (#302, à l'état de brouillon) reposent dessus. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois fusionnées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
         },
       ],
       links: [
@@ -71,8 +71,8 @@ export const fr: SiteContent = {
       id: "edf-asics",
       figures: [
         { value: "bit à bit", label: "résultats identiques à la référence" },
-        { value: "−12 %", label: "temps de calcul, jusqu'à" },
-        { value: "−40 %", label: "mémoire au pic" },
+        { value: "−12 %", label: "temps de calcul, meilleur cas" },
+        { value: "−40 %", label: "pic mémoire" },
       ],
       kicker: "EDF Lab Paris-Saclay · groupe ASICS",
       title: "Rendre mesurable un code de simulation nucléaire",
@@ -99,7 +99,7 @@ export const fr: SiteContent = {
     {
       name: "Homelab",
       blurb:
-        "Le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : une vingtaine de services derrière un seul Traefik, la CI Gitea et Coolify aujourd'hui, GitLab CI/CD, K3s, Ceph et Ansible au fil des ans, et un pipeline de déploiement qui revient en arrière si la sonde de santé échoue.",
+        "Le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : une vingtaine de services derrière un seul Traefik, la CI Gitea, Coolify et une VM Kubernetes (K3s) aujourd'hui, GitLab CI/CD, Ceph et Ansible au fil des ans, et un pipeline de déploiement qui revient en arrière si la sonde de santé échoue.",
       href: "/fr/cluster",
       hrefLabel: "Le cluster",
     },
@@ -110,24 +110,11 @@ export const fr: SiteContent = {
       noLinkLabel: "depuis 2021",
     },
     {
-      name: "Annuaire communautaire",
-      blurb:
-        "L'annuaire des communautés francophones de DCS World, que j'ai conçu et que j'héberge : 57 entrées, filtrage, comparaison, infographies et une API publique.",
-      noLinkLabel: "en cours",
-    },
-    {
       name: "n-body galaxy",
       blurb:
         "Jusqu'à 65 536 corps en interaction gravitationnelle, intégrés en temps réel dans des compute shaders WebGPU. Un projet personnel.",
       href: "https://ethan-puyaubreau.github.io/nbody-webgpu/",
       hrefLabel: "En ligne",
-    },
-    {
-      name: "isochrone-app",
-      blurb:
-        "Un explorateur d'isochrones hors ligne, construit autour d'un moteur de routage Valhalla auto-hébergé, disponible en application de bureau et sur le web.",
-      href: "https://github.com/ethan-puyaubreau/isochrone-app",
-      hrefLabel: "GitHub",
     },
     {
       name: "vireli",

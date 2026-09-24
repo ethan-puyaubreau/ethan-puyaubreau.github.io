@@ -68,7 +68,7 @@ export const en: SiteContent = {
       id: "edf-asics",
       figures: [
         { value: "bit for bit", label: "identical results to the reference" },
-        { value: "−12%", label: "compute time, up to" },
+        { value: "−12%", label: "compute time, best case" },
         { value: "−40%", label: "peak memory" },
       ],
       kicker: "EDF Lab Paris-Saclay · ASICS group",
@@ -96,7 +96,7 @@ export const en: SiteContent = {
     {
       name: "Homelab",
       blurb:
-        "The five-node Proxmox cluster I have run since 2020 for about 60 regular users: around 20 services behind one Traefik, Gitea CI and Coolify today, GitLab CI/CD, K3s, Ceph and Ansible over the years, and a deploy pipeline that rolls back on a failed health check.",
+        "The five-node Proxmox cluster I have run since 2020 for about 60 regular users: around 20 services behind one Traefik, Gitea CI, Coolify and a Kubernetes (K3s) VM today, GitLab CI/CD, Ceph and Ansible over the years, and a deploy pipeline that rolls back on a failed health check.",
       href: "/cluster",
       hrefLabel: "The cluster",
     },
@@ -107,24 +107,11 @@ export const en: SiteContent = {
       noLinkLabel: "since 2021",
     },
     {
-      name: "Community directory",
-      blurb:
-        "A directory of French-speaking DCS World communities that I built and host: 57 entries, filtering, comparison, infographics, and a public API.",
-      noLinkLabel: "ongoing",
-    },
-    {
       name: "n-body galaxy",
       blurb:
         "A galaxy of up to 65,536 bodies under mutual gravity, stepped live in WebGPU compute shaders. A side project.",
       href: "https://ethan-puyaubreau.github.io/nbody-webgpu/",
       hrefLabel: "Live",
-    },
-    {
-      name: "isochrone-app",
-      blurb:
-        "An offline isochrone explorer wrapping a self-hosted Valhalla routing engine, shipped to desktop and web.",
-      href: "https://github.com/ethan-puyaubreau/isochrone-app",
-      hrefLabel: "GitHub",
     },
     {
       name: "vireli",
