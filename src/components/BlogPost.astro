@@ -30,11 +30,14 @@ const hasOther =
   (await getCollection("blog", (p) => p.data.lang === other && p.data.slug === d.slug)).length > 0;
 const langPaths: Partial<Record<Locale, string>> = { [locale]: blogPost(locale, d.slug) };
 if (hasOther) langPaths[other] = blogPost(other, d.slug);
-const dateLabel = d.pubDate.toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
+const fmtDate = (date: Date) =>
+  date.toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+const dateLabel = fmtDate(d.pubDate);
+const updatedLabel = d.updatedDate ? fmtDate(d.updatedDate) : null;
 const canonical = d.canonical ?? new URL(blogPost(locale, d.slug), site.url).href;
 const ogImage = new URL("/og.png", site.url).href;
 const logoUrl = new URL("/favicon-32.png", site.url).href;
@@ -84,6 +87,7 @@ const articleLd = {
       <header class="post-head">
         <p class="label post-date">
           {ui.blog.published} {dateLabel}
+          {updatedLabel && `, ${ui.blog.updated} ${updatedLabel}`}
         </p>
         <h1 class="post-title">{d.title}</h1>
         <p class="post-desc">{d.description}</p>
@@ -247,6 +251,14 @@ const articleLd = {
      muted. Posts may carry several of each (e.g. the GPU-energy write-up). */
   .prose :global(figure) {
     margin: var(--space-l) 0;
+  }
+  @media (max-width: 640px) {
+    .prose :global(figure:has(> svg)) {
+      overflow-x: auto;
+    }
+    .prose :global(figure > svg) {
+      min-width: 560px;
+    }
   }
   .prose :global(figure svg),
   .prose :global(figure img) {

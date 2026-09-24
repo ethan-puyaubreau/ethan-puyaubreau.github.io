@@ -1,6 +1,6 @@
 ---
-title: "Démonter le nœud GPU, de Proxmox à un Debian nu"
-description: "Ce nœud tournait sous Proxmox. Je l'ai effacé pour un Debian 13 nu afin que le GPU soit piloté directement par le noyau de l'hôte, sans hyperviseur entre les deux, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a piégé, c'est le Secure Boot. (Il est depuis revenu sous Proxmox.)"
+title: "Démonter le nœud GPU, de Proxmox à une Debian nue"
+description: "Ce nœud tournait sous Proxmox. Je l'ai effacé pour une Debian 13 nue afin que le GPU soit piloté directement par le noyau de l'hôte, sans hyperviseur entre les deux, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a piégé, c'est le Secure Boot. (Il est depuis revenu sous Proxmox.)"
 pubDate: 2026-06-18
 updatedDate: 2026-09-23
 lang: fr
@@ -8,7 +8,7 @@ slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 ---
 
-<p>Le nœud GPU de mon homelab est une station de travail Xeon mono-socket qui, pendant un an, a fait tourner Proxmox comme le reste du cluster. En juin, je l'ai effacé et j'ai réinstallé un Debian 13 (Trixie) nu, parce que la seule chose que j'attends vraiment de cette machine, faire tourner des charges CUDA sur son GPU, est justement celle qu'un hyperviseur rend plus difficile. La réinstallation a pris vingt minutes. Faire charger le pilote a pris le reste de la soirée, presque entièrement sur une seule chose dont personne ne vous prévient : le Secure Boot refusant en silence un module signé par une clé inconnue.</p>
+<p>Le nœud GPU de mon homelab est une station de travail Xeon mono-socket qui, pendant un an, a fait tourner Proxmox comme le reste du cluster. En juin, je l'ai effacé et j'ai réinstallé une Debian 13 (Trixie) nue, parce que la seule chose que j'attends vraiment de cette machine, faire tourner des charges CUDA sur son GPU, est justement celle qu'un hyperviseur rend plus difficile. La réinstallation a pris vingt minutes. Faire charger le pilote a pris le reste de la soirée, presque entièrement sur une seule chose dont personne ne vous prévient : le Secure Boot refusant en silence un module signé par une clé inconnue.</p>
 
 <p>L'ordre des opérations qui marche réellement sur Trixie tient en quelques étapes, dont une facile à manquer.</p>
 
@@ -21,14 +21,14 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 <p>Une machine qui n'existe que pour faire tourner un GPU n'a pas besoin d'un hyperviseur posé entre moi et <code>nvidia-smi</code>. Une fois la couche supprimée, la carte revient sur le métal nu, et la taxe du passthrough disparaît avec elle.</p>
 
 <figure>
-<svg viewBox="0 0 720 340" role="img" aria-label="Deux piles logicielles comparées. La pile Proxmox a cinq couches avec le passthrough VFIO comme friction ; la pile Debian nu a quatre couches avec le GPU directement sous le noyau." xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 720 340" role="img" aria-label="Deux piles logicielles comparées. La pile Proxmox a cinq couches avec le passthrough VFIO comme friction ; la pile Debian nue a quatre couches avec le GPU directement sous le noyau." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
       <path d="M0,0 L9,4.5 L0,9 z" fill="#111111"/>
     </marker>
   </defs>
   <text x="180" y="30" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="15" font-weight="700" fill="#111111">Avant : nœud Proxmox</text>
-  <text x="540" y="30" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="15" font-weight="700" fill="#111111">Après : Debian 13 nu</text>
+  <text x="540" y="30" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="15" font-weight="700" fill="#111111">Après : Debian 13 nue</text>
   <g font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#111111" text-anchor="middle">
     <rect x="60" y="54"  width="240" height="40" rx="7" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="180" y="79">Charge CUDA (dans l'invité)</text>
