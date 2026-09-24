@@ -32,7 +32,7 @@ export const fr: SiteContent = {
       period: "Été 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs constructeurs proposés en amont et testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source.",
+        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs constructeurs soumis à Kokkos Tools et testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en 2026.",
       body: [
         {
           h: "Le problème",
@@ -40,11 +40,11 @@ export const fr: SiteContent = {
         },
         {
           h: "Comment c'est construit",
-          p: "Les outils se branchent à l'exécution par l'interface Kokkos Tools : une application se mesure telle quelle, sans recompilation ni correctif. Les connecteurs lisent la puissance NVIDIA via NVML, la puissance AMD via ROCm SMI, ou celle de tout constructeur pris en charge par Variorum. L'outil d'analyse, energy-dashboard-for-kokkos, est un binaire Rust unique, avec un format de trace documenté, des tests sur des traces réelles et des versions publiées.",
+          p: "Les outils se branchent à l'exécution par l'interface Kokkos Tools : une application se mesure telle quelle, sans recompilation ni correctif. Les connecteurs lisent la puissance NVIDIA via NVML, la puissance AMD via ROCm SMI, ou celle de tout constructeur pris en charge par Variorum. L'outil d'analyse, energy-dashboard-for-kokkos, réécrit en 2026 sous la forme d'un binaire Rust unique, a un format de trace documenté, des tests sur des traces réelles et des versions construites par la CI.",
         },
         {
           h: "Où ça en est",
-          p: "Le démon d'échantillonnage est intégré à kokkos-tools (#300) ; le cœur et les connecteurs NVML et Variorum sont proposés en amont (#299, #301, #302) et toujours en revue avec les mainteneurs en 2026. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25.",
+          p: "Le démon d'échantillonnage est intégré à kokkos-tools (#300) ; le cœur et les connecteurs NVML et Variorum sont soumis à kokkos-tools (#299, #301, #302) et toujours en revue avec les mainteneurs en 2026. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
         },
       ],
       links: [
@@ -61,6 +61,10 @@ export const fr: SiteContent = {
           href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
         },
         { label: "Rapport S4PST (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
+        {
+          label: "Toutes les pull requests kokkos-tools",
+          href: "https://github.com/kokkos/kokkos-tools/pulls?q=is%3Apr+author%3Aethan-puyaubreau",
+        },
       ],
     },
     {
@@ -76,7 +80,7 @@ export const fr: SiteContent = {
       period: "2023 à 2026",
       stack: ["C++17", "Python", "PyBind11", "CMake", "GitLab CI/CD", "Jenkins", "Sphinx"],
       summary:
-        "Une alternance de trois ans sur COCAGNE, la plateforme de simulation de cœurs de réacteurs d'EDF, plus de 500 000 lignes de C++ : les outils qui mesurent ses performances, un prototype de sa future architecture et le pipeline qui la package.",
+        "Une alternance de trois ans sur COCAGNE, la plateforme de simulation de cœurs de réacteurs d'EDF, plus de 500 000 lignes de C++ : les outils qui mesurent ses performances, un prototype de sa future architecture et la chaîne qui la livre en paquets Debian.",
       body: [
         {
           h: "Le contexte",
@@ -89,36 +93,16 @@ export const fr: SiteContent = {
       ],
       caveat: "Seul le travail ci-dessus peut être cité publiquement ; le reste est confidentiel.",
     },
-    {
-      id: "homelab",
-      kicker: "Homelab auto-hébergé",
-      title: "Héberger et exploiter mes propres services",
-      role: "Architecte et exploitant",
-      period: "Depuis 2020",
-      stack: [
-        "Proxmox",
-        "Docker",
-        "Traefik",
-        "Gitea / Coolify",
-        "GitLab CI",
-        "K3s",
-        "Ceph",
-        "Ansible",
-        "VyOS",
-      ],
-      summary:
-        "Un cluster Proxmox de cinq nœuds qui héberge une vingtaine de services pour une soixantaine d'utilisateurs réguliers, sur du matériel que j'exploite et automatise moi-même.",
-      body: [
-        {
-          h: "L'installation",
-          p: "Cinq nœuds Proxmox derrière un routeur de bordure VyOS, relié par WireGuard. Un seul Traefik assure la terminaison TLS Let's Encrypt pour une vingtaine de services : une forge Gitea avec sa CI, un PaaS Coolify, Nextcloud, des services multimédias et mes propres projets. En cinq ans, le cluster a aussi fait tourner GitLab CI/CD, K3s, du stockage Ceph et de l'automatisation Ansible. Mes projets passent en production par un pipeline qui construit une image versionnée, la scanne et revient automatiquement en arrière si le contrôle de santé échoue ; je suis seul d'astreinte.",
-        },
-      ],
-      links: [{ label: "Explorer le cluster", href: "/cluster" }],
-    },
   ],
 
   moreWork: [
+    {
+      name: "Homelab",
+      blurb:
+        "Le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : une vingtaine de services derrière un seul Traefik, la CI Gitea et Coolify aujourd'hui, GitLab CI/CD, K3s, Ceph et Ansible au fil des ans, et un pipeline de déploiement qui revient en arrière si le contrôle de santé échoue.",
+      href: "/fr/cluster",
+      hrefLabel: "Le cluster",
+    },
     {
       name: "Événements DCS World",
       blurb:
@@ -154,7 +138,7 @@ export const fr: SiteContent = {
   ],
 
   about: [
-    "Je développe des logiciels de recherche pour le calcul haute performance : des outils qui rendent les codes scientifiques mesurables, et l'ingénierie autour (tests, packaging, CI/CD, versions publiées, documentation) qui permet à d'autres de s'y fier. Je sors diplômé de Polytech Paris-Saclay en septembre 2026 (diplôme d'ingénieur) et je cherche un poste d'ingénieur logiciel pour la recherche à partir de janvier 2027, dans un laboratoire national, une université ou un institut de recherche, en France ou aux États-Unis.",
+    "Je développe des logiciels de recherche pour le calcul haute performance : des outils qui rendent les codes scientifiques mesurables, et l'ingénierie autour (tests, packaging, CI/CD, versions publiées, documentation) qui permet à d'autres de s'y fier. Je sors diplômé de Polytech Paris-Saclay en septembre 2026 (diplôme d'ingénieur) et je cherche un poste d'ingénieur logiciel pour la recherche à partir de janvier 2027, dans un laboratoire national, une université ou un institut de recherche, en France comme à l'international.",
   ],
 
   timeline: [
@@ -170,7 +154,7 @@ export const fr: SiteContent = {
   availability: {
     headline: "Ouvert aux postes d'ingénieur logiciel pour la recherche à partir de janvier 2027",
     detail:
-      "Calcul haute performance et calcul scientifique, dans un laboratoire national, une université ou un institut de recherche, en France ou aux États-Unis.",
+      "Calcul haute performance et calcul scientifique, dans un laboratoire national, une université ou un institut de recherche, en France comme à l'international.",
     cta: "Le plus rapide pour me joindre",
     contactLabel: "Me contacter",
     mailSubject:

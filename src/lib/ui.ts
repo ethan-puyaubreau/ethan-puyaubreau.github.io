@@ -28,16 +28,6 @@ export interface SectionCopy {
   readonly intro?: string;
 }
 
-export interface HomelabStatusStrings {
-  readonly heading: string;
-  readonly nodes: string;
-  readonly guests: string;
-  readonly cpu: string;
-  readonly mem: string;
-  readonly caption: string;
-  readonly asOf: string;
-}
-
 export interface BlogStrings {
   readonly kicker: string;
   readonly indexTitle: string;
@@ -50,6 +40,7 @@ export interface BlogStrings {
   readonly readArticle: string;
   /** Precedes the formatted date, e.g. "Published". */
   readonly published: string;
+  readonly updated: string;
   /** aria-label for the tag list on a post. */
   readonly tagsLabel: string;
   /** Author card at the foot of a post. */
@@ -94,7 +85,6 @@ export interface UIStrings {
   // Blog.
   readonly blog: BlogStrings;
   // Islands (passed as props).
-  readonly homelabStatus: HomelabStatusStrings;
 }
 
 const STRINGS: Record<Locale, UIStrings> = {
@@ -154,21 +144,13 @@ const STRINGS: Record<Locale, UIStrings> = {
       seeAll: "Read all posts",
       readArticle: "Read",
       published: "Published",
+      updated: "updated",
       tagsLabel: "Tags:",
       authorTagline:
         "Research software engineer in HPC; Graduate Research Fellow at Oak Ridge National Laboratory in 2025.",
       authorAvailable: "Open to research software engineer roles from January 2027.",
       contactCta: "Get in touch",
       talkHead: "Questions, corrections, or work: my address is below.",
-    },
-    homelabStatus: {
-      heading: "The cluster, a snapshot",
-      nodes: "nodes",
-      guests: "VMs and containers",
-      cpu: "CPU",
-      mem: "memory",
-      caption: "From the cluster's own Proxmox API, captured at build time",
-      asOf: "as of",
     },
   },
 
@@ -231,21 +213,13 @@ const STRINGS: Record<Locale, UIStrings> = {
       seeAll: "Lire tous les articles",
       readArticle: "Lire",
       published: "Publié le",
+      updated: "mis à jour le",
       tagsLabel: "Étiquettes :",
       authorTagline:
         "Ingénieur logiciel pour la recherche en HPC ; Graduate Research Fellow à l'Oak Ridge National Laboratory en 2025.",
       authorAvailable: "Ouvert aux postes d'ingénieur logiciel pour la recherche dès janvier 2027.",
       contactCta: "Me contacter",
       talkHead: "Questions, corrections ou propositions : mon adresse est en dessous.",
-    },
-    homelabStatus: {
-      heading: "Le cluster, un instantané",
-      nodes: "nœuds",
-      guests: "VM et conteneurs",
-      cpu: "CPU",
-      mem: "mémoire",
-      caption: "Tiré de l'API Proxmox du cluster à la génération du site",
-      asOf: "le",
     },
   },
 };

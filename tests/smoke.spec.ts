@@ -29,7 +29,7 @@ test("home: masthead and the five case studies render", async ({ page }) => {
   await expect(page.locator("#work")).toBeVisible();
   await expect(page.locator("#about")).toBeVisible();
   await expect(page.locator("#contact")).toBeVisible();
-  await expect(page.locator("#work article.case")).toHaveCount(3);
+  await expect(page.locator("#work article.case")).toHaveCount(2);
 });
 
 test("home: the hero draws both measured traces with their energy", async ({ page }) => {

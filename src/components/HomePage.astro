@@ -11,7 +11,6 @@ import MoreWork from "./MoreWork.astro";
 import About from "./About.astro";
 import Contact from "./Contact.astro";
 import PowerTrace from "./PowerTrace.astro";
-import HomelabSnapshot from "./HomelabSnapshot.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import { site, refs, getSiteCopy, links } from "../lib/site";
 import { getContent } from "../lib/content";
@@ -29,7 +28,7 @@ const content = getContent(locale);
 
 // Verifiable references surfaced in the hero (credibility before the argument).
 const proofLinks = links.filter(
-  (l) => l.confirmed && ["ORCID", "GitHub", "LinkedIn"].includes(l.label),
+  (l) => l.confirmed && ["ORCID", "Google Scholar", "GitHub", "LinkedIn"].includes(l.label),
 );
 const heads = ui.sectionHeads;
 const cvHref = locale === "fr" ? "/Ethan-Puyaubreau-CV-FR.pdf" : "/Ethan-Puyaubreau-CV.pdf";
@@ -102,11 +101,7 @@ const fmtDate = (d: Date): string =>
       <section id="work">
         <SectionHeader title={heads.work.title}>{heads.work.intro}</SectionHeader>
         {content.caseStudies.map((study) => (
-          <CaseStudyEntry study={study} ui={ui}>
-            {study.id === "homelab" && (
-              <HomelabSnapshot slot="artifact" strings={ui.homelabStatus} locale={locale} />
-            )}
-          </CaseStudyEntry>
+          <CaseStudyEntry study={study} ui={ui} />
         ))}
         <MoreWork items={content.moreWork} head={ui.moreWorkHead} label={ui.moreWorkLabel} />
       </section>

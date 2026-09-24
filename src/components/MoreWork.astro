@@ -18,7 +18,11 @@ const { items, head, label } = Astro.props;
         <p class="blurb">
           {item.blurb}{" "}
           {item.href ? (
-            <a href={item.href} rel="noopener" target="_blank">
+            <a
+              href={item.href}
+              rel={item.href.startsWith("http") ? "noopener" : undefined}
+              target={item.href.startsWith("http") ? "_blank" : undefined}
+            >
               {item.hrefLabel}
             </a>
           ) : (

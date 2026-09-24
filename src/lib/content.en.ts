@@ -29,7 +29,7 @@ export const en: SiteContent = {
       period: "Summer 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, vendor connectors open upstream and tested on Frontier, and energy-dashboard-for-kokkos, an open-source analysis tool.",
+        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, vendor connectors open upstream and tested on Frontier, and energy-dashboard-for-kokkos, an open-source analysis tool I rewrote in 2026.",
       body: [
         {
           h: "The problem",
@@ -37,11 +37,11 @@ export const en: SiteContent = {
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through the Kokkos Tools interface, so an application is measured as it is, without a rebuild or a patch. The connectors read NVIDIA power through NVML, AMD power through ROCm SMI, or any vendor Variorum supports. The analysis tool, energy-dashboard-for-kokkos, is a single Rust binary with a documented trace format, tests on real traces, and versioned releases.",
+          p: "The tools attach at run time through the Kokkos Tools interface, so an application is measured as it is, without a rebuild or a patch. The connectors read NVIDIA power through NVML, AMD power through ROCm SMI, or any vendor Variorum supports. The analysis tool, energy-dashboard-for-kokkos, rewritten in 2026 as a single Rust binary, has a documented trace format, tests on real traces, and releases built by CI.",
         },
         {
           h: "Where it stands",
-          p: "The sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302) and still in review with the maintainers in 2026. Nine pull requests to kokkos-tools and LAMMPS in all, three merged. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25.",
+          p: "The sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302) and still in review with the maintainers in 2026. Nine pull requests to kokkos-tools and LAMMPS in all, three merged. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25, which my apprenticeship schedule did not allow.",
         },
       ],
       links: [
@@ -58,6 +58,10 @@ export const en: SiteContent = {
           href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
         },
         { label: "S4PST report (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
+        {
+          label: "All kokkos-tools pull requests",
+          href: "https://github.com/kokkos/kokkos-tools/pulls?q=is%3Apr+author%3Aethan-puyaubreau",
+        },
       ],
     },
     {
@@ -86,36 +90,16 @@ export const en: SiteContent = {
       ],
       caveat: "The work above is cleared for public mention; the rest stays under confidentiality.",
     },
-    {
-      id: "homelab",
-      kicker: "Homelab, self-hosted",
-      title: "Running my own production",
-      role: "Architect & operator",
-      period: "Since 2020",
-      stack: [
-        "Proxmox",
-        "Docker",
-        "Traefik",
-        "Gitea / Coolify",
-        "GitLab CI",
-        "K3s",
-        "Ceph",
-        "Ansible",
-        "VyOS",
-      ],
-      summary:
-        "A five-node Proxmox cluster hosting around 20 services for about 60 regular users, on hardware I run and automate myself.",
-      body: [
-        {
-          h: "The setup",
-          p: "Five Proxmox nodes behind a VyOS edge router over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 services: a Gitea forge with its own CI, a Coolify PaaS, Nextcloud, media services, and my own projects. Over five years the cluster has also run GitLab CI/CD, K3s, Ceph storage, and Ansible automation. My projects ship through a pipeline that builds a versioned image, scans it, and rolls back automatically on a failed health check; I am the only person on call.",
-        },
-      ],
-      links: [{ label: "Explore the cluster", href: "/cluster" }],
-    },
   ],
 
   moreWork: [
+    {
+      name: "Homelab",
+      blurb:
+        "The five-node Proxmox cluster I have run since 2020 for about 60 regular users: around 20 services behind one Traefik, Gitea CI and Coolify today, GitLab CI/CD, K3s, Ceph and Ansible over the years, and a deploy pipeline that rolls back on a failed health check.",
+      href: "/cluster",
+      hrefLabel: "The cluster",
+    },
     {
       name: "DCS World events",
       blurb:
@@ -167,7 +151,7 @@ export const en: SiteContent = {
   availability: {
     headline: "Open to research software engineer roles from January 2027",
     detail:
-      "HPC and scientific computing, at a national lab, a university, or a research institute, in the US or in France.",
+      "HPC and scientific computing, at a national lab, a university, or a research institute, in the US or in France. For US roles I need visa sponsorship (J-1 or H-1B).",
     cta: "The fastest way to reach me",
     contactLabel: "Get in touch",
     mailSubject: "Research software engineer role: getting in touch (available Jan 2027)",
