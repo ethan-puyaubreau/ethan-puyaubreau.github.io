@@ -1,6 +1,6 @@
 ---
 title: "Charging GPU energy to the code that spent it"
-description: "A profiler tells you where GPU code spends time. I wanted to know where it spends joules, so I built a Kokkos Tools connector that samples power on a side thread and integrates it over each profiled region. On ArborX DBSCAN, two implementations with the same runtime differ by 15% in energy."
+description: "A profiler tells you where GPU code spends time. I wanted to know where it spends joules, so I built a Kokkos Tools connector that samples power on a side thread and integrates it over each profiled region. On ArborX DBSCAN, the faster implementation saves more energy than time: 19% faster, 25% less energy."
 pubDate: 2026-06-12
 updatedDate: 2026-09-23
 lang: en
@@ -10,12 +10,13 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <p>I spent the summer of 2025 at Oak Ridge on this, and the question behind it is short: does the fastest way to compute something also cost the least energy? A profiler ranks code by time, but clusters increasingly run under a power cap rather than a clock-rate target, so energy-to-solution is becoming the number that matters, and almost nothing in a normal HPC workflow reports it per region. So I built a tool that does, as a Kokkos Tools connector that attributes joules to each profiled region without touching the application it measures.</p>
 
-<p>Start with the result that ended up on the poster. ArborX ships two DBSCAN implementations, <code>fdbscan</code> and <code>fdbscan-dense</code>. On the same input and the same NVIDIA H100 NVL, they return the same clusters in the same time: the runtimes agree to within 0.03 s. The energy does not.</p>
+<p>Start with the result that ended up on the poster. ArborX ships two DBSCAN implementations, <code>fdbscan</code> and <code>fdbscan-dense</code>. On the same input and the same NVIDIA H100 NVL they return the same clusters, and over 64 runs of each, the dense one is faster and cheaper:</p>
 
-<pre><code>variant         total     in regions   outside regions
-------------------------------------------------------
-fdbscan         925.1 J   772.8 J      152.4 J (16.5%)
-fdbscan-dense   784.8 J   615.6 J      169.2 J (21.6%)</code></pre>
+<pre><code>variant         DBSCAN region   energy   mean power
+---------------------------------------------------
+fdbscan         2.69 s          777 J    288 W
+fdbscan-dense   2.19 s          580 J    262 W
+(medians over 64 runs each)</code></pre>
 
 <figure>
   <img src="/blog/kokkos/fdbscan.png" alt="GPU power over time for ArborX fdbscan on an H100 NVL, a plateau near 300 W under a 350 W cap. Total estimated energy 925.1 J, of which 772.8 J inside kernel regions." width="1200" height="898" loading="lazy" />
@@ -23,7 +24,7 @@ fdbscan-dense   784.8 J   615.6 J      169.2 J (21.6%)</code></pre>
   <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time.</figcaption>
 </figure>
 
-<p>A time profile calls these two equivalent. The energy profile says one of them costs 140 J less for the same answer, about 15%. A stopwatch cannot see that gap, and that is the whole argument for measuring energy instead of inferring it from time.</p>
+<p>So the faster variant also wins on energy, but by more: 25% less energy for 19% less time, because it also draws 9% less power while it runs. A time profile would report the 19%. The other six points only show up when you measure energy instead of inferring it from time.</p>
 
 <h2>Instrumentation you do not have to compile in</h2>
 
@@ -152,6 +153,6 @@ fdbscan-dense   784.8 J   615.6 J      169.2 J (21.6%)</code></pre>
 
 <h2>What per-region joules buy you</h2>
 
-<p>Once energy is attributed to the region that spent it, you can finally optimize the quantity you are actually billed for instead of using time as a stand-in and hoping the two agree. They do not always agree: the fastest code is not always the most energy-efficient, because going fast can mean running the silicon at its power ceiling, and a slower memory-bound phase can be the cheaper one to run a million times. Even at equal runtime, as with the two DBSCAN variants, the energy can differ by 15%.</p>
+<p>Once energy is attributed to the region that spent it, you can finally optimize the quantity you are actually billed for instead of using time as a stand-in and hoping the two agree. They do not always agree: the fastest code is not always the most energy-efficient, because going fast can mean running the silicon at its power ceiling, and a slower memory-bound phase can be the cheaper one to run a million times. Even between two correct implementations of the same algorithm, the energy gap (25%) can be wider than the time gap (19%).</p>
 
 <p>The sampling daemon is merged into <code>kokkos/kokkos-tools</code> (#300); the core, NVML and Variorum connectors (#299, #301, #302) are still open upstream. The CSV trace first fed a Grafana and PostgreSQL dashboard; it now goes to <a href="https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos">kokkos-energy</a>, a single Rust binary with no daemon and no Docker, which prints a per-region energy table, exports a Perfetto timeline, and writes a standalone HTML report. The full results are on the page of <a href="https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/">the poster I co-authored with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié</a> (SMC 2025). What is still missing is resolution finer than the whole board and than the 100 ms refresh: attribution stays at the scale of the GPU, and I have no clean answer for concurrent streams.</p>

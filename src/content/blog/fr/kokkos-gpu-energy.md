@@ -1,6 +1,6 @@
 ---
 title: "Imputer l'énergie GPU au code qui l'a dépensée"
-description: "Un profileur vous dit où du code GPU passe son temps. Je voulais savoir où il dépense ses joules : j'ai donc construit un connecteur Kokkos Tools qui échantillonne la puissance sur un thread dédié et l'intègre sur chaque région profilée. Sur le DBSCAN d'ArborX, deux implémentations de même durée diffèrent de 15 % en énergie."
+description: "Un profileur vous dit où du code GPU passe son temps. Je voulais savoir où il dépense ses joules : j'ai donc construit un connecteur Kokkos Tools qui échantillonne la puissance sur un thread dédié et l'intègre sur chaque région profilée. Sur le DBSCAN d'ArborX, l'implémentation la plus rapide économise plus d'énergie que de temps : 19 % plus rapide, 25 % d'énergie en moins."
 pubDate: 2026-06-12
 updatedDate: 2026-09-23
 lang: fr
@@ -10,12 +10,13 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <p>J'ai passé l'été 2025 à Oak Ridge là-dessus, et la question de départ est courte : la façon la plus rapide de calculer quelque chose est-elle aussi la moins coûteuse en énergie ? Un profileur classe le code selon le temps passé, mais les clusters tournent de plus en plus sous un plafond de puissance plutôt que sous une cible de fréquence : l'énergie consommée pour obtenir un résultat devient le chiffre qui compte, et presque rien dans un flux de travail HPC habituel ne la mesure par région. J'ai donc construit un outil qui le fait : un connecteur Kokkos Tools qui impute les joules à chaque région profilée sans toucher à l'application qu'il mesure.</p>
 
-<p>Commençons par le résultat qui a fini sur le poster. ArborX propose deux implémentations de DBSCAN, <code>fdbscan</code> et <code>fdbscan-dense</code>. Sur la même entrée et le même NVIDIA H100 NVL, elles renvoient les mêmes clusters dans le même temps : les durées concordent à 0,03 s près. L'énergie, non.</p>
+<p>Commençons par le résultat qui a fini sur le poster. ArborX propose deux implémentations de DBSCAN, <code>fdbscan</code> et <code>fdbscan-dense</code>. Sur la même entrée et le même NVIDIA H100 NVL, elles renvoient les mêmes clusters, et sur 64 exécutions de chacune, la version dense est plus rapide et plus sobre :</p>
 
-<pre><code>variante        total     dans les régions   hors régions
--------------------------------------------------------------
-fdbscan         925,1 J   772,8 J            152,4 J (16,5 %)
-fdbscan-dense   784,8 J   615,6 J            169,2 J (21,6 %)</code></pre>
+<pre><code>variante        région DBSCAN   énergie   puissance moyenne
+------------------------------------------------------------
+fdbscan         2,69 s          777 J     288 W
+fdbscan-dense   2,19 s          580 J     262 W
+(médianes sur 64 exécutions de chacune)</code></pre>
 
 <figure>
   <img src="/blog/kokkos/fdbscan.png" alt="Puissance GPU dans le temps pour fdbscan d'ArborX sur un H100 NVL, un plateau autour de 300 W sous un plafond de 350 W. Énergie totale estimée : 925,1 J, dont 772,8 J dans les régions de noyaux." width="1200" height="898" loading="lazy" />
@@ -23,7 +24,7 @@ fdbscan-dense   784,8 J   615,6 J            169,2 J (21,6 %)</code></pre>
   <figcaption>Figure 3 du poster : <code>fdbscan</code> (en haut) et <code>fdbscan-dense</code> (en bas). Les bandes colorées sont les régions Kokkos ; l'énergie est la trace de puissance intégrée dans le temps.</figcaption>
 </figure>
 
-<p>Un profil temporel juge ces deux versions équivalentes. Le profil énergétique dit que l'une coûte 140 J de moins pour le même résultat, environ 15 %. Un chronomètre ne voit pas cet écart, et c'est précisément pour ça qu'il faut mesurer l'énergie au lieu de la déduire du temps.</p>
+<p>La variante la plus rapide gagne donc aussi sur l'énergie, mais davantage : 25 % d'énergie en moins pour 19 % de temps en moins, parce qu'elle consomme aussi 9 % de watts en moins pendant son exécution. Un profil temporel rapporterait les 19 %. Les six points restants n'apparaissent que si l'on mesure l'énergie au lieu de la déduire du temps.</p>
 
 <h2>De l'instrumentation qu'on n'a pas à compiler</h2>
 
@@ -152,6 +153,6 @@ fdbscan-dense   784,8 J   615,6 J            169,2 J (21,6 %)</code></pre>
 
 <h2>Ce que les joules par région apportent</h2>
 
-<p>Une fois l'énergie imputée à la région qui l'a dépensée, on peut enfin optimiser la grandeur réellement facturée, au lieu d'utiliser le temps comme approximation en espérant que les deux concordent. Ils ne concordent pas toujours : le code le plus rapide n'est pas toujours le plus sobre, parce qu'aller vite peut vouloir dire faire tourner le silicium à son plafond de puissance, et une phase plus lente limitée par la mémoire peut être la moins chère à exécuter un million de fois. Même à durée égale, comme pour les deux variantes de DBSCAN, l'énergie peut différer de 15 %.</p>
+<p>Une fois l'énergie imputée à la région qui l'a dépensée, on peut enfin optimiser la grandeur réellement facturée, au lieu d'utiliser le temps comme approximation en espérant que les deux concordent. Ils ne concordent pas toujours : le code le plus rapide n'est pas toujours le plus sobre, parce qu'aller vite peut vouloir dire faire tourner le silicium à son plafond de puissance, et une phase plus lente limitée par la mémoire peut être la moins chère à exécuter un million de fois. Même entre deux implémentations correctes du même algorithme, l'écart d'énergie (25 %) peut dépasser l'écart de temps (19 %).</p>
 
 <p>Le démon d'échantillonnage est fusionné dans <code>kokkos/kokkos-tools</code> (#300) ; le cœur et les connecteurs NVML et Variorum (#299, #301, #302) sont encore en revue en amont. La trace CSV alimentait d'abord un tableau de bord Grafana et PostgreSQL ; elle passe désormais par <a href="https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos">kokkos-energy</a>, un binaire Rust unique, sans démon ni Docker, qui affiche un tableau d'énergie par région, exporte une chronologie Perfetto et produit un rapport HTML autonome. Les résultats complets sont sur la page du <a href="https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/">poster que j'ai cosigné avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié</a> (SMC 2025). Ce qui manque encore, c'est une résolution plus fine que la carte entière et que le rafraîchissement de 100 ms : l'imputation reste à l'échelle du GPU, et je n'ai pas de réponse propre pour les flux concurrents.</p>

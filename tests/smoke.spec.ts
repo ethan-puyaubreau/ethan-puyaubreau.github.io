@@ -37,7 +37,7 @@ test("home: the hero draws both measured traces with their energy", async ({ pag
   const chart = page.locator("#top svg.trace");
   await expect(chart).toBeVisible();
   await expect(chart.locator(".panel")).toHaveCount(2);
-  await expect(chart.locator(".joules")).toHaveText(["925 J", "785 J"]);
+  await expect(chart.locator(".joules")).toHaveText(["769 J", "569 J"]);
 });
 
 test("home FR renders in French and the lang switch points to /fr", async ({ page }) => {

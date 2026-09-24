@@ -111,9 +111,9 @@ const STRINGS: Record<Locale, UIStrings> = {
       ledeAfterLink:
         " at Oak Ridge, HPC for nuclear simulation at EDF, and a five-node cluster running about 20 services in production, operated end to end from Docker to CI/CD.",
       figureLabel:
-        "GPU power over time for two ArborX DBSCAN implementations on an NVIDIA H100 NVL. Both plateau near 300 watts for the same duration; fdbscan uses 925 joules and fdbscan-dense 785 joules.",
+        "GPU power over time for two ArborX DBSCAN implementations on an NVIDIA H100 NVL, aligned on the start of the DBSCAN computation. fdbscan runs for 2.68 seconds and uses 769 joules; fdbscan-dense runs for 2.20 seconds and uses 569 joules.",
       figureCaption:
-        "Two ArborX DBSCAN implementations on an NVIDIA H100 NVL: same result, same runtime. The shaded area is the energy.",
+        "Two ArborX DBSCAN implementations on an NVIDIA H100 NVL, same result. The shaded area is the energy of the DBSCAN computation. Over 64 runs each, the dense one is 19% faster and uses 25% less energy: it also draws 9% less power.",
       figureLinkLabel: "From the SMC 2025 poster",
       figureLinkHref: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
     },
@@ -191,9 +191,9 @@ const STRINGS: Record<Locale, UIStrings> = {
       ledeAfterLink:
         " à Oak Ridge, le HPC pour la simulation nucléaire chez EDF, et un cluster de cinq nœuds qui fait tourner une vingtaine de services en production, exploité de bout en bout, de Docker à la CI/CD.",
       figureLabel:
-        "Puissance GPU dans le temps pour deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL. Les deux plafonnent autour de 300 watts pendant la même durée ; fdbscan consomme 925 joules et fdbscan-dense 785 joules.",
+        "Puissance GPU dans le temps pour deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL, alignées sur le début du calcul DBSCAN. fdbscan tourne 2,68 secondes et consomme 769 joules ; fdbscan-dense tourne 2,20 secondes et consomme 569 joules.",
       figureCaption:
-        "Deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL : même résultat, même durée. L'aire colorée, c'est l'énergie.",
+        "Deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL, même résultat. L'aire colorée, c'est l'énergie du calcul DBSCAN. Sur 64 exécutions de chacune, la version dense est 19 % plus rapide et consomme 25 % d'énergie en moins : elle tire aussi 9 % de watts en moins.",
       figureLinkLabel: "Tiré du poster SMC 2025",
       figureLinkHref: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
     },
