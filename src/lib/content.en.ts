@@ -104,7 +104,7 @@ export const en: SiteContent = {
       name: "DCS World events",
       blurb:
         "Large multiplayer events in the flight simulator DCS World, designed and run since 2021: 150 to 180+ participants, a volunteer staff of four to five that grows to about twelve for the finals, and a written debrief after every event.",
-      noLinkLabel: "since 2021",
+      noLinkLabel: "ongoing",
     },
     {
       name: "n-body galaxy",

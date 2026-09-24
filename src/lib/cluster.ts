@@ -290,7 +290,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     pathHead: {
       title: "Comment une requête atteint un service",
       intro:
-        "Chaque visite d'une de mes apps auto-hébergées suit le même chemin, de la bordure publique jusqu'au backend qui répond. Le voici, de bout en bout.",
+        "Chaque visite d'une de mes apps auto-hébergées suit le même chemin, du point d'entrée public jusqu'au backend qui répond. Le voici, de bout en bout.",
     },
     path: [
       { label: "Visiteur", sub: "un navigateur" },
