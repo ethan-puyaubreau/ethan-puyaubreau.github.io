@@ -88,6 +88,7 @@ const xTicks = [0, 1, 2, 3];
           </text>
           <path class="area" d={p.area} />
           <path class="line" d={p.line} />
+          <line class="start" x1={x(0)} x2={x(0)} y1={p.top - 4} y2={p.y(0)} />
           <line class="end" x1={p.endX} x2={p.endX} y1={p.top - 4} y2={p.y(0)} />
           {L.above ? (
             <text class="head" x={lx} y={p.top - 14}>
@@ -115,7 +116,6 @@ const xTicks = [0, 1, 2, 3];
         </g>
       );
     })}
-    <line class="start" x1={x(0)} x2={x(0)} y1={L.pad.t - 4} y2={H - L.pad.b} />
     {xTicks.map((t) => (
       <text class="tick" x={x(t)} y={H - 8} text-anchor="middle">
         {t}&nbsp;s
