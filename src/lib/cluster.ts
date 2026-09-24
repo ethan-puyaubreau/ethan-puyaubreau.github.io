@@ -268,10 +268,10 @@ const CONTENT: Record<Locale, ClusterContent> = {
     backHome: "Accueil",
     hero: {
       kicker: "Infrastructure auto-hébergée",
-      lead: "Les cinq machines derrière ",
+      lead: "Les cinq machines qui font tourner ",
       em: "mon homelab",
       tail: ".",
-      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en bordure, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané pris à la génération du site.",
+      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en frontal, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané pris à la génération du site.",
     },
     nodesHead: {
       title: "Cinq nœuds, chacun son rôle",

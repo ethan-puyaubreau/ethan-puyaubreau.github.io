@@ -205,9 +205,9 @@ const STRINGS: Record<Locale, UIStrings> = {
       kicker: "Articles",
       indexTitle: "Articles",
       indexIntro:
-        "Des articles sur le HPC, le calcul GPU, l'infrastructure, et les projets derrière.",
+        "Des articles sur le HPC, le calcul GPU, l'infrastructure et les projets qui les accompagnent.",
       metaDescription:
-        "Des articles sur le calcul haute performance, le calcul GPU, l'infrastructure, et les projets derrière, par Ethan Puyaubreau.",
+        "Des articles sur le calcul haute performance, le calcul GPU, l'infrastructure et les projets qui les accompagnent, par Ethan Puyaubreau.",
       empty: "Pas encore d'articles. Revenez bientôt.",
       backToIndex: "Tous les articles",
       seeAll: "Lire tous les articles",

@@ -31,7 +31,7 @@ export const fr: SiteContent = {
       period: "Été 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage fusionné dans Kokkos Tools, des connecteurs de mesure soumis en amont, des outils testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en septembre 2026.",
+        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances sur laquelle reposent de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage fusionné dans Kokkos Tools, des connecteurs de mesure soumis en amont, des outils testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en septembre 2026.",
       body: [
         {
           h: "Le problème",
@@ -119,7 +119,7 @@ export const fr: SiteContent = {
       name: "vireli",
       blurb:
         "Une PWA d'empreinte carbone gamifiée, réalisée avec un partenaire industriel. J'ai dirigé l'équipe de six (554 heures au total) et pris en charge l'architecture, le backend et le déploiement ; les 18 exigences ont été livrées.",
-      noLinkLabel: "en maintenance",
+      noLinkLabel: "non public",
     },
   ],
 

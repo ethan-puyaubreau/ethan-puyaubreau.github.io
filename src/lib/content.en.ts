@@ -116,7 +116,7 @@ export const en: SiteContent = {
       name: "vireli",
       blurb:
         "A gamified carbon-footprint PWA built with an industry partner. I led the team of six (554 hours in all) and owned the architecture, backend, and deployment; all 18 requirements were delivered.",
-      noLinkLabel: "in maintenance",
+      noLinkLabel: "not public",
     },
   ],
 
