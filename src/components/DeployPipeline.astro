@@ -13,18 +13,16 @@ const { stages, note } = Astro.props;
 
 <div class="pipeline">
   <ol class="stages">
-    {
-      stages.map((s, i) => (
-        <li class="stage">
-          <span class="stage-top">
-            <span class="stage-num">{String(i + 1).padStart(2, "0")}</span>
-            <span class="stage-approx">{s.approx}</span>
-          </span>
-          <span class="stage-name">{s.name}</span>
-          <span class="stage-detail">{s.detail}</span>
-        </li>
-      ))
-    }
+    {stages.map((s, i) => (
+      <li class="stage">
+        <span class="stage-top">
+          <span class="stage-num">{String(i + 1).padStart(2, "0")}</span>
+          <span class="stage-approx">{s.approx}</span>
+        </span>
+        <span class="stage-name">{s.name}</span>
+        <span class="stage-detail">{s.detail}</span>
+      </li>
+    ))}
   </ol>
   <p class="pipeline-foot">
     <span class="note">{note}</span>
@@ -46,7 +44,7 @@ const { stages, note } = Astro.props;
   .stage {
     position: relative;
     border: 1px solid var(--line);
-    border-top: 2px solid var(--accent);
+    border-top: 2px solid var(--ink);
     padding: var(--space-s) var(--space-m) var(--space-m);
     background: var(--bg-raised);
     display: flex;
@@ -61,7 +59,7 @@ const { stages, note } = Astro.props;
     top: 50%;
     transform: translate(40%, -50%);
     font-family: var(--font-mono);
-    color: var(--accent);
+    color: var(--ink);
     z-index: 1;
   }
   .stage-top {
@@ -78,7 +76,7 @@ const { stages, note } = Astro.props;
   .stage-approx {
     font-family: var(--font-mono);
     font-size: var(--step--2);
-    color: var(--accent-deep);
+    color: var(--ink-dim);
     font-variant-numeric: tabular-nums;
   }
   .stage-name {

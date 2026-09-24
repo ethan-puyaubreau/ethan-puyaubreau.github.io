@@ -51,7 +51,6 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
       :key="card.id"
       class="node"
       :class="{ self: card.self }"
-      data-reveal
     >
       <header class="node-head">
         <span class="status-dot" :data-up="card.live?.online" aria-hidden="true"></span>
@@ -108,8 +107,8 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
   background: var(--bg-raised);
 }
 .node.self {
-  border-color: var(--accent);
-  box-shadow: inset 0 2px 0 var(--accent);
+  border-color: var(--ink);
+  box-shadow: inset 0 2px 0 var(--ink);
 }
 .node {
   scroll-margin-top: 5rem;
@@ -165,8 +164,6 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
 .meter dt {
   font-family: var(--font-mono);
   font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
   color: var(--muted);
 }
 .meter dd {
@@ -186,7 +183,7 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
 .bar i {
   position: absolute;
   inset: 0 auto 0 0;
-  background: var(--accent);
+  background: var(--ink);
 }
 .bar[data-tone="warn"] i {
   background: var(--warn);

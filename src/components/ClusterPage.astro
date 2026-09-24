@@ -6,7 +6,6 @@ import Base from "../layouts/Base.astro";
 import SiteHeader from "./SiteHeader.astro";
 import SiteFooter from "./SiteFooter.astro";
 import SectionHeader from "./SectionHeader.astro";
-import ClusterField from "../islands/ClusterField.vue";
 import ClusterNodes from "../islands/ClusterNodes.vue";
 import ClusterPulse from "../islands/ClusterPulse.vue";
 import ClusterServices from "../islands/ClusterServices.vue";
@@ -30,10 +29,7 @@ const c = getClusterContent(locale);
 // Per-locale URL so the language switch stays on this page.
 const langPaths: Partial<Record<Locale, string>> = { en: "/cluster", fr: "/fr/cluster" };
 
-// Hero title carries one accented word, assembled as HTML to keep exact spacing.
-const esc = (s: string): string =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const heroTitle = `${esc(c.hero.lead)}<em>${esc(c.hero.em)}</em>${esc(c.hero.tail)}`;
+const heroTitle = `${c.hero.lead}${c.hero.em}${c.hero.tail}`;
 
 const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
   locale === "fr" ? "fr-FR" : "en-US",
@@ -55,26 +51,16 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
   />
 
   <main id="main" tabindex="-1">
-    <section id="top" class="hero theme-dark">
-      <ClusterField client:only="vue" strings={c.field} nodes={c.nodes} />
-      <div class="hero-scrim" aria-hidden="true"></div>
-      <div class="hero-overlay container">
-        <p class="label hero-kicker">{c.hero.kicker}</p>
-        <h1 class="hero-title" set:html={heroTitle} />
-        <p class="hero-lede">{c.hero.lede}</p>
-        <a class="hero-cue" href="#nodes">
-          <span>{c.hero.cue}</span>
-          <span class="arrow" aria-hidden="true">↓</span>
-        </a>
-      </div>
+    <section id="top" class="hero container">
+      <p class="hero-kicker">{c.hero.kicker}</p>
+      <h1 class="hero-title">{heroTitle}</h1>
+      <p class="hero-lede">{c.hero.lede}</p>
     </section>
 
     <div class="container">
       <section id="nodes">
-        <SectionHeader title={c.nodesHead.title}>
-          {c.nodesHead.intro}
-        </SectionHeader>
-        <div class="pulse-wrap" data-reveal>
+        <SectionHeader title={c.nodesHead.title}>{c.nodesHead.intro}</SectionHeader>
+        <div class="pulse-wrap">
           <ClusterPulse
             client:visible
             strings={c.pulse}
@@ -94,16 +80,12 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
       </section>
 
       <section id="path">
-        <SectionHeader title={c.pathHead.title}>
-          {c.pathHead.intro}
-        </SectionHeader>
+        <SectionHeader title={c.pathHead.title}>{c.pathHead.intro}</SectionHeader>
         <RequestPath stages={c.path} label={c.pathHead.title} />
       </section>
 
       <section id="services">
-        <SectionHeader title={c.servicesHead.title}>
-          {c.servicesHead.intro}
-        </SectionHeader>
+        <SectionHeader title={c.servicesHead.title}>{c.servicesHead.intro}</SectionHeader>
         <ClusterServices
           client:visible
           strings={c.services}
@@ -113,37 +95,25 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
       </section>
 
       <section id="pipeline">
-        <SectionHeader title={c.pipelineHead.title}>
-          {c.pipelineHead.intro}
-        </SectionHeader>
-        <DeployPipeline
-          stages={c.pipeline.stages}
-          note={c.pipeline.note}
-        />
+        <SectionHeader title={c.pipelineHead.title}>{c.pipelineHead.intro}</SectionHeader>
+        <DeployPipeline stages={c.pipeline.stages} note={c.pipeline.note} />
       </section>
 
       <section id="stack">
-        <SectionHeader title={c.stackHead.title}>
-          {c.stackHead.intro}
-        </SectionHeader>
+        <SectionHeader title={c.stackHead.title}>{c.stackHead.intro}</SectionHeader>
         <ul class="stack-grid" aria-label={c.stackHead.title}>
-          {
-            c.stack.map((s, i) => (
-              <li class="stack-item" data-reveal style={`--ri:${i}`}>
-                <span class="stack-name">{s.name}</span>
-                <span class="stack-note">{s.note}</span>
-              </li>
-            ))
-          }
+          {c.stack.map((s) => (
+            <li class="stack-item">
+              <span class="stack-name">{s.name}</span>
+              <span class="stack-note">{s.note}</span>
+            </li>
+          ))}
         </ul>
-        <p class="field-note">{c.field.note}</p>
       </section>
 
       <section id="operations">
-        <SectionHeader title={c.opsHead.title}>
-          {c.opsHead.intro}
-        </SectionHeader>
-        <div class="ops" data-reveal>
+        <SectionHeader title={c.opsHead.title}>{c.opsHead.intro}</SectionHeader>
+        <div class="ops">
           <p class="ops-oncall">{c.ops.oncall}</p>
           <p class="ops-monitor">{c.ops.monitoring}</p>
           <div class="ops-runbooks">
@@ -163,15 +133,15 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
         />
       </section>
 
-      <aside id="hire" class="talk" data-reveal>
-        <p class="talk-kicker">{c.talk.kicker}</p>
+      <aside id="hire" class="talk">
         <h2 class="talk-head">{c.talk.head}</h2>
         <p class="talk-body">{c.talk.body}</p>
         <a
           class="talk-cta"
           href={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}
-          >{c.talk.cta} <span class="arrow" aria-hidden="true">&#8594;</span></a
         >
+          {site.email}
+        </a>
       </aside>
     </div>
   </main>
@@ -190,107 +160,24 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
 
 <style>
   .hero {
-    position: relative;
-    min-height: 100svh;
-    display: flex;
-    align-items: flex-end;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .hero-scrim {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background:
-      linear-gradient(80deg, rgb(6 7 10 / 0.86) 0%, rgb(6 7 10 / 0.4) 34%, transparent 62%),
-      linear-gradient(to top, rgb(6 7 10 / 0.78) 0%, rgb(6 7 10 / 0.14) 30%, transparent 56%);
-  }
-  .hero-overlay {
-    position: relative;
-    z-index: 2;
-    padding-bottom: var(--space-2xl);
-    padding-top: calc(3.5rem + var(--space-xl));
-    pointer-events: none;
-  }
-  .hero-overlay a {
-    pointer-events: auto;
+    padding-top: calc(3.5rem + var(--space-2xl));
+    padding-bottom: var(--space-l);
   }
   .hero-kicker {
+    font-size: var(--step--1);
+    color: var(--muted);
     margin-bottom: var(--space-m);
   }
   .hero-title {
-    font-size: var(--step-7);
-    max-width: 15ch;
-    font-weight: 480;
-    text-shadow: 0 2px 34px rgb(0 0 0 / 0.55);
-  }
-  .hero-title :global(em) {
-    font-style: italic;
-    font-weight: 460;
-    color: var(--accent);
+    font-size: var(--step-6);
+    max-width: 18ch;
   }
   .hero-lede {
-    margin-top: var(--space-l);
+    margin-top: var(--space-m);
     max-width: 56ch;
     color: var(--ink-dim);
     font-size: var(--step-1);
-    text-shadow: 0 1px 24px rgb(0 0 0 / 0.6);
-  }
-  .hero-cue {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-top: var(--space-l);
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--ink-dim);
-  }
-  .hero-cue:hover {
-    color: var(--accent);
-  }
-  .hero-cue .arrow {
-    animation: nudge 2.4s var(--ease-in-out) infinite;
-  }
-  @keyframes nudge {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(3px);
-    }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-overlay > * {
-      animation: reveal var(--dur-slow) var(--ease-out) backwards;
-    }
-    .hero-kicker {
-      animation-delay: 0.1s;
-    }
-    .hero-title {
-      animation-delay: 0.22s;
-    }
-    .hero-lede {
-      animation-delay: 0.5s;
-    }
-    .hero-cue {
-      animation-delay: 0.72s;
-    }
-  }
-  @keyframes reveal {
-    from {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-cue .arrow {
-      animation: none;
-    }
+    line-height: 1.5;
   }
 
   main > .container > section {
@@ -314,18 +201,14 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
     color: var(--ink);
   }
   .ops-monitor {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--accent-deep);
+    font-size: var(--step--1);
+    color: var(--muted);
   }
   .ops-runbooks {
-    border-left: 2px solid var(--accent);
-    padding-left: var(--space-m);
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-s);
   }
   .ops-rb-title {
-    font-family: var(--font-mono);
     font-size: var(--step-0);
     margin-bottom: var(--space-2xs);
   }
@@ -351,44 +234,23 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
     gap: 0.2rem;
   }
   .stack-name {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
+    font-weight: 600;
     color: var(--ink);
-    letter-spacing: var(--tracking-wide);
   }
   .stack-note {
     font-size: var(--step--2);
     color: var(--muted);
   }
-  .field-note {
-    margin-top: var(--space-l);
-    max-width: var(--measure);
-    font-size: var(--step--2);
-    color: var(--muted);
-    font-style: italic;
-  }
-
   /* Call to action: closes the page instead of dead-ending on the console. */
   .talk {
     margin-block: var(--space-2xl) var(--space-xl);
-    padding: var(--space-l);
-    border: 1px solid var(--line);
-    border-left: 2px solid var(--accent);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--line);
     max-width: var(--measure);
   }
-  .talk-kicker {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--accent-deep);
-  }
   .talk-head {
-    margin-top: var(--space-2xs);
-    font-family: var(--font-display);
     font-size: var(--step-3);
-    color: var(--ink);
-    max-width: 22ch;
+    max-width: 24ch;
   }
   .talk-body {
     margin-top: var(--space-s);
@@ -396,24 +258,16 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
     max-width: 52ch;
   }
   .talk-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+    display: inline-block;
     margin-top: var(--space-m);
-    font-family: var(--font-mono);
-    font-size: var(--step-0);
-    color: var(--accent);
-    border-bottom: 1px solid var(--line-strong);
-    padding-bottom: 3px;
-    transition: border-color var(--dur-fast) var(--ease-out);
+    font-size: var(--step-1);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
   .talk-cta:hover {
-    border-color: var(--accent);
-  }
-  .talk-cta .arrow {
-    transition: transform var(--dur) var(--ease-smooth);
-  }
-  .talk-cta:hover .arrow {
-    transform: translateX(4px);
+    text-decoration-color: currentColor;
   }
 </style>

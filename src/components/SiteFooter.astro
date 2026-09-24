@@ -42,25 +42,33 @@ const [colophonBefore, colophonAfter] = colophon.split("{cluster}");
 <footer class="site-footer">
   <div class="container foot">
     <p class="colophon">
-      {colophonBefore}{hasCluster && <span class="hl">{CLUSTER}</span>}{colophonAfter}
+      {colophonBefore}
+      {hasCluster && <span class="hl">{CLUSTER}</span>}
+      {colophonAfter}
     </p>
     <nav class="foot-nav" aria-label="Footer">
       <a href={contactHref}>{contactLabel}</a>
       {blogHref && <a href={blogHref}>Blog</a>}
     </nav>
     <dl class="build" aria-label={buildLabel}>
-      <div><dt>{commitLabel}</dt><dd>{sha}</dd></div>
-      {
-        buildTime && (
-          <div>
-            <>
-              <dt>{builtLabel}</dt>
-              <dd>{buildTime}</dd>
-            </>
-          </div>
-        )
-      }
-      <div><dt>©</dt><dd>{year} {owner}</dd></div>
+      <div>
+        <dt>{commitLabel}</dt>
+        <dd>{sha}</dd>
+      </div>
+      {buildTime && (
+        <div>
+          <>
+            <dt>{builtLabel}</dt>
+            <dd>{buildTime}</dd>
+          </>
+        </div>
+      )}
+      <div>
+        <dt>©</dt>
+        <dd>
+          {year} {owner}
+        </dd>
+      </div>
     </dl>
   </div>
 </footer>
@@ -87,20 +95,19 @@ const [colophonBefore, colophonAfter] = colophon.split("{cluster}");
     gap: var(--space-m);
   }
   .foot-nav a {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
+    font-size: var(--step--1);
+    font-weight: 500;
     color: var(--ink-dim);
-    border-bottom: 1px solid var(--line-strong);
-    padding-bottom: 2px;
-    transition: color var(--dur-fast) var(--ease-out);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
   .foot-nav a:hover {
-    color: var(--accent);
+    color: var(--ink);
+    text-decoration-color: currentColor;
   }
   .hl {
-    color: var(--accent-deep);
+    color: var(--ink-dim);
   }
   .build {
     display: flex;
@@ -114,10 +121,7 @@ const [colophonBefore, colophonAfter] = colophon.split("{cluster}");
     align-items: baseline;
   }
   .build dt {
-    font-family: var(--font-mono);
     font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
     color: var(--muted);
   }
   .build dd {

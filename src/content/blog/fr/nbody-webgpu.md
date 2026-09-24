@@ -51,6 +51,6 @@ L'état initial est un disque en rotation autour d'une masse centrale lourde. La
 
 ## Bilan
 
-Sur un GPU dédié récent, ça tient 60 fps à 65k corps, soit, d'après l'affichage à l'écran, environ 258 milliards d'interactions entre paires par seconde (N² × fps). La galaxie derrière la page d'accueil de ce site tourne avec 16 384 corps seulement, pour rester fluide sur un portable. L'ensemble tient en une poignée de fichiers TypeScript et deux shaders WGSL, construit avec Vite, sans dépendance à l'exécution, et se déploie sur GitHub Pages.
+Sur un GPU dédié récent, ça tient 60 fps à 65k corps, soit, d'après l'affichage à l'écran, environ 258 milliards d'interactions entre paires par seconde (N² × fps). L'ensemble tient en une poignée de fichiers TypeScript et deux shaders WGSL, construit avec Vite, sans dépendance à l'exécution, et se déploie sur GitHub Pages.
 
 Pour dépasser le plafond en N², il faudrait Barnes-Hut ou une méthode multipolaire rapide (FMM), avec des millions de corps en ligne de mire ; faire entrer deux disques en collision viendrait ensuite. En attendant, la version O(N²) bête et méchante va déjà nettement plus loin que je ne le pensais.

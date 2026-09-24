@@ -13,15 +13,13 @@ const { stages, label } = Astro.props;
 
 <div class="reqpath">
   <ol class="track" aria-label={label}>
-    {
-      stages.map((s) => (
-        <li class="station">
-          <span class="bead" aria-hidden="true" />
-          <span class="st-label">{s.label}</span>
-          <span class="st-sub">{s.sub}</span>
-        </li>
-      ))
-    }
+    {stages.map((s) => (
+      <li class="station">
+        <span class="bead" aria-hidden="true" />
+        <span class="st-label">{s.label}</span>
+        <span class="st-sub">{s.sub}</span>
+      </li>
+    ))}
   </ol>
   <div class="packets" aria-hidden="true">
     <span class="packet"></span>
@@ -71,7 +69,7 @@ const { stages, label } = Astro.props;
     height: 0.7rem;
     border-radius: 50%;
     background: var(--bg);
-    border: 1px solid var(--accent);
+    border: 1px solid var(--ink);
     /* ring of page background masks the rail passing behind the bead */
     box-shadow: 0 0 0 4px var(--bg);
   }
@@ -101,8 +99,7 @@ const { stages, label } = Astro.props;
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
+    background: var(--ink);
   }
 
   @media (prefers-reduced-motion: no-preference) {

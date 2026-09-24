@@ -110,15 +110,13 @@ const memArea = computed(() => area(props.memHist));
   gap: 0.5rem;
   font-family: var(--font-mono);
   font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
   color: var(--muted);
 }
 .dot {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--ink);
   flex: none;
 }
 .pulse-agg {
@@ -129,8 +127,6 @@ const memArea = computed(() => area(props.memHist));
 .pulse-agg dt {
   font-family: var(--font-mono);
   font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
   color: var(--muted);
 }
 .pulse-agg dd {
@@ -150,8 +146,6 @@ const memArea = computed(() => area(props.memHist));
 .spark-label {
   font-family: var(--font-mono);
   font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
   color: var(--muted);
 }
 .spark {
@@ -162,13 +156,13 @@ const memArea = computed(() => area(props.memHist));
 }
 .spark-line {
   fill: none;
-  stroke: var(--accent);
+  stroke: var(--ink);
   stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
   stroke-linejoin: round;
 }
 .spark-fill {
-  fill: var(--accent);
+  fill: var(--ink);
   opacity: 0.1;
 }
 .spark-val {

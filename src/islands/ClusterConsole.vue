@@ -74,7 +74,7 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 .prompt {
-  color: var(--accent-deep);
+  color: var(--ink-dim);
   flex: none;
 }
 .cmd {
@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 .cursor {
   width: 0.55ch;
   height: 1.05em;
-  background: var(--accent);
+  background: var(--ink);
   flex: none;
   margin-left: -0.2rem;
 }

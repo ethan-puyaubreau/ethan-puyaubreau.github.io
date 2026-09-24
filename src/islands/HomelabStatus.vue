@@ -74,15 +74,13 @@ defineProps<{
   gap: 0.5rem;
   font-family: var(--font-mono);
   font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
   color: var(--muted);
 }
 .dot {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--ink);
   flex: none;
 }
 .grid {
@@ -99,8 +97,6 @@ defineProps<{
 .grid dt {
   font-family: var(--font-mono);
   font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
   color: var(--muted);
 }
 .grid dd {

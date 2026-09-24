@@ -29,7 +29,7 @@ defineProps<{ strings: ServicesStrings; up: number; total: number }>();
   color: var(--ink);
 }
 .svc-count .num {
-  color: var(--accent-deep);
+  color: var(--ink-dim);
   font-variant-numeric: tabular-nums;
 }
 .svc-caption {

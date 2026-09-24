@@ -54,7 +54,6 @@ export interface ClusterContent {
     readonly em: string;
     readonly tail: string;
     readonly lede: string;
-    readonly cue: string;
   };
   readonly nodesHead: { readonly title: string; readonly intro: string };
   readonly nodes: readonly ClusterNode[];
@@ -101,20 +100,12 @@ export interface ClusterContent {
   };
   /** Call to action closing the page (no dead end). */
   readonly talk: {
-    readonly kicker: string;
     readonly head: string;
     readonly body: string;
     readonly cta: string;
   };
   readonly stackHead: { readonly title: string; readonly intro: string };
   readonly stack: readonly StackItem[];
-  readonly field: {
-    readonly canvasLabel: string;
-    readonly legendNode: string;
-    readonly legendService: string;
-    readonly legendTraffic: string;
-    readonly note: string;
-  };
 }
 
 // Node order on the page; ids match the Proxmox node names the snapshot reports.
@@ -177,7 +168,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
       em: "my homelab",
       tail: ".",
       lede: "The homelab is a five-node Proxmox cluster I run: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and about twenty services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time.",
-      cue: "The nodes",
     },
     nodesHead: {
       title: "Five nodes, each with a job",
@@ -260,7 +250,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
       uptime: "uptime",
     },
     talk: {
-      kicker: "Contact",
       head: "Everything here, I built and run myself",
       body: "The GPU work, the cluster, the CI/CD. I am open to HPC and infrastructure roles from January 2027.",
       cta: "Get in touch",
@@ -281,14 +270,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
       { name: "Tailscale", note: "Nomad access to the LAN" },
       { name: "Coolify", note: "A small PaaS for the side apps" },
     ],
-    field: {
-      canvasLabel:
-        "Map of the homelab cluster: five nodes, the services they host, and traffic flowing in through the reverse proxy.",
-      legendNode: "node",
-      legendService: "service",
-      legendTraffic: "traffic",
-      note: "A map of the cluster. The nodes are real; the flowing points are a stand-in for traffic, not a packet capture.",
-    },
   },
 
   fr: {
@@ -312,7 +293,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
       em: "mon homelab",
       tail: ".",
       lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en bordure, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané capturé au moment du build.",
-      cue: "Les nœuds",
     },
     nodesHead: {
       title: "Cinq nœuds, chacun son rôle",
@@ -357,8 +337,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     services: {
       count: "actifs",
-      caption:
-        "Un contrôle de santé instantané des points d'accès surveillés.",
+      caption: "Un contrôle de santé instantané des points d'accès surveillés.",
     },
     pipelineHead: {
       title: "Comment un projet auto-hébergé se déploie",
@@ -396,7 +375,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
       uptime: "uptime",
     },
     talk: {
-      kicker: "Contact",
       head: "Tout ce qui est ici, je l'ai construit et je l'exploite",
       body: "Le travail GPU, le cluster, la CI/CD. Je suis ouvert à des postes HPC et infrastructure à partir de janvier 2027.",
       cta: "Me contacter",
@@ -417,14 +395,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
       { name: "Tailscale", note: "Accès nomade au LAN" },
       { name: "Coolify", note: "Un petit PaaS pour les apps annexes" },
     ],
-    field: {
-      canvasLabel:
-        "Carte du cluster homelab : cinq nœuds, les services qu'ils hébergent, et le trafic qui entre par le reverse proxy.",
-      legendNode: "nœud",
-      legendService: "service",
-      legendTraffic: "trafic",
-      note: "Une carte du cluster. Les nœuds sont réels ; les points en mouvement figurent le trafic, ce n'est pas une capture réseau.",
-    },
   },
 };
 

@@ -75,39 +75,39 @@ const articleLd = {
     langPaths={langPaths}
     solid
   />
-  <script type="application/ld+json" set:html={JSON.stringify(articleLd)} is:inline />
-
+  <script type="application/ld+json" set:html={JSON.stringify(articleLd)} is:inline></script>
   <main id="main" tabindex="-1" class="post-main">
     <article class="container post">
-      <a class="back" href={blogHome(locale)}
-        ><span aria-hidden="true">←</span> {ui.blog.backToIndex}</a
-      >
-      <header class="post-head" data-reveal>
-        <p class="label post-date">{ui.blog.published} {dateLabel}</p>
+      <a class="back" href={blogHome(locale)}>
+        {ui.blog.backToIndex}
+      </a>
+      <header class="post-head">
+        <p class="label post-date">
+          {ui.blog.published} {dateLabel}
+        </p>
         <h1 class="post-title">{d.title}</h1>
         <p class="post-desc">{d.description}</p>
-        {
-          d.tags.length > 0 && (
-            <ul class="post-tags" aria-label={ui.blog.tagsLabel}>
-              {d.tags.map((t) => (
-                <li>{t}</li>
-              ))}
-            </ul>
-          )
-        }
+        {d.tags.length > 0 && (
+          <p class="post-tags">
+            <span class="visually-hidden">{ui.blog.tagsLabel}: </span>
+            {d.tags.join(" · ")}
+          </p>
+        )}
       </header>
-      <div class="prose" data-reveal>
+      <div class="prose">
         <Content />
       </div>
 
-      <footer class="author-card" data-reveal>
+      <footer class="author-card">
         <Image src={avatar} alt="" width={88} densities={[1, 2]} class="author-avatar" />
         <div class="author-meta">
           <p class="author-name">{site.name}</p>
           <p class="author-tagline">{ui.blog.authorTagline}</p>
           <p class="author-available">{ui.blog.authorAvailable}</p>
         </div>
-        <a class="author-cta" href={`${localeHome(locale)}#contact`}>{ui.blog.contactCta}</a>
+        <a class="author-cta" href={`${localeHome(locale)}#contact`}>
+          {ui.blog.contactCta}
+        </a>
       </footer>
     </article>
   </main>
@@ -126,7 +126,7 @@ const articleLd = {
 
 <style>
   .post-main {
-    padding-top: calc(3.5rem + var(--space-xl));
+    padding-top: calc(3.5rem + var(--space-2xl));
     padding-bottom: var(--space-2xl);
   }
   .post {
@@ -135,26 +135,23 @@ const articleLd = {
   .back {
     display: inline-block;
     margin-bottom: var(--space-l);
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
+    font-size: var(--step--1);
+    font-weight: 500;
     color: var(--ink-dim);
-    border-bottom: 1px solid var(--line-strong);
-    padding-bottom: 2px;
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
   .back:hover {
-    color: var(--accent);
-    border-color: var(--accent);
+    color: var(--ink);
+    text-decoration-color: currentColor;
   }
   .post-date {
     margin-bottom: var(--space-s);
   }
   .post-title {
-    font-family: var(--font-display);
     font-size: var(--step-5);
-    font-weight: 480;
-    line-height: 1.08;
+    line-height: 1.06;
   }
   .post-desc {
     margin-top: var(--space-m);
@@ -163,29 +160,15 @@ const articleLd = {
     font-size: var(--step-1);
   }
   .post-tags {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding: 0;
-    margin: var(--space-m) 0 0;
-  }
-  .post-tags li {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-wide);
-    color: var(--accent-deep);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 0.15rem 0.5rem;
+    margin-top: var(--space-s);
+    font-size: var(--step--1);
+    color: var(--muted);
   }
   .prose {
     margin-top: var(--space-xl);
   }
   .prose :global(h2) {
-    font-family: var(--font-display);
     font-size: var(--step-3);
-    font-weight: 480;
     margin-top: var(--space-xl);
     margin-bottom: var(--space-s);
   }
@@ -195,16 +178,17 @@ const articleLd = {
     color: var(--ink);
   }
   .prose :global(a) {
-    color: var(--accent-deep);
-    border-bottom: 1px solid var(--line-strong);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
   .prose :global(a:hover) {
-    color: var(--accent);
+    text-decoration-color: currentColor;
   }
   .prose :global(code) {
     font-family: var(--font-mono);
     font-size: 0.9em;
-    background: var(--line);
+    background: var(--bg-sunken);
     padding: 0.1rem 0.3rem;
     border-radius: var(--radius);
   }
@@ -270,8 +254,7 @@ const articleLd = {
     min-width: 0;
   }
   .author-name {
-    font-family: var(--font-display);
-    font-size: var(--step-1);
+    font-weight: 650;
     color: var(--ink);
   }
   .author-tagline {
@@ -279,29 +262,18 @@ const articleLd = {
     color: var(--ink-dim);
   }
   .author-available {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--accent-deep);
+    font-size: var(--step--1);
+    color: var(--muted);
     margin-top: 0.2rem;
   }
   .author-cta {
     flex-shrink: 0;
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--ink);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
-    padding: 0.5rem 0.9rem;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
   .author-cta:hover {
-    color: var(--accent);
-    border-color: var(--accent);
+    text-decoration-color: currentColor;
   }
 </style>

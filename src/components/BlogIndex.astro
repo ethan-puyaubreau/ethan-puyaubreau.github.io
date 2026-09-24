@@ -47,53 +47,33 @@ const fmt = (d: Date): string =>
 
   <main id="main" tabindex="-1" class="index-main">
     <div class="container">
-      <header class="index-head" data-reveal>
-        <p class="label">{ui.blog.kicker}</p>
+      <header class="index-head">
         <h1 class="index-title">{ui.blog.indexTitle}</h1>
         <p class="index-intro">{ui.blog.indexIntro}</p>
       </header>
 
-      {
-        posts.length === 0 ? (
-          <p class="empty">{ui.blog.empty}</p>
-        ) : (
-          <Fragment>
-            <a class="featured" href={blogPost(locale, posts[0].data.slug)} data-reveal>
-              <span class="feat-date">{fmt(posts[0].data.pubDate)}</span>
-              <span class="feat-title">{posts[0].data.title}</span>
-              <span class="feat-desc">{posts[0].data.description}</span>
-              <span class="feat-cta">
-                {ui.blog.readArticle}{" "}
-                <span class="arrow" aria-hidden="true">
-                  →
-                </span>
-              </span>
-            </a>
-            {posts.length > 1 && (
-              <ul class="post-list">
-                {posts.slice(1).map((p, i) => (
-                  <li class="post-row" data-reveal style={`--ri:${i}`}>
-                    <a href={blogPost(locale, p.data.slug)}>
-                      <span class="row-date">{fmt(p.data.pubDate)}</span>
-                      <span class="row-title">{p.data.title}</span>
-                      <span class="row-desc">{p.data.description}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Fragment>
-        )
-      }
+      {posts.length === 0 ? (
+        <p class="empty">{ui.blog.empty}</p>
+      ) : (
+        <ul class="post-list">
+          {posts.map((p) => (
+            <li class="post-row">
+              <a href={blogPost(locale, p.data.slug)}>
+                <span class="row-date">{fmt(p.data.pubDate)}</span>
+                <span class="row-title">{p.data.title}</span>
+                <span class="row-desc">{p.data.description}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
 
-      <aside class="talk" data-reveal>
-        <h2 class="talk-head">{ui.blog.talkHead}</h2>
-        <a
-          class="talk-cta"
-          href={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}
-          >{ui.blog.contactCta} <span class="arrow" aria-hidden="true">&#8594;</span></a
-        >
-      </aside>
+      <p class="talk">
+        {ui.blog.talkHead}{" "}
+        <a href={`mailto:${site.email}?subject=${encodeURIComponent(ui.contactMailSubject)}`}>
+          {site.email}
+        </a>
+      </p>
     </div>
   </main>
 
@@ -111,17 +91,14 @@ const fmt = (d: Date): string =>
 
 <style>
   .index-main {
-    padding-top: calc(3.5rem + var(--space-xl));
+    padding-top: calc(3.5rem + var(--space-2xl));
     padding-bottom: var(--space-2xl);
   }
   .index-title {
-    font-family: var(--font-display);
     font-size: var(--step-5);
-    font-weight: 480;
-    margin-top: var(--space-s);
   }
   .index-intro {
-    margin-top: var(--space-m);
+    margin-top: var(--space-s);
     max-width: 52ch;
     color: var(--ink-dim);
     font-size: var(--step-1);
@@ -129,61 +106,6 @@ const fmt = (d: Date): string =>
   .empty {
     margin-top: var(--space-xl);
     color: var(--muted);
-  }
-
-  /* Featured: the newest post as a full-width card, so a young blog still reads
-     as active rather than a single lonely row. */
-  .featured {
-    display: block;
-    margin-top: var(--space-2xl);
-    padding: var(--space-l);
-    border: 1px solid var(--line);
-    border-left: 2px solid var(--accent);
-    transition: border-color var(--dur-fast) var(--ease-out);
-  }
-  .featured:hover {
-    border-color: var(--accent);
-  }
-  .feat-date {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
-    color: var(--muted);
-  }
-  .feat-title {
-    display: block;
-    margin-top: var(--space-s);
-    font-family: var(--font-display);
-    font-size: var(--step-4);
-    font-weight: 480;
-    color: var(--ink);
-    max-width: 24ch;
-  }
-  .feat-desc {
-    display: block;
-    margin-top: var(--space-s);
-    max-width: 60ch;
-    color: var(--ink-dim);
-    font-size: var(--step-1);
-  }
-  .feat-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: var(--space-m);
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    color: var(--accent);
-  }
-  .featured:hover .feat-cta .arrow {
-    transform: translateX(4px);
-  }
-  .feat-cta .arrow {
-    transition: transform var(--dur) var(--ease-smooth);
   }
   .post-list {
     list-style: none;
@@ -200,64 +122,42 @@ const fmt = (d: Date): string =>
     align-items: baseline;
   }
   .post-row a:hover .row-title {
-    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
   }
   .row-date {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
+    font-size: var(--step--1);
     color: var(--muted);
+    font-variant-numeric: tabular-nums;
   }
   .row-title {
     grid-column: 2;
-    font-family: var(--font-display);
     font-size: var(--step-2);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.15;
     color: var(--ink);
-    transition: color var(--dur-fast) var(--ease-out);
   }
   .row-desc {
     grid-column: 2;
     margin-top: 0.3rem;
+    max-width: 62ch;
     color: var(--ink-dim);
-    font-size: var(--step-0);
   }
-  /* Call to action: a way to reach out from the blog, not a dead end. */
   .talk {
-    margin-block: var(--space-2xl) 0;
-    padding: var(--space-l);
-    border: 1px solid var(--line);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-m);
+    margin-top: var(--space-xl);
+    color: var(--ink-dim);
   }
-  .talk-head {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
+  .talk a {
     color: var(--ink);
-    max-width: 30ch;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
-  .talk-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: var(--step-0);
-    color: var(--accent);
-    border-bottom: 1px solid var(--line-strong);
-    padding-bottom: 3px;
-    transition: border-color var(--dur-fast) var(--ease-out);
-  }
-  .talk-cta:hover {
-    border-color: var(--accent);
-  }
-  .talk-cta .arrow {
-    transition: transform var(--dur) var(--ease-smooth);
-  }
-  .talk-cta:hover .arrow {
-    transform: translateX(4px);
+  .talk a:hover {
+    text-decoration-color: currentColor;
   }
   @media (max-width: 640px) {
     .post-row a {

@@ -51,6 +51,6 @@ The initial state is a rotating disk around a heavy central mass. Each body's or
 
 ## Results
 
-On a recent discrete GPU it holds 60 fps at 65k bodies, which the HUD reports as about 258 billion pairwise interactions per second (N² × fps). The galaxy behind the home page of this site runs a lighter 16,384 bodies, so it stays smooth on laptops. The whole thing is a handful of TypeScript files and two WGSL shaders, built with Vite, with no runtime dependencies, and it deploys to GitHub Pages.
+On a recent discrete GPU it holds 60 fps at 65k bodies, which the HUD reports as about 258 billion pairwise interactions per second (N² × fps). The whole thing is a handful of TypeScript files and two WGSL shaders, built with Vite, with no runtime dependencies, and it deploys to GitHub Pages.
 
 Barnes-Hut or a fast multipole method (FMM) would break the N² ceiling and open the door to millions of bodies; colliding two disks would come after that. For now the dumb O(N²) version goes considerably further than I expected.
