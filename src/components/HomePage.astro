@@ -43,6 +43,7 @@ const posts = (
 )
   .sort(
     (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
+      Number(b.data.pinned) - Number(a.data.pinned) ||
       b.data.pubDate.getTime() - a.data.pubDate.getTime(),
   )
   .slice(0, 3);

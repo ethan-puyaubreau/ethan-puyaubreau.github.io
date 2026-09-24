@@ -2,7 +2,8 @@
 title: "Charging GPU energy to the code that spent it"
 description: "A profiler tells you where GPU code spends time. I wanted to know where it spends joules, so I built a Kokkos Tools connector that samples power on a side thread and integrates it over each profiled region. On ArborX DBSCAN, the faster implementation saves more energy than time: 19% less time, 25% less energy."
 pubDate: 2026-06-12
-updatedDate: 2026-09-23
+updatedDate: 2026-09-24
+pinned: true
 lang: en
 slug: kokkos-gpu-energy
 tags: ["HPC", "GPU", "Kokkos", "NVML"]
@@ -41,7 +42,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <h2>You cannot read energy, only watch power</h2>
 
-<p>The obvious first version reads the power sensor at the begin callback, reads it again at the end, and multiplies the average by the duration. It does not work, and the reason it does not work is the heart of the problem. NVIDIA's management library, NVML, exposes <code>nvmlDeviceGetPowerUsage</code>, which returns the board's instantaneous power draw in milliwatts. The catch is twofold. That value is refreshed only every 100 ms, and it averages just the last 25 ms of each interval (<a href="https://doi.org/10.1109/SC41406.2024.00028">Yang, Adamek and Armour, SC24</a>), so most of what the board does is never observed at all. Most HPC kernels run in under 10 ms: begin and end frequently return the same stale reading, and the duration tells you nothing. And even when a region is long enough to span several updates, two point readings cannot describe a curve that rises and falls across it.</p>
+<p>The obvious first version reads the power sensor at the begin callback, reads it again at the end, and multiplies the average by the duration; that is what the existing <a href="https://github.com/kokkos/kokkos-tools/tree/develop/profiling/variorum-connector">Variorum connector</a> in Kokkos Tools does. It does not work, and the reason it does not work is the heart of the problem. NVIDIA's management library, NVML, exposes <code>nvmlDeviceGetPowerUsage</code>, which returns the board's instantaneous power draw in milliwatts. The catch is twofold. That value is refreshed only every 100 ms, and it averages just the last 25 ms of each interval (<a href="https://doi.org/10.1109/SC41406.2024.00028">Yang, Adamek and Armour, SC24</a>), so most of what the board does is never observed at all. Most HPC kernels run in under 10 ms: begin and end frequently return the same stale reading, and the duration tells you nothing. And even when a region is long enough to span several updates, two point readings cannot describe a curve that rises and falls across it.</p>
 
 <p>The deeper issue is that power is the wrong quantity to sample at the boundaries. Power is a rate, in watts. What you pay for is energy, in joules, and energy is the integral of power over time. Two readings give you two heights of a curve. The bill is the area under it. My first version reported nonsense on short kernels, sometimes zero, sometimes the power of the previous kernel, depending on which side of a sensor update the two readings landed, and that was the signal to stop sampling on the kernel's schedule and start sampling on the clock's.</p>
 
@@ -51,14 +52,14 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
     <line x1="70" y1="50" x2="70" y2="300"/>
     <line x1="70" y1="300" x2="700" y2="300"/>
   </g>
-  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#5f5f5c" text-anchor="end">
+  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="12.5" fill="#5f5f5c" text-anchor="end">
     <line x1="66" y1="300" x2="70" y2="300" stroke="#c9c9c4"/><text x="61" y="304">0</text>
     <line x1="66" y1="217" x2="70" y2="217" stroke="#c9c9c4"/><text x="61" y="221">100</text>
     <line x1="66" y1="133" x2="70" y2="133" stroke="#c9c9c4"/><text x="61" y="137">200</text>
     <line x1="66" y1="50"  x2="70" y2="50"  stroke="#c9c9c4"/><text x="61" y="54">300</text>
   </g>
-  <text x="70" y="36" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#5f5f5c">power (W)</text>
-  <text x="694" y="318" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#5f5f5c">time &#8594;</text>
+  <text x="70" y="36" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#5f5f5c">power (W)</text>
+  <text x="694" y="318" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#5f5f5c">time &#8594;</text>
   <g font-family="JetBrains Mono Variable,ui-monospace,monospace" font-size="11" text-anchor="middle">
     <rect x="95"  y="50" width="160" height="250" fill="#b93a0a" opacity="0.05"/>
     <rect x="300" y="50" width="170" height="250" fill="#3d3d3d" opacity="0.06"/>
@@ -85,7 +86,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
     <circle cx="606" cy="216" r="2.4"/><circle cx="632" cy="212" r="2.4"/>
     <circle cx="676" cy="249" r="2.4"/>
   </g>
-  <text x="177" y="180" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#9a3412">Energy = &#8747; P dt</text>
+  <text x="177" y="180" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#9a3412">Energy = &#8747; P dt</text>
   <text x="177" y="198" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#9a3412">area above idle = marginal cost</text>
 </svg>
 <figcaption>A schematic, not a measurement. One region's energy is the area under its power curve. The dashed line is the idle floor; the marginal cost of a region is the part of the area that sits above it. The dots are the side thread sampling at a fixed cadence.</figcaption>
@@ -99,11 +100,11 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <h2>The limits of the number</h2>
 
-<p>NVML reports power for the whole board, not per streaming multiprocessor, so this is whole-GPU attribution. If two kernels run concurrently on the same device, on separate streams, the trace cannot tell you which one drew which watt, and the energy of the overlap cannot be split cleanly between them. The total also includes whatever the board draws between regions: in the DBSCAN runs above, 16.5% and 21.6% of the energy falls outside any Kokkos region, which is why the connector reports both numbers. Whole-device attribution is enough to compare algorithms by energy, and not enough to rank individual kernels.</p>
+<p>NVML reports power for the whole board, not per streaming multiprocessor, so this is whole-GPU attribution. If two kernels run concurrently on the same device, on separate streams, the trace cannot tell you which one drew which watt, and the energy of the overlap cannot be split cleanly between them. The total also includes whatever the board draws between regions: in the DBSCAN runs above, 16.5% and 21.6% of the energy falls outside any Kokkos region, which is why the 2025 connector reports both numbers. Whole-device attribution is enough to compare algorithms by energy, and not enough to rank individual kernels.</p>
 
 <h2>Two backends, two different questions</h2>
 
-<p>NVML answers one question: what this NVIDIA GPU drew. It reports per board, in milliwatts, NVIDIA only, and sees nothing outside the card. So the connector has a second backend built on Variorum, which is vendor-neutral and reads power at the node and socket level, including the CPU (through RAPL, the power counters built into Intel and AMD processors), the DRAM, and some non-NVIDIA GPUs. NVML gives you what the GPU drew, Variorum what the whole node drew. A region that looks cheap on the card can still be shuffling enough data to light up the CPU and the memory controllers around it, and only the node-level view catches that. You reach for NVML when the question is what the GPU itself spent, and for Variorum when you want the energy bill the machine room actually sees.</p>
+<p>NVML answers one question: what this NVIDIA GPU drew. It reports per board, in milliwatts, NVIDIA only, and sees nothing outside the card. So the 2025 connector (#302) has a second backend built on Variorum, which is vendor-neutral and reads power at the node and socket level, including the CPU (through RAPL, the power counters built into Intel and AMD processors), the DRAM, and some non-NVIDIA GPUs. NVML gives you what the GPU drew, Variorum what the whole node drew. A region that looks cheap on the card can still be shuffling enough data to light up the CPU and the memory controllers around it, and only the node-level view catches that. You reach for NVML when the question is what the GPU itself spent, and for Variorum when you want the energy bill the machine room actually sees.</p>
 
 <figure>
 <svg viewBox="0 0 760 340" role="img" aria-label="The connector pipeline. The Kokkos application fires Tools callbacks at every parallel region; the energy connector receives a power trace from a sampler thread that reads power out of band at a fixed interval; NVML and Variorum feed the sampler; the connector integrates the trace per region into joules, which flow to energy-dashboard-for-kokkos, the analysis tool." xmlns="http://www.w3.org/2000/svg">

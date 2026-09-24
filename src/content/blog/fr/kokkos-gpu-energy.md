@@ -2,7 +2,8 @@
 title: "Imputer l'énergie GPU au code qui l'a dépensée"
 description: "Un profileur vous dit où du code GPU passe son temps. Je voulais savoir où il dépense ses joules : j'ai donc construit un connecteur Kokkos Tools qui échantillonne la puissance sur un thread dédié et l'intègre sur chaque région profilée. Sur le DBSCAN d'ArborX, l'implémentation la plus rapide économise plus d'énergie que de temps : 19 % de temps et 25 % d'énergie en moins."
 pubDate: 2026-06-12
-updatedDate: 2026-09-23
+updatedDate: 2026-09-24
+pinned: true
 lang: fr
 slug: kokkos-gpu-energy
 tags: ["HPC", "GPU", "Kokkos", "NVML"]
@@ -41,7 +42,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <h2>On ne peut pas lire l'énergie, seulement observer la puissance</h2>
 
-<p>La première version évidente lit le capteur de puissance au callback de début, le relit à la fin, et multiplie la moyenne par la durée. Ça ne marche pas, et la raison pour laquelle ça ne marche pas est au cœur du problème. La bibliothèque de gestion de NVIDIA, NVML, expose <code>nvmlDeviceGetPowerUsage</code>, qui renvoie la puissance instantanée de la carte en milliwatts. Le piège est double. Cette valeur n'est rafraîchie que toutes les 100 ms, et elle ne moyenne que les 25 dernières ms de chaque intervalle (<a href="https://doi.org/10.1109/SC41406.2024.00028">Yang, Adamek et Armour, SC24</a>) : l'essentiel de ce que fait la carte n'est jamais observé. La plupart des noyaux HPC durent moins de 10 ms : début et fin renvoient alors souvent la même valeur périmée, et la durée ne dit rien. Et même quand une région est assez longue pour couvrir plusieurs mises à jour, deux lectures ponctuelles ne peuvent pas décrire une courbe qui monte et descend pendant toute sa durée.</p>
+<p>La première version évidente lit le capteur de puissance au callback de début, le relit à la fin, et multiplie la moyenne par la durée ; c'est ce que fait le <a href="https://github.com/kokkos/kokkos-tools/tree/develop/profiling/variorum-connector">connecteur Variorum</a> déjà présent dans Kokkos Tools. Ça ne marche pas, et la raison pour laquelle ça ne marche pas est au cœur du problème. La bibliothèque de gestion de NVIDIA, NVML, expose <code>nvmlDeviceGetPowerUsage</code>, qui renvoie la puissance instantanée de la carte en milliwatts. Le piège est double. Cette valeur n'est rafraîchie que toutes les 100 ms, et elle ne moyenne que les 25 dernières ms de chaque intervalle (<a href="https://doi.org/10.1109/SC41406.2024.00028">Yang, Adamek et Armour, SC24</a>) : l'essentiel de ce que fait la carte n'est jamais observé. La plupart des noyaux HPC durent moins de 10 ms : début et fin renvoient alors souvent la même valeur périmée, et la durée ne dit rien. Et même quand une région est assez longue pour couvrir plusieurs mises à jour, deux lectures ponctuelles ne peuvent pas décrire une courbe qui monte et descend pendant toute sa durée.</p>
 
 <p>Le problème de fond, c'est que la puissance est la mauvaise grandeur à échantillonner aux bornes. La puissance est un débit instantané, en watts. Ce qu'on paie, c'est de l'énergie, en joules, et l'énergie est l'intégrale de la puissance dans le temps. Deux lectures donnent deux hauteurs d'une courbe. La facture, c'est l'aire en dessous. Ma première version donnait n'importe quoi sur les noyaux courts : tantôt zéro, tantôt la puissance du noyau précédent, selon le côté d'une mise à jour du capteur où tombaient les deux lectures, et c'était le signal pour cesser d'échantillonner au rythme du noyau et passer au rythme de l'horloge.</p>
 
@@ -51,14 +52,14 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
     <line x1="70" y1="50" x2="70" y2="300"/>
     <line x1="70" y1="300" x2="700" y2="300"/>
   </g>
-  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#5f5f5c" text-anchor="end">
+  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="12.5" fill="#5f5f5c" text-anchor="end">
     <line x1="66" y1="300" x2="70" y2="300" stroke="#c9c9c4"/><text x="61" y="304">0</text>
     <line x1="66" y1="217" x2="70" y2="217" stroke="#c9c9c4"/><text x="61" y="221">100</text>
     <line x1="66" y1="133" x2="70" y2="133" stroke="#c9c9c4"/><text x="61" y="137">200</text>
     <line x1="66" y1="50"  x2="70" y2="50"  stroke="#c9c9c4"/><text x="61" y="54">300</text>
   </g>
-  <text x="70" y="36" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#5f5f5c">puissance (W)</text>
-  <text x="694" y="318" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#5f5f5c">temps &#8594;</text>
+  <text x="70" y="36" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#5f5f5c">puissance (W)</text>
+  <text x="694" y="318" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#5f5f5c">temps &#8594;</text>
   <g font-family="JetBrains Mono Variable,ui-monospace,monospace" font-size="11" text-anchor="middle">
     <rect x="95"  y="50" width="160" height="250" fill="#b93a0a" opacity="0.05"/>
     <rect x="300" y="50" width="170" height="250" fill="#3d3d3d" opacity="0.06"/>
@@ -85,7 +86,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
     <circle cx="606" cy="216" r="2.4"/><circle cx="632" cy="212" r="2.4"/>
     <circle cx="676" cy="249" r="2.4"/>
   </g>
-  <text x="177" y="180" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#9a3412">Énergie = &#8747; P dt</text>
+  <text x="177" y="180" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#9a3412">Énergie = &#8747; P dt</text>
   <text x="177" y="198" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#9a3412">aire au-dessus du repos = coût marginal</text>
 </svg>
 <figcaption>Un schéma, pas une mesure. L'énergie d'une région est l'aire sous sa courbe de puissance. La ligne pointillée est le plancher de repos ; le coût marginal d'une région est la part de l'aire qui se situe au-dessus. Les points sont le thread dédié qui échantillonne à cadence fixe.</figcaption>
@@ -99,11 +100,11 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <h2>Les limites du chiffre</h2>
 
-<p>NVML fournit la puissance de la carte entière, pas par SM (multiprocesseur) : c'est une imputation à l'échelle du GPU. Si deux noyaux s'exécutent en même temps sur le même GPU, sur des streams CUDA distincts, la trace ne peut pas dire lequel a consommé quel watt, et l'énergie du recouvrement ne peut pas être répartie proprement entre eux. Le total inclut aussi ce que la carte consomme entre les régions : dans les exécutions de DBSCAN ci-dessus, 16,5 % et 21,6 % de l'énergie tombent hors de toute région Kokkos, et c'est pourquoi le connecteur donne les deux chiffres. Une imputation à l'échelle du GPU suffit pour comparer des algorithmes par l'énergie, pas pour classer des noyaux isolés.</p>
+<p>NVML fournit la puissance de la carte entière, pas par SM (multiprocesseur) : c'est une imputation à l'échelle du GPU. Si deux noyaux s'exécutent en même temps sur le même GPU, sur des streams CUDA distincts, la trace ne peut pas dire lequel a consommé quel watt, et l'énergie du recouvrement ne peut pas être répartie proprement entre eux. Le total inclut aussi ce que la carte consomme entre les régions : dans les exécutions de DBSCAN ci-dessus, 16,5 % et 21,6 % de l'énergie tombent hors de toute région Kokkos, et c'est pourquoi le connecteur de 2025 donne les deux chiffres. Une imputation à l'échelle du GPU suffit pour comparer des algorithmes par l'énergie, pas pour classer des noyaux isolés.</p>
 
 <h2>Deux backends, deux questions différentes</h2>
 
-<p>NVML répond à une seule question : ce qu'a consommé ce GPU NVIDIA. La mesure est par carte, en milliwatts, NVIDIA uniquement, et ne voit rien hors de la carte. Le connecteur a donc un second backend bâti sur Variorum, indépendant du fournisseur, qui lit la puissance au niveau du nœud et du socket, y compris le CPU (via RAPL, les compteurs de puissance intégrés aux processeurs Intel et AMD), la DRAM, et certains GPU non NVIDIA. NVML donne ce que le GPU a consommé, Variorum ce que le nœud entier a consommé. Une région qui paraît bon marché sur la carte peut tout de même brasser assez de données pour faire chauffer le CPU et les contrôleurs mémoire autour d'elle, et seule la vue au niveau du nœud le détecte. On se tourne vers NVML quand la question porte sur ce qu'a dépensé le GPU lui-même, et vers Variorum quand on veut la facture énergétique que la salle machine voit réellement.</p>
+<p>NVML répond à une seule question : ce qu'a consommé ce GPU NVIDIA. La mesure est par carte, en milliwatts, NVIDIA uniquement, et ne voit rien hors de la carte. Le connecteur de 2025 (#302) a donc un second backend bâti sur Variorum, indépendant du fournisseur, qui lit la puissance au niveau du nœud et du socket, y compris le CPU (via RAPL, les compteurs de puissance intégrés aux processeurs Intel et AMD), la DRAM, et certains GPU non NVIDIA. NVML donne ce que le GPU a consommé, Variorum ce que le nœud entier a consommé. Une région qui paraît bon marché sur la carte peut tout de même brasser assez de données pour faire chauffer le CPU et les contrôleurs mémoire autour d'elle, et seule la vue au niveau du nœud le détecte. On se tourne vers NVML quand la question porte sur ce qu'a dépensé le GPU lui-même, et vers Variorum quand on veut la facture énergétique que la salle machine voit réellement.</p>
 
 <figure>
 <svg viewBox="0 0 760 340" role="img" aria-label="Le pipeline du connecteur. L'application Kokkos déclenche les callbacks Tools à chaque région parallèle ; le connecteur énergie reçoit une trace de puissance d'un thread échantillonneur qui lit la puissance hors bande à intervalle fixe ; NVML et Variorum alimentent l'échantillonneur ; le connecteur intègre la trace par région en joules, qui partent vers energy-dashboard-for-kokkos, l'outil d'analyse." xmlns="http://www.w3.org/2000/svg">

@@ -35,7 +35,7 @@ export const fr: SiteContent = {
       body: [
         {
           h: "Le problème",
-          p: "Kokkos fait tourner un même code source C++ sur des GPU NVIDIA, AMD et Intel, et le même noyau consomme une puissance différente sur chacun. Kokkos Tools ne savait pas rapporter l'énergie par région, sur des machines du DOE où la puissance est devenue une contrainte majeure.",
+          p: "Kokkos fait tourner un même code source C++ sur des GPU NVIDIA, AMD et Intel, et le même noyau consomme une puissance différente sur chacun. Kokkos Tools ne savait estimer l'énergie d'un noyau qu'à partir de deux lectures de puissance, au début et à la fin, ce que le rafraîchissement de NVML toutes les 100 ms rend peu fiable ; rien n'intégrait une trace continue par région, sur des machines du DOE où la puissance est devenue une contrainte majeure.",
         },
         {
           h: "Comment c'est construit",
@@ -83,7 +83,7 @@ export const fr: SiteContent = {
       body: [
         {
           h: "Le contexte",
-          p: "Le groupe ASICS d'EDF développe le calcul scientifique dont dépend la simulation nucléaire. J'ai travaillé au sein de l'équipe qui développe la plateforme : réunion de groupe hebdomadaire, revues de code données et reçues via les merge requests GitLab, et cinq notes techniques internes.",
+          p: "Le groupe ASICS d'EDF développe le calcul scientifique dont dépend la simulation nucléaire. J'ai travaillé au sein de l'équipe qui développe la plateforme : réunion de groupe hebdomadaire, revues de code données et reçues via les merge requests GitLab, cinq notes techniques internes, et le support aux utilisateurs des outils ; le profileur mémoire a trouvé une explosion mémoire que l'équipe traquait depuis des jours.",
         },
         {
           h: "Ce que j'ai construit",
@@ -98,7 +98,7 @@ export const fr: SiteContent = {
     {
       name: "Homelab",
       blurb:
-        "Le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : une vingtaine de services derrière un seul Traefik, la CI Gitea, Coolify et une VM Kubernetes (K3s) aujourd'hui, GitLab CI/CD, Ceph et Ansible au fil des ans, et un pipeline de déploiement qui annule le déploiement si le contrôle de santé échoue.",
+        "Le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : une vingtaine de services derrière un seul Traefik, la CI Gitea, Coolify et une VM Kubernetes (K3s) aujourd'hui, GitLab CI/CD, Ceph et Ansible au fil des ans, et un pipeline de déploiement qui revient à la version précédente si la vérification échoue.",
       href: "/fr/cluster",
       hrefLabel: "Le cluster",
     },

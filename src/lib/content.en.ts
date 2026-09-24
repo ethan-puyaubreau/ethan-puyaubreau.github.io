@@ -32,7 +32,7 @@ export const en: SiteContent = {
       body: [
         {
           h: "The problem",
-          p: "Kokkos runs one C++ source on NVIDIA, AMD, and Intel GPUs, and the same kernel draws different power on each. Kokkos Tools had no way to report energy per region, on DOE machines where power is now a first-class constraint.",
+          p: "Kokkos runs one C++ source on NVIDIA, AMD, and Intel GPUs, and the same kernel draws different power on each. Kokkos Tools could only estimate a kernel's energy from two power readings, at its start and end, which NVML's 100 ms refresh makes unreliable; nothing integrated a continuous power trace per region, on DOE machines where power is now a first-class constraint.",
         },
         {
           h: "How it is built",
@@ -80,7 +80,7 @@ export const en: SiteContent = {
       body: [
         {
           h: "The context",
-          p: "EDF's ASICS group develops the scientific computing behind nuclear simulation. I worked inside the team that develops the platform: weekly group meetings, code reviews given and received through GitLab merge requests, and five internal technical notes.",
+          p: "EDF's ASICS group develops the scientific computing behind nuclear simulation. I worked inside the team that develops the platform: weekly group meetings, code reviews given and received through GitLab merge requests, five internal technical notes, and support for the tools' users; the memory profiler pinned down a memory blow-up the team had been chasing for days.",
         },
         {
           h: "What I built",

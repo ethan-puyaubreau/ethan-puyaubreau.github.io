@@ -22,6 +22,8 @@ const blog = defineCollection({
       pubDate: z.coerce.date(),
       /** Optional last-updated date; feeds dateModified in the article schema. */
       updatedDate: z.coerce.date().optional(),
+      /** Listed first on the home page. */
+      pinned: z.boolean().default(false),
       lang: z.enum(["en", "fr"]),
       slug: z.string(),
       tags: z.array(z.string()).default([]),

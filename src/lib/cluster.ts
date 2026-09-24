@@ -334,7 +334,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     opsHead: {
       title: "Exploité de bout en bout",
       intro:
-        "La partie qui ne tient pas dans une capture : le maintenir en route, le surveiller, et consigner l'exploitation pour qu'elle survive à ma mémoire.",
+        "La partie qui ne tient pas dans une capture : le maintenir en route, le surveiller, et consigner l'exploitation pour ne pas dépendre de ma mémoire.",
     },
     ops: {
       oncall:
