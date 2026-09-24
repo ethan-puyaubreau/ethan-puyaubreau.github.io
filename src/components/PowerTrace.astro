@@ -1,107 +1,171 @@
 ---
 // Two measured NVML power traces from the SMC 2025 poster runs (ArborX DBSCAN
-// on an NVIDIA H100 NVL), drawn at build time as static SVG, one panel per run
+// on an NVIDIA H100 NVL), drawn at build time as static SVG: one panel per run
 // on a shared time axis that starts where the DBSCANCalculation region starts.
-// The filled area is the energy inside that region; its duration and energy are
-// printed beside each panel. Data: src/data/dbscan-traces.json, from the raw
-// traces and Kokkos region timestamps of those runs.
+// The filled area is the energy inside that region; duration and energy are
+// printed with each panel. Two layouts are emitted, a wide one with labels on
+// the right and a narrow one with labels above each panel, and CSS shows one.
+// Data: src/data/dbscan-traces.json, from the raw traces and Kokkos region
+// timestamps of those runs.
 import traces from "../data/dbscan-traces.json";
+import type { Locale } from "../lib/i18n";
 
 interface Props {
   label: string;
+  locale?: Locale;
 }
-const { label } = Astro.props;
+const { label, locale = "en" } = Astro.props;
 
-const W = 640;
-const PANEL_H = 112;
-const GAP = 40;
-const PAD = { l: 48, r: 150, t: 8, b: 30 };
-const H = PAD.t + PANEL_H * 2 + GAP + PAD.b;
 const T0 = -0.4; // seconds shown before the region starts
-const T1 = 3.0; // last second shown
+const T1 = 3.0; // last second on the axis
+const TAIL = 0.25; // seconds of trace kept after each region ends
 const P_MAX = 360; // watts at the top of a panel
 
-const x = (t: number) => PAD.l + ((t - T0) / (T1 - T0)) * (W - PAD.l - PAD.r);
+const num = (v: number, digits: number) =>
+  new Intl.NumberFormat(locale === "fr" ? "fr-FR" : "en-US", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(v);
+const fmtS = (s: number) => `${num(s, 2)}\u00A0s`;
+const fmtJ = (j: number) => `${num(Math.round(j), 0)}\u00A0J`;
 
-type Panel = {
-  key: string;
-  durationS: number;
-  energyJ: number;
-  top: number;
-  line: string;
-  area: string;
-  y: (p: number) => number;
+const keys = ["fdbscan", "fdbscan-dense"] as const;
+const delta = Math.round(traces["fdbscan-dense"].energyJ) - Math.round(traces.fdbscan.energyJ);
+const deltaLabel = `${delta < 0 ? "−" : "+"}${Math.abs(delta)}\u00A0J`;
+
+type Layout = {
+  W: number;
+  panelH: number;
+  gap: number;
+  pad: { l: number; r: number; t: number; b: number };
+  above: boolean; // labels above each panel instead of to the right
 };
-const panels: Panel[] = (["fdbscan", "fdbscan-dense"] as const).map((key, i) => {
-  const { durationS, energyJ, samples } = traces[key];
-  const top = PAD.t + i * (PANEL_H + GAP);
-  const y = (p: number) => top + (1 - p / P_MAX) * PANEL_H;
-  const pts = samples.filter(([t]) => t >= T0 && t <= T1);
-  const path = (ps: typeof pts) =>
-    ps.map(([t, w], j) => `${j ? "L" : "M"}${x(t).toFixed(1)} ${y(w).toFixed(1)}`).join(" ");
-  const inside = pts.filter(([t]) => t >= 0 && t <= durationS);
-  const area = `${path(inside)} L${x(durationS).toFixed(1)} ${y(0)} L${x(0).toFixed(1)} ${y(0)} Z`;
-  return { key, durationS, energyJ, top, line: path(pts), area, y };
-});
+const LAYOUTS: Record<"wide" | "narrow", Layout> = {
+  wide: { W: 640, panelH: 112, gap: 40, pad: { l: 52, r: 150, t: 10, b: 30 }, above: false },
+  narrow: { W: 360, panelH: 96, gap: 64, pad: { l: 40, r: 8, t: 44, b: 30 }, above: true },
+};
 
-const fmtS = (s: number) => `${s.toFixed(2)} s`;
-const fmtJ = (j: number) => `${Math.round(j)} J`;
+function build(L: Layout) {
+  const H = L.pad.t + L.panelH * 2 + L.gap + L.pad.b;
+  const x = (t: number) => L.pad.l + ((t - T0) / (T1 - T0)) * (L.W - L.pad.l - L.pad.r);
+  const panels = keys.map((key, i) => {
+    const { durationS, energyJ, samples } = traces[key];
+    const top = L.pad.t + i * (L.panelH + L.gap);
+    const y = (p: number) => top + (1 - p / P_MAX) * L.panelH;
+    const pts = samples.filter(([t]) => t >= T0 && t <= durationS + TAIL);
+    const path = (ps: typeof pts) =>
+      ps.map(([t, w], j) => `${j ? "L" : "M"}${x(t).toFixed(1)} ${y(w).toFixed(1)}`).join(" ");
+    const inside = pts.filter(([t]) => t >= 0 && t <= durationS);
+    const area = `${path(inside)} L${x(durationS).toFixed(1)} ${y(0)} L${x(0).toFixed(1)} ${y(0)} Z`;
+    return { key, durationS, energyJ, top, y, line: path(pts), area, endX: x(durationS) };
+  });
+  return { H, x, panels };
+}
+const views = (["wide", "narrow"] as const).map((name) => ({
+  name,
+  L: LAYOUTS[name],
+  ...build(LAYOUTS[name]),
+}));
 const xTicks = [0, 1, 2, 3];
 ---
 
-<svg class="trace" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label}>
-  {
-    panels.map((p, i) => (
-      <g class:list={["panel", i === 1 ? "is-dense" : "is-scan"]}>
-        <line class="axis" x1={PAD.l} x2={W - PAD.r} y1={p.y(0)} y2={p.y(0)} />
-        <line class="grid" x1={PAD.l} x2={W - PAD.r} y1={p.y(300)} y2={p.y(300)} />
-        <text class="tick" x={PAD.l - 8} y={p.y(300) + 5} text-anchor="end">
-          300 W
-        </text>
-        <path class="area" d={p.area} />
-        <path class="line" d={p.line} />
-        <line class="end" x1={x(p.durationS)} x2={x(p.durationS)} y1={p.top - 4} y2={p.y(0)} />
-        <text class="name" x={W - PAD.r + 18} y={p.top + 22}>
-          {p.key}
-        </text>
-        <text class="joules" x={W - PAD.r + 18} y={p.top + 58}>
-          {fmtJ(p.energyJ)}
-        </text>
-        <text class="secs" x={W - PAD.r + 18} y={p.top + 82}>
-          {fmtS(p.durationS)}
-        </text>
-      </g>
-    ))
-  }
-  <line class="start" x1={x(0)} x2={x(0)} y1={PAD.t - 4} y2={H - PAD.b} />
-  {
-    xTicks.map((t) => (
-      <text class="tick" x={x(t)} y={H - 6} text-anchor="middle">
-        {t} s
+{views.map(({ name, L, H, x, panels }) => (
+  <svg
+    class:list={["trace", `trace-${name}`]}
+    viewBox={`0 0 ${L.W} ${H}`}
+    role="img"
+    aria-label={label}
+  >
+    {panels.map((p, i) => {
+      const lx = L.above ? L.pad.l : L.W - L.pad.r + 18;
+      return (
+        <g class="panel">
+          <line class="axis" x1={L.pad.l} x2={L.W - L.pad.r} y1={p.y(0)} y2={p.y(0)} />
+          <line class="grid" x1={L.pad.l} x2={L.W - L.pad.r} y1={p.y(300)} y2={p.y(300)} />
+          <text class="tick" x={L.pad.l - 6} y={p.y(300) + 5} text-anchor="end">
+            300
+          </text>
+          <text class="tick" x={L.pad.l - 6} y={p.y(0) + 5} text-anchor="end">
+            0 W
+          </text>
+          <path class="area" d={p.area} />
+          <path class="line" d={p.line} />
+          <line class="end" x1={p.endX} x2={p.endX} y1={p.top - 4} y2={p.y(0)} />
+          {L.above ? (
+            <text class="head" x={lx} y={p.top - 14}>
+              <tspan class="name">{p.key}</tspan>
+              <tspan class="joules" dx="10">
+                {fmtJ(p.energyJ)}
+              </tspan>
+              <tspan class="secs" dx="8">
+                {fmtS(p.durationS)}
+              </tspan>
+              {i === 1 && (
+                <tspan class="delta" dx="8">
+                  {deltaLabel}
+                </tspan>
+              )}
+            </text>
+          ) : (
+            <g>
+              <text class="name" x={lx} y={p.top + 20}>
+                {p.key}
+              </text>
+              <text class="joules" x={lx} y={p.top + 56}>
+                {fmtJ(p.energyJ)}
+              </text>
+              <text class="secs" x={lx} y={p.top + 80}>
+                {fmtS(p.durationS)}
+                {i === 1 && (
+                  <tspan class="delta" dx="10">
+                    {deltaLabel}
+                  </tspan>
+                )}
+              </text>
+            </g>
+          )}
+        </g>
+      );
+    })}
+    <line class="start" x1={x(0)} x2={x(0)} y1={L.pad.t - 4} y2={H - L.pad.b} />
+    {xTicks.map((t) => (
+      <text class="tick" x={x(t)} y={H - 8} text-anchor="middle">
+        {t}&nbsp;s
       </text>
-    ))
-  }
-</svg>
+    ))}
+  </svg>
+))}
 
 <style>
   .trace {
     width: 100%;
     height: auto;
   }
-  .axis {
-    stroke: var(--line-strong);
-    stroke-width: 1;
+  .trace-narrow {
+    display: none;
   }
-  .grid {
-    stroke: var(--hairline);
+  @media (max-width: 640px) {
+    .trace-wide {
+      display: none;
+    }
+    .trace-narrow {
+      display: block;
+    }
+  }
+  .axis,
+  .start,
+  .end {
+    stroke: var(--muted);
     stroke-width: 1;
-    stroke-dasharray: 3 4;
   }
   .start,
   .end {
+    stroke-dasharray: 2 3;
+  }
+  .grid {
     stroke: var(--line-strong);
     stroke-width: 1;
-    stroke-dasharray: 2 3;
+    stroke-dasharray: 3 4;
   }
   .tick {
     font-family: var(--font-mono);
@@ -119,28 +183,32 @@ const xTicks = [0, 1, 2, 3];
     font-size: 32px;
     font-weight: 600;
     letter-spacing: -0.02em;
+    fill: var(--accent);
+  }
+  .delta {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    fill: var(--accent);
+  }
+  .area {
+    fill: var(--accent-fill);
   }
   .line {
     fill: none;
+    stroke: var(--accent);
     stroke-width: 1.6;
     stroke-linejoin: round;
   }
-  .is-scan .area {
-    fill: rgb(17 17 17 / 0.1);
+  /* narrow layout: everything a little larger relative to its 360-unit width */
+  .trace-narrow .tick {
+    font-size: 12px;
   }
-  .is-scan .line {
-    stroke: var(--ink);
+  .trace-narrow .name,
+  .trace-narrow .secs,
+  .trace-narrow .delta {
+    font-size: 13px;
   }
-  .is-scan .joules {
-    fill: var(--ink);
-  }
-  .is-dense .area {
-    fill: var(--accent-fill);
-  }
-  .is-dense .line {
-    stroke: var(--accent);
-  }
-  .is-dense .joules {
-    fill: var(--accent);
+  .trace-narrow .joules {
+    font-size: 20px;
   }
 </style>

@@ -1,6 +1,6 @@
 ---
 title: "Imputer l'énergie GPU au code qui l'a dépensée"
-description: "Un profileur vous dit où du code GPU passe son temps. Je voulais savoir où il dépense ses joules : j'ai donc construit un connecteur Kokkos Tools qui échantillonne la puissance sur un thread dédié et l'intègre sur chaque région profilée. Sur le DBSCAN d'ArborX, l'implémentation la plus rapide économise plus d'énergie que de temps : 19 % plus rapide, 25 % d'énergie en moins."
+description: "Un profileur vous dit où du code GPU passe son temps. Je voulais savoir où il dépense ses joules : j'ai donc construit un connecteur Kokkos Tools qui échantillonne la puissance sur un thread dédié et l'intègre sur chaque région profilée. Sur le DBSCAN d'ArborX, l'implémentation la plus rapide économise plus d'énergie que de temps : 19 % de temps et 25 % d'énergie en moins."
 pubDate: 2026-06-12
 updatedDate: 2026-09-23
 lang: fr
@@ -21,7 +21,7 @@ fdbscan-dense   2,19 s          580 J     262 W
 <figure>
   <img src="/blog/kokkos/fdbscan.png" alt="Puissance GPU dans le temps pour fdbscan d'ArborX sur un H100 NVL, un plateau autour de 300 W sous un plafond de 350 W. Énergie totale estimée : 925,1 J, dont 772,8 J dans les régions de noyaux." width="1200" height="898" loading="lazy" />
   <img src="/blog/kokkos/fdbscan-dense.png" alt="Puissance GPU dans le temps pour fdbscan-dense sur le même GPU et la même entrée, un plateau similaire. Énergie totale estimée : 784,8 J, dont 615,6 J dans les régions de noyaux." width="1200" height="898" loading="lazy" />
-  <figcaption>Figure 3 du poster : <code>fdbscan</code> (en haut) et <code>fdbscan-dense</code> (en bas). Les bandes colorées sont les régions Kokkos ; l'énergie est la trace de puissance intégrée dans le temps.</figcaption>
+  <figcaption>Figure 3 du poster : <code>fdbscan</code> (en haut) et <code>fdbscan-dense</code> (en bas). Les bandes colorées sont les régions Kokkos ; l'énergie est la trace de puissance intégrée dans le temps. Les encadrés du poster additionnent toutes les régions de noyaux (772,8 J et 615,6 J) ; la page d'accueil ne compte que la région DBSCANCalculation des mêmes exécutions (769 J et 569 J).</figcaption>
 </figure>
 
 <p>La variante la plus rapide gagne donc aussi sur l'énergie, mais davantage : 25 % d'énergie en moins pour 19 % de temps en moins, parce qu'elle consomme aussi 9 % de watts en moins pendant son exécution. Un profil temporel rapporterait les 19 %. Les six points restants n'apparaissent que si l'on mesure l'énergie au lieu de la déduire du temps.</p>
@@ -112,8 +112,8 @@ fdbscan-dense   2,19 s          580 J     262 W
     <rect x="172" y="60" width="120" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="232" y="82">Callbacks Tools</text>
     <text x="232" y="99" font-size="10.5" fill="#5f5f5c">début / fin</text>
-    <rect x="316" y="60" width="124" height="52" rx="8" fill="#fbe7df" stroke="#b93a0a" stroke-width="1.4"/>
-    <text x="378" y="82" fill="#9a3412">connecteur énergie</text>
+    <rect x="316" y="60" width="124" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.6"/>
+    <text x="378" y="82" fill="#111111">connecteur énergie</text>
     <text x="378" y="99" font-size="10.5" fill="#9a3412">&#8747; trapèze</text>
     <rect x="464" y="60" width="134" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="531" y="82">joules par région</text>

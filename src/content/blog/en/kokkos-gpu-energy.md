@@ -1,6 +1,6 @@
 ---
 title: "Charging GPU energy to the code that spent it"
-description: "A profiler tells you where GPU code spends time. I wanted to know where it spends joules, so I built a Kokkos Tools connector that samples power on a side thread and integrates it over each profiled region. On ArborX DBSCAN, the faster implementation saves more energy than time: 19% faster, 25% less energy."
+description: "A profiler tells you where GPU code spends time. I wanted to know where it spends joules, so I built a Kokkos Tools connector that samples power on a side thread and integrates it over each profiled region. On ArborX DBSCAN, the faster implementation saves more energy than time: 19% less time, 25% less energy."
 pubDate: 2026-06-12
 updatedDate: 2026-09-23
 lang: en
@@ -21,7 +21,7 @@ fdbscan-dense   2.19 s          580 J    262 W
 <figure>
   <img src="/blog/kokkos/fdbscan.png" alt="GPU power over time for ArborX fdbscan on an H100 NVL, a plateau near 300 W under a 350 W cap. Total estimated energy 925.1 J, of which 772.8 J inside kernel regions." width="1200" height="898" loading="lazy" />
   <img src="/blog/kokkos/fdbscan-dense.png" alt="GPU power over time for ArborX fdbscan-dense on the same GPU and input, a similar plateau. Total estimated energy 784.8 J, of which 615.6 J inside kernel regions." width="1200" height="898" loading="lazy" />
-  <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time.</figcaption>
+  <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time. The boxes on the poster sum every kernel region (772.8 J and 615.6 J); the home page counts only the DBSCANCalculation region of the same runs (769 J and 569 J).</figcaption>
 </figure>
 
 <p>So the faster variant also wins on energy, but by more: 25% less energy for 19% less time, because it also draws 9% less power while it runs. A time profile would report the 19%. The other six points only show up when you measure energy instead of inferring it from time.</p>
@@ -112,8 +112,8 @@ fdbscan-dense   2.19 s          580 J    262 W
     <rect x="172" y="60" width="120" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="232" y="82">Tools callbacks</text>
     <text x="232" y="99" font-size="10.5" fill="#5f5f5c">begin / end</text>
-    <rect x="316" y="60" width="124" height="52" rx="8" fill="#fbe7df" stroke="#b93a0a" stroke-width="1.4"/>
-    <text x="378" y="82" fill="#9a3412">energy connector</text>
+    <rect x="316" y="60" width="124" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.6"/>
+    <text x="378" y="82" fill="#111111">energy connector</text>
     <text x="378" y="99" font-size="10.5" fill="#9a3412">&#8747; trapezoid</text>
     <rect x="464" y="60" width="134" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="531" y="82">joules per region</text>
