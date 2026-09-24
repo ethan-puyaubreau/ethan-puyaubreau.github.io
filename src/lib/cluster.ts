@@ -73,13 +73,9 @@ export interface ClusterContent {
     readonly guests: string;
     readonly cpu: string;
     readonly mem: string;
+    readonly services: string;
     readonly window: string;
     readonly asOf: string;
-  };
-  readonly servicesHead: { readonly title: string; readonly intro: string };
-  readonly services: {
-    readonly count: string;
-    readonly caption: string;
   };
   readonly pipelineHead: { readonly title: string; readonly intro: string };
   readonly pipeline: {
@@ -129,7 +125,7 @@ const NODE_ROLE: Record<Locale, Record<string, string>> = {
     edge: "La bordure. Le routeur VyOS, Traefik et la supervision de disponibilité.",
     apps: "Apps et sites auto-hébergés, plus le DNS du LAN et Home Assistant.",
     aux: "Un petit nœud d'appoint : une seconde VM routeur et les gabarits de VM.",
-    core: "Le cheval de trait. Une forge Git, les runners CI, Nextcloud, un PaaS.",
+    core: "Le nœud principal. Une forge Git, les runners CI, Nextcloud, un PaaS.",
     gpu: "Capacité et GPU. Les services multimédias, la VM Kubernetes et l'inférence LLM locale.",
   },
 };
@@ -154,10 +150,9 @@ const CONTENT: Record<Locale, ClusterContent> = {
     sections: [
       { id: "nodes", num: "01", label: "Nodes" },
       { id: "path", num: "02", label: "Path" },
-      { id: "services", num: "03", label: "Services" },
-      { id: "pipeline", num: "04", label: "Pipeline" },
-      { id: "stack", num: "05", label: "Stack" },
-      { id: "operations", num: "06", label: "Ops" },
+      { id: "pipeline", num: "03", label: "Pipeline" },
+      { id: "stack", num: "04", label: "Stack" },
+      { id: "operations", num: "05", label: "Ops" },
     ],
     backHome: "Home",
     hero: {
@@ -195,22 +190,14 @@ const CONTENT: Record<Locale, ClusterContent> = {
       { label: "apps", sub: "self-hosted apps" },
     ],
     pulse: {
-      heading: "Cluster pulse",
+      heading: "Cluster load",
       nodes: "nodes online",
       guests: "VMs and containers running",
       cpu: "CPU",
       mem: "memory",
-      window: "rolling window, snapshot",
+      services: "services up",
+      window: "CPU and memory over the last week, one point every 8 h",
       asOf: "as of",
-    },
-    servicesHead: {
-      title: "What runs there",
-      intro:
-        "The public endpoints of those services, health-checked at the moment the snapshot above was captured.",
-    },
-    services: {
-      count: "up",
-      caption: "A snapshot health check of the monitored endpoints.",
     },
     pipelineHead: {
       title: "How a self-hosted project ships",
@@ -274,10 +261,9 @@ const CONTENT: Record<Locale, ClusterContent> = {
     sections: [
       { id: "nodes", num: "01", label: "Nœuds" },
       { id: "path", num: "02", label: "Chemin" },
-      { id: "services", num: "03", label: "Services" },
-      { id: "pipeline", num: "04", label: "Pipeline" },
-      { id: "stack", num: "05", label: "Outils" },
-      { id: "operations", num: "06", label: "Ops" },
+      { id: "pipeline", num: "03", label: "Pipeline" },
+      { id: "stack", num: "04", label: "Outils" },
+      { id: "operations", num: "05", label: "Ops" },
     ],
     backHome: "Accueil",
     hero: {
@@ -285,7 +271,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       lead: "Les cinq machines derrière ",
       em: "mon homelab",
       tail: ".",
-      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en bordure, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané capturé au moment du build.",
+      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en bordure, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané pris à la génération du site.",
     },
     nodesHead: {
       title: "Cinq nœuds, chacun son rôle",
@@ -315,27 +301,19 @@ const CONTENT: Record<Locale, ClusterContent> = {
       { label: "apps", sub: "apps auto-hébergées" },
     ],
     pulse: {
-      heading: "Pouls du cluster",
+      heading: "Charge du cluster",
       nodes: "nœuds en ligne",
       guests: "VM et conteneurs actifs",
       cpu: "CPU",
       mem: "mémoire",
-      window: "fenêtre glissante, instantané",
+      services: "services actifs",
+      window: "CPU et mémoire sur la dernière semaine, un point toutes les 8 h",
       asOf: "relevé le",
-    },
-    servicesHead: {
-      title: "Ce qui tourne",
-      intro:
-        "Les points d'accès publics de ces services, vérifiés au moment où l'instantané ci-dessus a été capturé.",
-    },
-    services: {
-      count: "actifs",
-      caption: "Un contrôle de santé instantané des points d'accès surveillés.",
     },
     pipelineHead: {
       title: "Comment un projet auto-hébergé se déploie",
       intro:
-        "Un push sur main lance trois jobs sur un runner auto-hébergé et passe en production en deux minutes environ, avec un rollback automatique si le test de fumée échoue. Ce site précis (Astro, déployé sur GitHub Pages) utilise un autre pipeline ; celui-ci est celui de mes projets auto-hébergés.",
+        "Un push sur main lance trois jobs sur un runner auto-hébergé et passe en production en deux minutes environ, avec un rollback automatique si le test de fumée échoue. Ce site-ci (Astro, sur GitHub Pages) passe par un autre pipeline ; celui-là sert à mes projets auto-hébergés.",
     },
     pipeline: {
       stages: [

@@ -8,7 +8,6 @@ import SiteFooter from "./SiteFooter.astro";
 import SectionHeader from "./SectionHeader.astro";
 import ClusterNodes from "../islands/ClusterNodes.vue";
 import ClusterPulse from "../islands/ClusterPulse.vue";
-import ClusterServices from "../islands/ClusterServices.vue";
 import RequestPath from "./RequestPath.astro";
 import DeployPipeline from "./DeployPipeline.astro";
 import { getUI } from "../lib/ui";
@@ -62,7 +61,11 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
         <div class="pulse-wrap">
           <ClusterPulse
             strings={c.pulse}
-            agg={snapshot.cluster}
+            agg={{
+              ...snapshot.cluster,
+              servicesUp: snapshot.servicesUp,
+              servicesTotal: snapshot.servicesTotal,
+            }}
             cpuHist={snapshot.history.map((h) => h.cpuPct)}
             memHist={snapshot.history.map((h) => h.memPct)}
             asOf={asOf}
@@ -81,15 +84,6 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
       <section id="path">
         <SectionHeader title={c.pathHead.title}>{c.pathHead.intro}</SectionHeader>
         <RequestPath stages={c.path} label={c.pathHead.title} />
-      </section>
-
-      <section id="services">
-        <SectionHeader title={c.servicesHead.title}>{c.servicesHead.intro}</SectionHeader>
-        <ClusterServices
-          strings={c.services}
-          up={snapshot.servicesUp}
-          total={snapshot.servicesTotal}
-        />
       </section>
 
       <section id="pipeline">

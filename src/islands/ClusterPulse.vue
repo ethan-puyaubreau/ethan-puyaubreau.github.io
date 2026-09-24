@@ -10,6 +10,7 @@ interface PulseStrings {
   readonly heading: string;
   readonly nodes: string;
   readonly guests: string;
+  readonly services: string;
   readonly cpu: string;
   readonly mem: string;
   readonly window: string;
@@ -20,6 +21,8 @@ interface Agg {
   nodesTotal: number;
   guestsRunning: number;
   guestsTotal: number;
+  servicesUp: number;
+  servicesTotal: number;
   cpuPct: number;
   memPct: number;
 }
@@ -79,6 +82,10 @@ const memArea = computed(() => area(props.memHist));
         <dt>{{ strings.guests }}</dt>
         <dd>{{ agg.guestsRunning }}/{{ agg.guestsTotal }}</dd>
       </div>
+      <div>
+        <dt>{{ strings.services }}</dt>
+        <dd>{{ agg.servicesUp }}/{{ agg.servicesTotal }}</dd>
+      </div>
     </dl>
 
     <div class="spark-row">
@@ -125,9 +132,14 @@ const memArea = computed(() => area(props.memHist));
   flex: none;
 }
 .pulse-agg {
-  display: flex;
-  gap: var(--space-l);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  gap: var(--space-s) var(--space-m);
   margin: var(--space-m) 0;
+}
+.pulse-agg div {
+  display: flex;
+  flex-direction: column;
 }
 .pulse-agg dt {
   font-family: var(--font-mono);
@@ -135,7 +147,8 @@ const memArea = computed(() => area(props.memHist));
   color: var(--muted);
 }
 .pulse-agg dd {
-  margin: 0.1rem 0 0;
+  order: -1;
+  margin: 0 0 0.1rem;
   font-family: var(--font-mono);
   font-size: var(--step-2);
   color: var(--ink);
