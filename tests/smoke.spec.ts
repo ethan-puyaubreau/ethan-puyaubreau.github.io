@@ -235,6 +235,15 @@ test("French pages use no-break spaces before double punctuation", async ({ page
   }
 });
 
+// Reveal-on-scroll must not strand a block that is taller than the viewport:
+// a ratio threshold is never reached by a long article body.
+test("long posts reveal their body once it scrolls into view", async ({ page }) => {
+  await page.goto("/blog/kokkos-gpu-energy", { waitUntil: "load" });
+  const prose = page.locator("[data-reveal].prose");
+  await prose.scrollIntoViewIfNeeded();
+  await expect(prose).toHaveClass(/in-view/);
+});
+
 test("the 404 page points back to home", async ({ page }) => {
   await page.goto("/does-not-exist", { waitUntil: "domcontentloaded" });
   await expect(page.locator('a[href="/"]')).toBeVisible();

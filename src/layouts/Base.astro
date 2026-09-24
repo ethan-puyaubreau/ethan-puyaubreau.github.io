@@ -69,7 +69,7 @@ const alternates = isPaired
 // enter view (one-shot, unobserved after). Runs in both motion modes (the CSS
 // makes it a plain opacity fade under reduced motion, fade + rise otherwise);
 // a no-op without JS, so content is never trapped hidden. CSS in global.css.
-const revealScript = `(function(){try{var d=document;d.documentElement.classList.add('reveal');var run=function(){var els=d.querySelectorAll('[data-reveal]');if(!('IntersectionObserver'in window)){els.forEach(function(el){el.classList.add('in-view');});return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in-view');io.unobserve(e.target);}});},{rootMargin:'0px 0px -15% 0px',threshold:0.12});els.forEach(function(el){io.observe(el);});};if(d.readyState!=='loading')run();else d.addEventListener('DOMContentLoaded',run);}catch(e){}})();`;
+const revealScript = `(function(){try{var d=document;d.documentElement.classList.add('reveal');var run=function(){var els=d.querySelectorAll('[data-reveal]');if(!('IntersectionObserver'in window)){els.forEach(function(el){el.classList.add('in-view');});return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in-view');io.unobserve(e.target);}});},{rootMargin:'0px 0px -15% 0px',threshold:0});els.forEach(function(el){io.observe(el);});};if(d.readyState!=='loading')run();else d.addEventListener('DOMContentLoaded',run);}catch(e){}})();`;
 
 // Structured data ties this domain to the ORCID and Google Scholar records.
 const jsonLd = {
