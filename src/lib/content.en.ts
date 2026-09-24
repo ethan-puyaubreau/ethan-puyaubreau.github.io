@@ -36,7 +36,7 @@ export const en: SiteContent = {
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The upstream connectors read power through NVML or Variorum; an AMD path through ROCm SMI, not public yet, is the version I ran on Frontier. energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
+          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The upstream connectors read power through NVML or Variorum; an AMD path through ROCm SMI, not public yet, is the version I ran on Frontier. energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases archived on Zenodo with a DOI. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
         },
         {
           h: "Where it stands",
@@ -52,6 +52,7 @@ export const en: SiteContent = {
           label: "energy-dashboard-for-kokkos",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
+        { label: "Zenodo archive (DOI)", href: "https://doi.org/10.5281/zenodo.22943410" },
         {
           label: "SMC 2025 poster",
           href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
