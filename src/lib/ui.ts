@@ -202,8 +202,8 @@ const STRINGS: Record<Locale, UIStrings> = {
     notFoundTitle: "404",
     notFoundDescription: "Page introuvable.",
     blog: {
-      kicker: "Écrits",
-      indexTitle: "Écrits",
+      kicker: "Articles",
+      indexTitle: "Articles",
       indexIntro:
         "Des articles sur le HPC, le calcul GPU, l'infrastructure, et les projets derrière.",
       metaDescription:

@@ -10,7 +10,7 @@ import type { SiteContent } from "./content.types";
 export const fr: SiteContent = {
   sections: [
     { id: "work", label: "Réalisations" },
-    { id: "writing", label: "Écrits" },
+    { id: "writing", label: "Articles" },
     { id: "about", label: "Parcours" },
     { id: "contact", label: "Contact" },
   ],
@@ -32,19 +32,19 @@ export const fr: SiteContent = {
       period: "Été 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs constructeurs soumis à Kokkos Tools et testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en 2026.",
+        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs de mesure soumis en amont, des outils testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en 2026.",
       body: [
         {
           h: "Le problème",
-          p: "Kokkos permet de faire tourner une même source C++ sur des GPU NVIDIA, AMD et Intel, et c'est précisément pour cela que l'énergie est difficile à évaluer : le même noyau consomme une puissance différente sur chaque backend, et les équipes applicatives n'avaient aucun moyen portable de la voir. Sur les machines du DOE, où la puissance est désormais une contrainte de premier ordre, cet angle mort compte.",
+          p: "Kokkos permet de faire tourner une même source C++ sur des GPU NVIDIA, AMD et Intel, et c'est précisément pour cela que l'énergie est difficile à évaluer : le même noyau consomme une puissance différente sur chaque backend, et les équipes applicatives n'avaient aucun moyen portable de la voir. Sur les machines du DOE, où la puissance est devenue une contrainte majeure, cet angle mort pèse lourd.",
         },
         {
           h: "Comment c'est construit",
-          p: "Les outils se branchent à l'exécution par l'interface Kokkos Tools : une application se mesure telle quelle, sans recompilation ni correctif. Les connecteurs lisent la puissance NVIDIA via NVML, la puissance AMD via ROCm SMI, ou celle de tout constructeur pris en charge par Variorum. L'outil d'analyse, energy-dashboard-for-kokkos, réécrit en 2026 sous la forme d'un binaire Rust unique, a un format de trace documenté, des tests sur des traces réelles et des versions construites par la CI.",
+          p: "Les outils se branchent à l'exécution par l'interface Kokkos Tools : une application se mesure telle quelle, sans recompilation ni correctif. Les connecteurs soumis en amont lisent la puissance NVIDIA via NVML, ou celle de tout constructeur pris en charge par Variorum ; j'ai aussi écrit une version AMD via ROCm SMI, pas encore publiée. L'outil d'analyse, energy-dashboard-for-kokkos, réécrit en 2026 sous la forme d'un binaire Rust unique, a un format de trace documenté, des tests unitaires et un test sur une trace GPU réelle, et des versions construites par la CI.",
         },
         {
           h: "Où ça en est",
-          p: "Le démon d'échantillonnage est intégré à kokkos-tools (#300) ; le cœur et les connecteurs NVML et Variorum sont soumis à kokkos-tools (#299, #301, #302) et toujours en revue avec les mainteneurs en 2026. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
+          p: "Le démon d'échantillonnage est intégré à kokkos-tools (#300). Le cœur qui l'accueille (#299) est en revue avec les mainteneurs, et le connecteur NVML (#301) et le connecteur Variorum (#302, à l'état de brouillon) reposent dessus. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
         },
       ],
       links: [
@@ -145,7 +145,7 @@ export const fr: SiteContent = {
     { when: "2023 à 2026", what: "Alternance HPC", where: "EDF Lab Paris-Saclay · ASICS" },
     {
       when: "Été 2025",
-      what: "Outillage d'énergie GPU + poster SMC25",
+      what: "Outils de mesure d'énergie GPU + poster SMC25",
       where: "Oak Ridge National Laboratory",
     },
     { when: "Sept. 2026", what: "Diplôme d'ingénieur", where: "Polytech Paris-Saclay" },

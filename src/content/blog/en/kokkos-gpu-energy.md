@@ -24,8 +24,10 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 <figure>
   <img src="/blog/kokkos/fdbscan.png" alt="GPU power over time for ArborX fdbscan on an H100 NVL, a plateau near 300 W under a 350 W cap. Total estimated energy 925.1 J, of which 772.8 J inside kernel regions." width="1200" height="898" loading="lazy" />
   <img src="/blog/kokkos/fdbscan-dense.png" alt="GPU power over time for ArborX fdbscan-dense on the same GPU and input, a similar plateau. Total estimated energy 784.8 J, of which 615.6 J inside kernel regions." width="1200" height="898" loading="lazy" />
-  <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time. The poster's legend calls its energy box DBSCAN Calculation, but that figure sums every kernel region of the run (772.8 J and 615.6 J); the home page counts only the DBSCANCalculation region itself (769 J and 569 J). The totals printed on the figure (925.1 J and 784.8 J) also count the time outside any region. The poster described the two runtimes as equal; the timestamps show the 19% gap in the table above.</figcaption>
+  <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time.</figcaption>
 </figure>
+
+<p>Four numbers describe <code>fdbscan</code>, and they measure different things. The table gives 777 J, the median over 64 runs of the DBSCANCalculation region alone. One of those runs, drawn on this site's home page, spends 769 J in that region. The poster's box, labelled DBSCAN Calculation, reads 772.8 J because it sums every kernel region of the run, and its 925.1 J total also counts the time outside any region. The poster presented the two runtimes as equal; the region timestamps show the 19% gap in the table.</p>
 
 <p>So the faster variant also wins on energy, but by more: 25% less energy for 19% less time, because its mean power is also 9% lower while it runs. A time profile would report the 19%. The other six points only show up when you measure energy instead of inferring it from time.</p>
 

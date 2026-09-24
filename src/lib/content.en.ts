@@ -29,7 +29,7 @@ export const en: SiteContent = {
       period: "Summer 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, vendor connectors open upstream and tested on Frontier, and energy-dashboard-for-kokkos, an open-source analysis tool I rewrote in 2026.",
+        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, measurement connectors submitted upstream, tools tested on Frontier, and energy-dashboard-for-kokkos, an open-source analysis tool I rewrote in 2026.",
       body: [
         {
           h: "The problem",
@@ -37,11 +37,11 @@ export const en: SiteContent = {
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through the Kokkos Tools interface, so an application is measured as it is, without a rebuild or a patch. The connectors read NVIDIA power through NVML, AMD power through ROCm SMI, or any vendor Variorum supports. The analysis tool, energy-dashboard-for-kokkos, rewritten in 2026 as a single Rust binary, has a documented trace format, tests on real traces, and releases built by CI.",
+          p: "The tools attach at run time through the Kokkos Tools interface, so an application is measured as it is, without a rebuild or a patch. The upstream connectors read NVIDIA power through NVML or any vendor Variorum supports; I also wrote an AMD path through ROCm SMI that is not public yet. The analysis tool, energy-dashboard-for-kokkos, rewritten in 2026 as a single Rust binary, has a documented trace format, unit tests plus a test on a real GPU trace, and releases built by CI.",
         },
         {
           h: "Where it stands",
-          p: "The sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302) and still in review with the maintainers in 2026. Nine pull requests to kokkos-tools and LAMMPS in all, three merged. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25, which my apprenticeship schedule did not allow.",
+          p: "The sampling daemon is merged into kokkos-tools (#300). The core it runs under (#299) is in review with the maintainers, and the NVML connector (#301) and the Variorum connector (#302, a draft) build on it. Nine pull requests to kokkos-tools and LAMMPS in all, three merged. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25, which my apprenticeship schedule did not allow.",
         },
       ],
       links: [

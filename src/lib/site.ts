@@ -27,7 +27,7 @@ const SITE_COPY: Record<Locale, SiteCopy> = {
     positioning: "Research software that makes scientific computing measurable.",
   },
   fr: {
-    role: "Ingénieur logiciel pour la recherche, HPC",
+    role: "Ingénieur logiciel pour la recherche (RSE), HPC",
     positioning: "Du logiciel de recherche qui rend le calcul scientifique mesurable.",
   },
 };
