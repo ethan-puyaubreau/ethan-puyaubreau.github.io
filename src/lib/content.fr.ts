@@ -44,7 +44,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Où ça en est",
-          p: "Le démon d'échantillonnage est fusionné dans kokkos-tools (#300). Le cœur qui l'accueille (#299) est en cours de relecture par les mainteneurs, et le connecteur NVML (#301) et le connecteur Variorum (#302, à l'état de brouillon) reposent dessus. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois fusionnées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
+          p: "J'ai écrit le démon d'échantillonnage (#300) ; mon encadrant à l'ORNL, Jakob Bludau, l'a mené au bout de la relecture après mon séjour, et il a été fusionné dans kokkos-tools en mars 2026. Le cœur (#299) et les connecteurs NVML et Variorum (#301, #302) sont encore ouverts, et les mener à la fusion est mon travail de cet automne. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois fusionnées : le démon et deux correctifs de build. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié ; le poster SMC est cité dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
         },
       ],
       links: [

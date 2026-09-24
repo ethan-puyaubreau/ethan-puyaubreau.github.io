@@ -99,7 +99,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       ledeBeforeLink: "Open-source energy tooling for ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
-        ", built at Oak Ridge National Laboratory and tested on Frontier; three years of performance tooling for a nuclear reactor simulation code at EDF; and the five-node cluster where my own software runs in production.",
+        ", built at Oak Ridge National Laboratory and tested on Frontier, and three years of performance tooling for a nuclear reactor simulation code at EDF.",
       figureLabel:
         "GPU power over time for two ArborX DBSCAN implementations on an NVIDIA H100 NVL, aligned on the start of the DBSCAN computation. fdbscan runs for 2.68 seconds and uses 769 joules; fdbscan-dense runs for 2.20 seconds and uses 569 joules.",
       figureCaption:
@@ -167,7 +167,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       ledeBeforeLink: "Des outils open source de mesure d'énergie pour ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
-        ", développés à l'Oak Ridge National Laboratory et testés sur Frontier ; trois ans d'outillage de performance pour un code de simulation de réacteurs nucléaires chez EDF ; et le cluster de cinq nœuds où mes propres logiciels tournent en production.",
+        ", développés à l'Oak Ridge National Laboratory et testés sur Frontier, et trois ans d'outillage de performance pour un code de simulation de réacteurs nucléaires chez EDF.",
       figureLabel:
         "Puissance GPU dans le temps pour deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL, alignées sur le début du calcul DBSCAN. fdbscan tourne 2,68 secondes et consomme 769 joules ; fdbscan-dense tourne 2,20 secondes et consomme 569 joules.",
       figureCaption:

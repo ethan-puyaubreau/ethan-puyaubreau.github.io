@@ -313,15 +313,19 @@ const CONTENT: Record<Locale, ClusterContent> = {
     pipelineHead: {
       title: "Comment un projet auto-hébergé se déploie",
       intro:
-        "Un push sur main lance trois jobs sur un runner auto-hébergé et passe en production en deux minutes environ, avec un rollback automatique si le test de fumée échoue. Ce site-ci (Astro, sur GitHub Pages) passe par un autre pipeline ; celui-là sert à mes projets auto-hébergés.",
+        "Un push sur main lance trois jobs sur un runner auto-hébergé et passe en production en deux minutes environ, avec un rollback automatique si la vérification après déploiement échoue. Ce site-ci (Astro, sur GitHub Pages) passe par un autre pipeline ; celui-là sert à mes projets auto-hébergés.",
     },
     pipeline: {
       stages: [
-        { name: "verify", detail: "lint, types, build et les tests de fumée", approx: "~45 s" },
+        {
+          name: "verify",
+          detail: "lint, types, build et les tests de bout en bout",
+          approx: "~45 s",
+        },
         { name: "image", detail: "build, scan Trivy, push vers le registre", approx: "~50 s" },
         {
           name: "deploy",
-          detail: "pull, test de fumée sur l'URL publique, rollback si échec",
+          detail: "pull, vérification de l'URL publique, rollback si échec",
           approx: "~15 s",
         },
       ],
