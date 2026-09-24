@@ -34,7 +34,6 @@ export interface HomelabStatusStrings {
   readonly guests: string;
   readonly cpu: string;
   readonly mem: string;
-  readonly uptime: string;
   readonly caption: string;
   readonly asOf: string;
 }
@@ -106,7 +105,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     contactMailSubject: "HPC / infrastructure role: getting in touch (available Jan 2027)",
     hero: {
       title: "I measure what computing costs, and I run the machines it runs on.",
-      availability: "Paris · available from January 2027",
+      availability: "Paris · engineering degree 2026 · available from January 2027",
       ledeBeforeLink: "GPU energy measurement for ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
@@ -155,7 +154,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       seeAll: "Read all posts",
       readArticle: "Read",
       published: "Published",
-      tagsLabel: "Tags",
+      tagsLabel: "Tags:",
       authorTagline:
         "HPC & infrastructure engineer; Graduate Research Fellow at Oak Ridge National Laboratory in 2025.",
       authorAvailable: "Open to HPC and infrastructure roles from January 2027.",
@@ -168,7 +167,6 @@ const STRINGS: Record<Locale, UIStrings> = {
       guests: "VMs and containers",
       cpu: "CPU",
       mem: "memory",
-      uptime: "uptime",
       caption: "From the cluster's own Proxmox API, captured at build time",
       asOf: "as of",
     },
@@ -181,7 +179,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     contactMailSubject: "Poste HPC / infrastructure : prise de contact (dispo janv. 2027)",
     hero: {
       title: "Je mesure ce que coûte le calcul, et j'exploite les machines qui le font tourner.",
-      availability: "Paris · disponible à partir de janvier 2027",
+      availability: "Paris · diplômé en 2026 · disponible dès janvier 2027",
       ledeBeforeLink: "Mesure d'énergie GPU pour ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
@@ -231,7 +229,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       seeAll: "Lire tous les articles",
       readArticle: "Lire",
       published: "Publié le",
-      tagsLabel: "Étiquettes",
+      tagsLabel: "Étiquettes :",
       authorTagline:
         "Ingénieur HPC et infrastructure ; Graduate Research Fellow à l'Oak Ridge National Laboratory en 2025.",
       authorAvailable: "Ouvert aux postes HPC et infrastructure dès janvier 2027.",
@@ -244,9 +242,8 @@ const STRINGS: Record<Locale, UIStrings> = {
       guests: "VM et conteneurs",
       cpu: "CPU",
       mem: "mémoire",
-      uptime: "disponibilité",
-      caption: "Tiré de l'API Proxmox du cluster, au moment du build",
-      asOf: "au",
+      caption: "Tiré de l'API Proxmox du cluster à la génération du site",
+      asOf: "le",
     },
   },
 };

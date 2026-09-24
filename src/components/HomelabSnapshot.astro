@@ -14,10 +14,6 @@ const { strings, locale } = Astro.props;
 const tag = locale === "fr" ? "fr-FR" : "en-US";
 const pct = (v: number) =>
   new Intl.NumberFormat(tag, { style: "percent", maximumFractionDigits: 1 }).format(v / 100);
-const days = (d: number) =>
-  new Intl.NumberFormat(tag, { style: "unit", unit: "day", unitDisplay: "short" }).format(
-    Math.round(d),
-  );
 const asOf = new Date(snapshot.generatedAt).toLocaleDateString(tag, {
   year: "numeric",
   month: "short",
@@ -29,7 +25,6 @@ const rows = [
   { label: strings.guests, value: `${c.guestsRunning}/${c.guestsTotal}` },
   { label: strings.cpu, value: pct(c.cpuPct) },
   { label: strings.mem, value: pct(c.memPct) },
-  { label: strings.uptime, value: days(snapshot.uptimeDays) },
 ];
 ---
 
@@ -65,8 +60,11 @@ const rows = [
   }
   .grid div {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 2px;
+  }
+  .grid dd {
+    order: -1;
   }
   .grid dt {
     font-size: var(--step--1);
