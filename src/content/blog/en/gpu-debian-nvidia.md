@@ -24,37 +24,37 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 <svg viewBox="0 0 720 340" role="img" aria-label="Two software stacks compared. The Proxmox stack has five layers with VFIO passthrough as friction; the bare Debian stack has four layers with the GPU directly under the kernel." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
-      <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2620"/>
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#111111"/>
     </marker>
   </defs>
-  <text x="180" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">Before: Proxmox node</text>
-  <text x="540" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#2b2620">After: bare Debian 13</text>
-  <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620" text-anchor="middle">
-    <rect x="60" y="54"  width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+  <text x="180" y="30" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="15" font-weight="700" fill="#111111">Before: Proxmox node</text>
+  <text x="540" y="30" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="15" font-weight="700" fill="#111111">After: bare Debian 13</text>
+  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#111111" text-anchor="middle">
+    <rect x="60" y="54"  width="240" height="40" rx="7" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="180" y="79">CUDA workload (inside the guest)</text>
-    <rect x="60" y="106" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <rect x="60" y="106" width="240" height="40" rx="7" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="180" y="131">VM: guest OS + NVIDIA driver</text>
-    <rect x="60" y="158" width="240" height="40" rx="7" fill="#f3e2db" stroke="#b3563a" stroke-width="1.3"/>
-    <text x="180" y="183" fill="#8a3a22">VFIO passthrough</text>
-    <rect x="60" y="210" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <rect x="60" y="158" width="240" height="40" rx="7" fill="#fbe7df" stroke="#5f5f5c" stroke-width="1.3"/>
+    <text x="180" y="183" fill="#3d3d3d">VFIO passthrough</text>
+    <rect x="60" y="210" width="240" height="40" rx="7" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="180" y="235">Proxmox host: kernel + KVM</text>
-    <rect x="60" y="262" width="240" height="40" rx="7" fill="#e7e1d4" stroke="#2b2620" stroke-width="1.3"/>
+    <rect x="60" y="262" width="240" height="40" rx="7" fill="#e6e6e2" stroke="#111111" stroke-width="1.3"/>
     <text x="180" y="287">GPU</text>
   </g>
-  <text x="180" y="322" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#8a3a22">one VM owns the card · the driver lives in the guest</text>
-  <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620" text-anchor="middle">
-    <rect x="420" y="80"  width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+  <text x="180" y="322" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#3d3d3d">one VM owns the card · the driver lives in the guest</text>
+  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#111111" text-anchor="middle">
+    <rect x="420" y="80"  width="240" height="40" rx="7" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="540" y="105">CUDA workload</text>
-    <rect x="420" y="132" width="240" height="40" rx="7" fill="#e7efe0" stroke="#5f8a3a" stroke-width="1.3"/>
-    <text x="540" y="157" fill="#3f6326">nvidia.ko (DKMS-built)</text>
-    <rect x="420" y="184" width="240" height="40" rx="7" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <rect x="420" y="132" width="240" height="40" rx="7" fill="#eeeeeb" stroke="#3d3d3d" stroke-width="1.3"/>
+    <text x="540" y="157" fill="#111111">nvidia.ko (DKMS-built)</text>
+    <rect x="420" y="184" width="240" height="40" rx="7" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="540" y="209">Debian 13 kernel</text>
-    <rect x="420" y="236" width="240" height="40" rx="7" fill="#e7e1d4" stroke="#2b2620" stroke-width="1.3"/>
+    <rect x="420" y="236" width="240" height="40" rx="7" fill="#e6e6e2" stroke="#111111" stroke-width="1.3"/>
     <text x="540" y="261">GPU</text>
   </g>
-  <text x="540" y="300" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#3f6326">the card answers to the kernel directly</text>
-  <line x1="314" y1="162" x2="404" y2="162" stroke="#2b2620" stroke-width="3" marker-end="url(#ar-u1)"/>
-  <text x="359" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-style="italic" fill="#6b6258">collapse the stack</text>
+  <text x="540" y="300" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#111111">the card answers to the kernel directly</text>
+  <line x1="314" y1="162" x2="404" y2="162" stroke="#111111" stroke-width="3" marker-end="url(#ar-u1)"/>
+  <text x="359" y="150" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="12" font-style="italic" fill="#5f5f5c">collapse the stack</text>
 </svg>
 <figcaption>The same hardware, two stacks. Passthrough buys flexibility a single-purpose GPU node never uses.</figcaption>
 </figure>
@@ -99,29 +99,29 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 <svg viewBox="0 0 720 560" role="img" aria-label="A vertical flowchart of the driver install: add sources, blacklist nouveau, install headers and driver via DKMS, then a Secure Boot decision that either enrolls a MOK or proceeds straight to reboot, ending at a working nvidia-smi." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u2" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
-      <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2620"/>
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#111111"/>
     </marker>
   </defs>
-  <g font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="12" fill="#2b2620" text-anchor="middle">
-    <rect x="120" y="36" width="360" height="56" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+  <g font-family="JetBrains Mono Variable,ui-monospace,monospace" font-size="12" fill="#111111" text-anchor="middle">
+    <rect x="120" y="36" width="360" height="56" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="300" y="60">add contrib non-free non-free-firmware</text>
     <text x="300" y="78">to /etc/apt/sources.list</text>
-    <rect x="120" y="110" width="360" height="48" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <rect x="120" y="110" width="360" height="48" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="300" y="139">blacklist nouveau, update-initramfs -u</text>
-    <rect x="120" y="184" width="360" height="56" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <rect x="120" y="184" width="360" height="56" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="300" y="208">apt install linux-headers-amd64 nvidia-driver</text>
-    <text x="300" y="226" fill="#6b6258">(DKMS builds against your kernel)</text>
+    <text x="300" y="226" fill="#5f5f5c">(DKMS builds against your kernel)</text>
   </g>
-  <polygon points="300,258 382,300 300,342 218,300" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
-  <text x="300" y="304" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620">Secure Boot on?</text>
-  <rect x="475" y="274" width="206" height="52" rx="8" fill="#f6ead2" stroke="#c8821e" stroke-width="1.4"/>
-  <text x="578" y="296" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12.5" fill="#7a4e10">enroll the DKMS key (MOK)</text>
-  <text x="578" y="313" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" font-style="italic" fill="#9a6a1e">the easy step to miss</text>
-  <rect x="190" y="400" width="220" height="48" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
-  <text x="300" y="429" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620">reboot</text>
-  <rect x="120" y="476" width="360" height="48" rx="8" fill="#e7efe0" stroke="#5f8a3a" stroke-width="1.4"/>
-  <text x="300" y="505" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#3f6326">nvidia-smi shows the card + driver version</text>
-  <g stroke="#2b2620" stroke-width="1.5" fill="none">
+  <polygon points="300,258 382,300 300,342 218,300" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="300" y="304" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#111111">Secure Boot on?</text>
+  <rect x="475" y="274" width="206" height="52" rx="8" fill="#fbe7df" stroke="#b93a0a" stroke-width="1.4"/>
+  <text x="578" y="296" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="12.5" fill="#9a3412">enroll the DKMS key (MOK)</text>
+  <text x="578" y="313" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" font-style="italic" fill="#9a3412">the easy step to miss</text>
+  <rect x="190" y="400" width="220" height="48" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="300" y="429" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#111111">reboot</text>
+  <rect x="120" y="476" width="360" height="48" rx="8" fill="#eeeeeb" stroke="#3d3d3d" stroke-width="1.4"/>
+  <text x="300" y="505" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#111111">nvidia-smi shows the card + driver version</text>
+  <g stroke="#111111" stroke-width="1.5" fill="none">
     <line x1="300" y1="92"  x2="300" y2="108" marker-end="url(#ar-u2)"/>
     <line x1="300" y1="158" x2="300" y2="182" marker-end="url(#ar-u2)"/>
     <line x1="300" y1="240" x2="300" y2="256" marker-end="url(#ar-u2)"/>
@@ -130,8 +130,8 @@ sudo mokutil --import /var/lib/dkms/mok.pub
     <polyline points="578,326 578,372 300,372"/>
     <line x1="300" y1="448" x2="300" y2="474" marker-end="url(#ar-u2)"/>
   </g>
-  <text x="284" y="362" text-anchor="end" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11.5" fill="#6b6258">no</text>
-  <text x="425" y="292" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11.5" fill="#6b6258">yes</text>
+  <text x="284" y="362" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">no</text>
+  <text x="425" y="292" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">yes</text>
 </svg>
 <figcaption>The whole sequence. Every box except the amber one is mechanical; the amber one is where a clean build still gives you a dead <code>nvidia-smi</code>.</figcaption>
 </figure>

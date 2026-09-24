@@ -40,33 +40,33 @@ fdbscan-dense   2,19 s          580 J     262 W
 
 <figure>
 <svg viewBox="0 0 720 380" role="img" aria-label="Une courbe puissance-temps schématique pour trois régions profilées, A, B et C, chacune à un niveau de puissance différent. Des points d'échantillonnage jalonnent la courbe à cadence fixe. Une ligne pointillée marque le plancher de repos, et l'aire sous la première région est ombrée et annotée énergie égale l'intégrale de la puissance dans le temps." xmlns="http://www.w3.org/2000/svg">
-  <g stroke="#cdc3b1" stroke-width="1">
+  <g stroke="#c9c9c4" stroke-width="1">
     <line x1="70" y1="50" x2="70" y2="300"/>
     <line x1="70" y1="300" x2="700" y2="300"/>
   </g>
-  <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#8a7d63" text-anchor="end">
-    <line x1="66" y1="300" x2="70" y2="300" stroke="#cdc3b1"/><text x="61" y="304">0</text>
-    <line x1="66" y1="217" x2="70" y2="217" stroke="#cdc3b1"/><text x="61" y="221">100</text>
-    <line x1="66" y1="133" x2="70" y2="133" stroke="#cdc3b1"/><text x="61" y="137">200</text>
-    <line x1="66" y1="50"  x2="70" y2="50"  stroke="#cdc3b1"/><text x="61" y="54">300</text>
+  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#5f5f5c" text-anchor="end">
+    <line x1="66" y1="300" x2="70" y2="300" stroke="#c9c9c4"/><text x="61" y="304">0</text>
+    <line x1="66" y1="217" x2="70" y2="217" stroke="#c9c9c4"/><text x="61" y="221">100</text>
+    <line x1="66" y1="133" x2="70" y2="133" stroke="#c9c9c4"/><text x="61" y="137">200</text>
+    <line x1="66" y1="50"  x2="70" y2="50"  stroke="#c9c9c4"/><text x="61" y="54">300</text>
   </g>
-  <text x="70" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#6b6258">puissance (W)</text>
-  <text x="694" y="318" text-anchor="end" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#6b6258">temps &#8594;</text>
-  <g font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" text-anchor="middle">
-    <rect x="95"  y="50" width="160" height="250" fill="#c8821e" opacity="0.05"/>
-    <rect x="300" y="50" width="170" height="250" fill="#5f8a3a" opacity="0.06"/>
-    <rect x="510" y="50" width="140" height="250" fill="#b3563a" opacity="0.05"/>
-    <text x="175" y="64" fill="#7a4e10">région A</text>
-    <text x="385" y="64" fill="#3f6326">région B</text>
-    <text x="580" y="64" fill="#8a3a22">région C</text>
+  <text x="70" y="36" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#5f5f5c">puissance (W)</text>
+  <text x="694" y="318" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#5f5f5c">temps &#8594;</text>
+  <g font-family="JetBrains Mono Variable,ui-monospace,monospace" font-size="11" text-anchor="middle">
+    <rect x="95"  y="50" width="160" height="250" fill="#b93a0a" opacity="0.05"/>
+    <rect x="300" y="50" width="170" height="250" fill="#3d3d3d" opacity="0.06"/>
+    <rect x="510" y="50" width="140" height="250" fill="#5f5f5c" opacity="0.05"/>
+    <text x="175" y="64" fill="#9a3412">région A</text>
+    <text x="385" y="64" fill="#111111">région B</text>
+    <text x="580" y="64" fill="#3d3d3d">région C</text>
   </g>
-  <polygon points="99,108 255,112 255,249 99,249" fill="#c8821e" opacity="0.22"/>
-  <polygon points="99,249 255,249 255,300 99,300" fill="#6b6258" opacity="0.10"/>
-  <line x1="70" y1="249" x2="700" y2="249" stroke="#8a7d63" stroke-width="1.2" stroke-dasharray="6 4"/>
-  <text x="700" y="245" text-anchor="end" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#8a7d63">plancher de repos</text>
-  <polyline fill="none" stroke="#2b2620" stroke-width="2"
+  <polygon points="99,108 255,112 255,249 99,249" fill="#b93a0a" opacity="0.22"/>
+  <polygon points="99,249 255,249 255,300 99,300" fill="#5f5f5c" opacity="0.10"/>
+  <line x1="70" y1="249" x2="700" y2="249" stroke="#5f5f5c" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="700" y="245" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#5f5f5c">plancher de repos</text>
+  <polyline fill="none" stroke="#111111" stroke-width="2"
     points="70,249 95,249 99,108 255,112 259,249 300,249 304,193 470,196 474,249 510,249 514,214 540,205 562,221 586,208 612,220 640,210 650,214 654,249 700,249"/>
-  <g fill="#c8821e">
+  <g fill="#b93a0a">
     <circle cx="84" cy="249" r="2.4"/>
     <circle cx="112" cy="109" r="2.4"/><circle cx="138" cy="110" r="2.4"/><circle cx="164" cy="110" r="2.4"/>
     <circle cx="190" cy="111" r="2.4"/><circle cx="216" cy="111" r="2.4"/><circle cx="242" cy="112" r="2.4"/>
@@ -78,8 +78,8 @@ fdbscan-dense   2,19 s          580 J     262 W
     <circle cx="606" cy="216" r="2.4"/><circle cx="632" cy="212" r="2.4"/>
     <circle cx="676" cy="249" r="2.4"/>
   </g>
-  <text x="177" y="180" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#7a4e10">Énergie = &#8747; P dt</text>
-  <text x="177" y="198" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10.5" fill="#9a6a1e">aire au-dessus du repos = coût marginal</text>
+  <text x="177" y="180" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="13" fill="#9a3412">Énergie = &#8747; P dt</text>
+  <text x="177" y="198" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#9a3412">aire au-dessus du repos = coût marginal</text>
 </svg>
 <figcaption>Un schéma, pas une mesure. L'énergie d'une région est l'aire sous sa courbe de puissance. La ligne pointillée est le plancher de repos ; le coût marginal d'une région est la part de l'aire qui se situe au-dessus. Les points sont le thread dédié qui échantillonne à cadence fixe.</figcaption>
 </figure>
@@ -102,51 +102,51 @@ fdbscan-dense   2,19 s          580 J     262 W
 <svg viewBox="0 0 760 340" role="img" aria-label="Le pipeline du connecteur. L'application Kokkos déclenche les callbacks Tools à chaque région parallèle ; le connecteur énergie reçoit une trace de puissance d'un thread échantillonneur qui lit la puissance hors bande à intervalle fixe ; NVML et Variorum alimentent l'échantillonneur ; le connecteur intègre la trace par région en joules, qui partent vers kokkos-energy, l'outil d'analyse." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-k1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
-      <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2620"/>
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#111111"/>
     </marker>
   </defs>
-  <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="12.5" fill="#2b2620" text-anchor="middle">
-    <rect x="16"  y="60" width="132" height="52" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="12.5" fill="#111111" text-anchor="middle">
+    <rect x="16"  y="60" width="132" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="82" y="82">Appli Kokkos</text>
-    <text x="82" y="99" font-size="10" fill="#6b6258">parallel_for · régions</text>
-    <rect x="172" y="60" width="120" height="52" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="82" y="99" font-size="10" fill="#5f5f5c">parallel_for · régions</text>
+    <rect x="172" y="60" width="120" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="232" y="82">Callbacks Tools</text>
-    <text x="232" y="99" font-size="10.5" fill="#6b6258">début / fin</text>
-    <rect x="316" y="60" width="124" height="52" rx="8" fill="#f6ead2" stroke="#c8821e" stroke-width="1.4"/>
-    <text x="378" y="82" fill="#7a4e10">connecteur énergie</text>
-    <text x="378" y="99" font-size="10.5" fill="#9a6a1e">&#8747; trapèze</text>
-    <rect x="464" y="60" width="134" height="52" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="232" y="99" font-size="10.5" fill="#5f5f5c">début / fin</text>
+    <rect x="316" y="60" width="124" height="52" rx="8" fill="#fbe7df" stroke="#b93a0a" stroke-width="1.4"/>
+    <text x="378" y="82" fill="#9a3412">connecteur énergie</text>
+    <text x="378" y="99" font-size="10.5" fill="#9a3412">&#8747; trapèze</text>
+    <rect x="464" y="60" width="134" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="531" y="82">joules par région</text>
-    <text x="531" y="99" font-size="10.5" fill="#6b6258">sommés sur les appels</text>
-    <rect x="622" y="60" width="122" height="52" rx="8" fill="#e7efe0" stroke="#5f8a3a" stroke-width="1.4"/>
-    <text x="683" y="82" fill="#3f6326">kokkos-energy</text>
-    <text x="683" y="99" font-size="10.5" fill="#4d7030">table · trace · HTML</text>
+    <text x="531" y="99" font-size="10.5" fill="#5f5f5c">sommés sur les appels</text>
+    <rect x="622" y="60" width="122" height="52" rx="8" fill="#eeeeeb" stroke="#3d3d3d" stroke-width="1.4"/>
+    <text x="683" y="82" fill="#111111">kokkos-energy</text>
+    <text x="683" y="99" font-size="10.5" fill="#3d3d3d">table · trace · HTML</text>
   </g>
-  <g stroke="#2b2620" stroke-width="1.5" fill="none">
+  <g stroke="#111111" stroke-width="1.5" fill="none">
     <line x1="148" y1="86" x2="170" y2="86" marker-end="url(#ar-k1)"/>
     <line x1="292" y1="86" x2="314" y2="86" marker-end="url(#ar-k1)"/>
     <line x1="440" y1="86" x2="462" y2="86" marker-end="url(#ar-k1)"/>
     <line x1="598" y1="86" x2="620" y2="86" marker-end="url(#ar-k1)"/>
   </g>
-  <rect x="150" y="208" width="448" height="96" rx="10" fill="none" stroke="#b9ad97" stroke-width="1.2" stroke-dasharray="5 4"/>
-  <text x="374" y="202" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11.5" fill="#8a7d63">puissance lue hors bande, à cadence fixe</text>
-  <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="12.5" fill="#2b2620" text-anchor="middle">
-    <rect x="166" y="232" width="120" height="50" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+  <rect x="150" y="208" width="448" height="96" rx="10" fill="none" stroke="#a8a8a3" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="374" y="202" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">puissance lue hors bande, à cadence fixe</text>
+  <g font-family="Archivo Variable,system-ui,sans-serif" font-size="12.5" fill="#111111" text-anchor="middle">
+    <rect x="166" y="232" width="120" height="50" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="226" y="254">NVML</text>
-    <text x="226" y="271" font-size="10" fill="#6b6258">par GPU · mW</text>
-    <rect x="316" y="232" width="124" height="50" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="226" y="271" font-size="10" fill="#5f5f5c">par GPU · mW</text>
+    <rect x="316" y="232" width="124" height="50" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="378" y="254">thread échantillonneur</text>
-    <text x="378" y="271" font-size="10" fill="#6b6258">lit la puissance tous les &#916;t</text>
-    <rect x="470" y="232" width="124" height="50" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
+    <text x="378" y="271" font-size="10" fill="#5f5f5c">lit la puissance tous les &#916;t</text>
+    <rect x="470" y="232" width="124" height="50" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="532" y="254">Variorum</text>
-    <text x="532" y="271" font-size="10" fill="#6b6258">nœud · CPU+DRAM</text>
+    <text x="532" y="271" font-size="10" fill="#5f5f5c">nœud · CPU+DRAM</text>
   </g>
-  <g stroke="#2b2620" stroke-width="1.5" fill="none">
+  <g stroke="#111111" stroke-width="1.5" fill="none">
     <line x1="286" y1="257" x2="314" y2="257" marker-end="url(#ar-k1)"/>
     <line x1="470" y1="257" x2="442" y2="257" marker-end="url(#ar-k1)"/>
     <line x1="378" y1="232" x2="378" y2="114" marker-end="url(#ar-k1)"/>
   </g>
-  <text x="392" y="180" text-anchor="start" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" font-style="italic" fill="#6b6258">trace intégrée</text>
+  <text x="392" y="180" text-anchor="start" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" font-style="italic" fill="#5f5f5c">trace intégrée</text>
 </svg>
 <figcaption>Les callbacks ne font que marquer quand chaque région s'ouvre et se ferme. L'énergie vient d'une trace de puissance séparée que le connecteur intègre sur ces fenêtres, avec NVML ou Variorum sous l'échantillonneur selon que vous interrogez la carte ou le nœud.</figcaption>
 </figure>
