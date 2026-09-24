@@ -12,19 +12,22 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <p>Commençons par le résultat qui a fini sur le poster. ArborX propose deux implémentations de DBSCAN, <code>fdbscan</code> et <code>fdbscan-dense</code>. Sur la même entrée et le même NVIDIA H100 NVL, elles renvoient les mêmes clusters, et sur 64 exécutions de chacune, la version dense est plus rapide et plus sobre :</p>
 
-<pre><code>variante        région DBSCAN   énergie   puissance moyenne
-------------------------------------------------------------
-fdbscan         2,69 s          777 J     288 W
-fdbscan-dense   2,19 s          580 J     262 W
-(médianes sur 64 exécutions de chacune)</code></pre>
+<table class="results">
+  <caption>Médianes sur 64 exécutions de chaque variante.</caption>
+  <thead><tr><th scope="col">variante</th><th scope="col">région DBSCAN</th><th scope="col">énergie</th><th scope="col">puissance moyenne</th></tr></thead>
+  <tbody>
+    <tr><th scope="row"><code>fdbscan</code></th><td>2,69 s</td><td>777 J</td><td>288 W</td></tr>
+    <tr><th scope="row"><code>fdbscan-dense</code></th><td>2,19 s</td><td>580 J</td><td>262 W</td></tr>
+  </tbody>
+</table>
 
 <figure>
   <img src="/blog/kokkos/fdbscan.png" alt="Puissance GPU dans le temps pour fdbscan d'ArborX sur un H100 NVL, un plateau autour de 300 W sous un plafond de 350 W. Énergie totale estimée : 925,1 J, dont 772,8 J dans les régions de noyaux." width="1200" height="898" loading="lazy" />
   <img src="/blog/kokkos/fdbscan-dense.png" alt="Puissance GPU dans le temps pour fdbscan-dense sur le même GPU et la même entrée, un plateau similaire. Énergie totale estimée : 784,8 J, dont 615,6 J dans les régions de noyaux." width="1200" height="898" loading="lazy" />
-  <figcaption>Figure 3 du poster : <code>fdbscan</code> (en haut) et <code>fdbscan-dense</code> (en bas). Les bandes colorées sont les régions Kokkos ; l'énergie est la trace de puissance intégrée dans le temps. Les encadrés du poster additionnent toutes les régions de noyaux (772,8 J et 615,6 J) ; la page d'accueil ne compte que la région DBSCANCalculation des mêmes exécutions (769 J et 569 J).</figcaption>
+  <figcaption>Figure 3 du poster : <code>fdbscan</code> (en haut) et <code>fdbscan-dense</code> (en bas). Les bandes colorées sont les régions Kokkos ; l'énergie est la trace de puissance intégrée dans le temps. La légende du poster intitule son encadré DBSCAN Calculation, mais ce chiffre additionne toutes les régions de noyaux de l'exécution (772,8 J et 615,6 J) ; la page d'accueil ne compte que la région DBSCANCalculation elle-même (769 J et 569 J).</figcaption>
 </figure>
 
-<p>La variante la plus rapide gagne donc aussi sur l'énergie, mais davantage : 25 % d'énergie en moins pour 19 % de temps en moins, parce qu'elle consomme aussi 9 % de watts en moins pendant son exécution. Un profil temporel rapporterait les 19 %. Les six points restants n'apparaissent que si l'on mesure l'énergie au lieu de la déduire du temps.</p>
+<p>La variante la plus rapide gagne donc aussi sur l'énergie, mais davantage : 25 % d'énergie en moins pour 19 % de temps en moins, parce que sa puissance moyenne est aussi inférieure de 9 % pendant l'exécution. Un profil temporel rapporterait les 19 %. Les six points restants n'apparaissent que si l'on mesure l'énergie au lieu de la déduire du temps.</p>
 
 <h2>De l'instrumentation qu'on n'a pas à compiler</h2>
 
@@ -88,7 +91,7 @@ fdbscan-dense   2,19 s          580 J     262 W
 
 <p>Il faut donc séparer entièrement l'échantillonnage des noyaux. Un thread en arrière-plan interroge le capteur de puissance à intervalle fixe, espacé de quelques millisecondes, et horodate chaque lecture, construisant une trace continue de l'évolution de la consommation de la carte sur toute l'exécution. Les callbacks de début et de fin ne lisent plus du tout la puissance. Ils enregistrent une fenêtre temporelle, le moment où la région s'est ouverte et celui où elle s'est refermée. Pour obtenir l'énergie d'une région, le connecteur intègre la trace de puissance sur cette fenêtre avec la règle des trapèzes, en sommant les petits trapèzes entre échantillons consécutifs qui tombent à l'intérieur. Comme on entre de nombreuses fois dans la même région, ses joules se cumulent d'un appel à l'autre.</p>
 
-<p>Échantillonner au rythme de l'horloge plutôt qu'à celui du noyau donne une trace continue, mais ne fait pas mieux que le capteur. Avec une fenêtre de 25 ms toutes les 100 ms, un noyau court isolé est pratiquement invisible, et additionner de nombreux lancements ne corrige pas un angle mort qui revient à la même phase. Ce que la trace mesure de façon fiable, c'est une région bien plus longue que l'intervalle de rafraîchissement : une phase de solveur, ou un algorithme entier, comme les deux exécutions de DBSCAN ci-dessus. Le poster gagne un peu de résolution en répétant une exécution 64 fois, avec un départ décalé de 5 ms à chaque fois, et en gardant la lecture la plus haute ; mais la conclusion reste la même : l'énergie par noyau reste hors de portée via NVML.</p>
+<p>Échantillonner au rythme de l'horloge plutôt qu'à celui du noyau donne une trace continue, mais ne fait pas mieux que le capteur. Avec une fenêtre de 25 ms toutes les 100 ms, un noyau court isolé est pratiquement invisible, et additionner de nombreux lancements ne corrige pas un angle mort qui revient à la même phase. Ce que la trace mesure de façon fiable, c'est une région bien plus longue que l'intervalle de rafraîchissement : une phase de solveur, ou un algorithme entier, comme les deux exécutions de DBSCAN ci-dessus. Le poster gagne un peu de résolution en répétant une exécution 64 fois, avec un départ décalé de 5 ms à chaque fois, et en gardant la lecture la plus haute pour chaque noyau. Ce sont les mêmes 64 exécutions que celles des médianes ci-dessus, où chaque exécution est intégrée séparément. Dans les deux cas, la conclusion reste la même : l'énergie par noyau reste hors de portée via NVML.</p>
 
 <h2>Les limites du chiffre</h2>
 

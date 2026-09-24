@@ -12,19 +12,22 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <p>Start with the result that ended up on the poster. ArborX ships two DBSCAN implementations, <code>fdbscan</code> and <code>fdbscan-dense</code>. On the same input and the same NVIDIA H100 NVL they return the same clusters, and over 64 runs of each, the dense one is faster and cheaper:</p>
 
-<pre><code>variant         DBSCAN region   energy   mean power
----------------------------------------------------
-fdbscan         2.69 s          777 J    288 W
-fdbscan-dense   2.19 s          580 J    262 W
-(medians over 64 runs each)</code></pre>
+<table class="results">
+  <caption>Medians over 64 runs of each variant.</caption>
+  <thead><tr><th scope="col">variant</th><th scope="col">DBSCAN region</th><th scope="col">energy</th><th scope="col">mean power</th></tr></thead>
+  <tbody>
+    <tr><th scope="row"><code>fdbscan</code></th><td>2.69 s</td><td>777 J</td><td>288 W</td></tr>
+    <tr><th scope="row"><code>fdbscan-dense</code></th><td>2.19 s</td><td>580 J</td><td>262 W</td></tr>
+  </tbody>
+</table>
 
 <figure>
   <img src="/blog/kokkos/fdbscan.png" alt="GPU power over time for ArborX fdbscan on an H100 NVL, a plateau near 300 W under a 350 W cap. Total estimated energy 925.1 J, of which 772.8 J inside kernel regions." width="1200" height="898" loading="lazy" />
   <img src="/blog/kokkos/fdbscan-dense.png" alt="GPU power over time for ArborX fdbscan-dense on the same GPU and input, a similar plateau. Total estimated energy 784.8 J, of which 615.6 J inside kernel regions." width="1200" height="898" loading="lazy" />
-  <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time. The boxes on the poster sum every kernel region (772.8 J and 615.6 J); the home page counts only the DBSCANCalculation region of the same runs (769 J and 569 J).</figcaption>
+  <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time. The poster's legend calls its energy box DBSCAN Calculation, but that figure sums every kernel region of the run (772.8 J and 615.6 J); the home page counts only the DBSCANCalculation region itself (769 J and 569 J).</figcaption>
 </figure>
 
-<p>So the faster variant also wins on energy, but by more: 25% less energy for 19% less time, because it also draws 9% less power while it runs. A time profile would report the 19%. The other six points only show up when you measure energy instead of inferring it from time.</p>
+<p>So the faster variant also wins on energy, but by more: 25% less energy for 19% less time, because its mean power is also 9% lower while it runs. A time profile would report the 19%. The other six points only show up when you measure energy instead of inferring it from time.</p>
 
 <h2>Instrumentation you do not have to compile in</h2>
 
@@ -88,7 +91,7 @@ fdbscan-dense   2.19 s          580 J    262 W
 
 <p>So sampling has to be separated from the kernels entirely. A background thread polls the power sensor on a fixed interval, a few milliseconds apart, and timestamps every reading, building a continuous trace of how the board's draw moved through the whole run. The begin and end callbacks no longer read power at all. They record a wall-clock window, the moment the region opened and the moment it closed. To get a region's energy, the connector integrates the power trace over that window with the trapezoidal rule, summing the little trapezoids between consecutive samples that fall inside it. Because the same region is entered many times, its joules accumulate across every call.</p>
 
-<p>Sampling on the clock instead of on the kernel gives a continuous trace, but it cannot beat the sensor. With a 25 ms window every 100 ms, a single short kernel is effectively invisible, and adding up many launches does not fix a blind spot that recurs at the same phase. What the trace does measure reliably is a region much longer than the refresh interval: a solver phase, or a whole algorithm, like the two DBSCAN runs above. The poster pushes resolution a little further by repeating a run 64 times, shifting its start by 5 ms each time and keeping the highest reading, but the conclusion stands: per-kernel energy is out of reach through NVML.</p>
+<p>Sampling on the clock instead of on the kernel gives a continuous trace, but it cannot beat the sensor. With a 25 ms window every 100 ms, a single short kernel is effectively invisible, and adding up many launches does not fix a blind spot that recurs at the same phase. What the trace does measure reliably is a region much longer than the refresh interval: a solver phase, or a whole algorithm, like the two DBSCAN runs above. The poster pushes resolution a little further by repeating a run 64 times, shifting its start by 5 ms each time and keeping the highest reading per kernel. Those are the same 64 runs behind the medians above, where each run is integrated on its own. Either way the conclusion stands: per-kernel energy is out of reach through NVML.</p>
 
 <h2>The limits of the number</h2>
 

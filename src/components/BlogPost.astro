@@ -89,7 +89,7 @@ const articleLd = {
         <p class="post-desc">{d.description}</p>
         {d.tags.length > 0 && (
           <p class="post-tags">
-            <span class="visually-hidden">{ui.blog.tagsLabel}: </span>
+            <span class="visually-hidden">{ui.blog.tagsLabel} </span>
             {d.tags.join(" · ")}
           </p>
         )}
@@ -202,6 +202,41 @@ const articleLd = {
   .prose :global(pre code) {
     background: none;
     padding: 0;
+  }
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--space-m);
+    font-variant-numeric: tabular-nums;
+  }
+  .prose :global(caption) {
+    caption-side: bottom;
+    text-align: left;
+    margin-top: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    padding: var(--space-2xs) var(--space-xs) var(--space-2xs) 0;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: baseline;
+  }
+  .prose :global(thead th) {
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .prose :global(td) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    white-space: nowrap;
+  }
+  .prose :global(tbody th code) {
+    background: none;
+    padding: 0;
+    white-space: nowrap;
   }
   .prose :global(ul),
   .prose :global(ol) {
