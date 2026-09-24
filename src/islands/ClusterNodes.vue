@@ -32,7 +32,16 @@ const props = defineProps<{
   nodes: readonly NodeFact[];
   snapshot: readonly NodeSnapshot[];
   asOf: string;
+  lang: string;
 }>();
+
+// Numbers in the page's language (a narrow no-break space before % in French).
+const pct = (v: number): string =>
+  new Intl.NumberFormat(props.lang, { style: "percent", maximumFractionDigits: 0 }).format(v / 100);
+const days = (d: number): string =>
+  new Intl.NumberFormat(props.lang, { style: "unit", unit: "day", unitDisplay: "short" }).format(
+    Math.round(d),
+  );
 
 const cards = computed(() =>
   props.nodes.map((n) => ({
@@ -66,7 +75,7 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
             <span class="bar" :data-tone="tone(card.live?.cpuPct ?? 0)">
               <i :style="{ width: (card.live?.cpuPct ?? 0) + '%' }"></i>
             </span>
-            <span class="val">{{ card.live?.cpuPct ?? 0 }}%</span>
+            <span class="val">{{ pct(card.live?.cpuPct ?? 0) }}</span>
           </dd>
         </div>
         <div class="meter">
@@ -75,13 +84,13 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
             <span class="bar" :data-tone="tone(card.live?.memPct ?? 0)">
               <i :style="{ width: (card.live?.memPct ?? 0) + '%' }"></i>
             </span>
-            <span class="val">{{ card.live?.memPct ?? 0 }}%</span>
+            <span class="val">{{ pct(card.live?.memPct ?? 0) }}</span>
           </dd>
         </div>
         <div class="meter up">
           <dt>{{ strings.uptime }}</dt>
           <dd>
-            <span class="val">{{ card.live?.uptimeDays ?? 0 }}d</span>
+            <span class="val">{{ days(card.live?.uptimeDays ?? 0) }}</span>
           </dd>
         </div>
       </dl>
@@ -94,7 +103,7 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
 <style scoped>
 .nodes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   gap: var(--space-m);
   margin-top: var(--space-l);
 }
@@ -116,7 +125,7 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
 .node-head {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: 0.25rem 0.5rem;
   flex-wrap: wrap;
 }
 .status-dot {
@@ -140,7 +149,7 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
   letter-spacing: var(--tracking-wide);
 }
 .node-spec {
-  margin-left: auto;
+  flex-basis: 100%;
   font-family: var(--font-mono);
   font-size: var(--step--2);
   color: var(--muted);

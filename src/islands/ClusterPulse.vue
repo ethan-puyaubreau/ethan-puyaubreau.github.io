@@ -29,7 +29,12 @@ const props = defineProps<{
   cpuHist: readonly number[];
   memHist: readonly number[];
   asOf: string;
+  lang: string;
 }>();
+
+// Numbers in the page's language (a narrow no-break space before % in French).
+const pct = (v: number): string =>
+  new Intl.NumberFormat(props.lang, { style: "percent", maximumFractionDigits: 0 }).format(v / 100);
 
 const W = 100;
 const H = 28;
@@ -82,7 +87,7 @@ const memArea = computed(() => area(props.memHist));
         <path :d="cpuArea" class="spark-fill" />
         <path :d="cpuLine" class="spark-line" />
       </svg>
-      <span class="spark-val">{{ agg.cpuPct }}%</span>
+      <span class="spark-val">{{ pct(agg.cpuPct) }}</span>
     </div>
     <div class="spark-row">
       <span class="spark-label">{{ strings.mem }}</span>
@@ -90,7 +95,7 @@ const memArea = computed(() => area(props.memHist));
         <path :d="memArea" class="spark-fill" />
         <path :d="memLine" class="spark-line" />
       </svg>
-      <span class="spark-val">{{ agg.memPct }}%</span>
+      <span class="spark-val">{{ pct(agg.memPct) }}</span>
     </div>
 
     <p class="pulse-window">{{ strings.window }} · {{ strings.asOf }} {{ asOf }}</p>
@@ -176,19 +181,5 @@ const memArea = computed(() => area(props.memHist));
   margin-top: var(--space-s);
   font-size: var(--step--2);
   color: var(--muted);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .dot {
-    animation: pulse-dot 2.6s ease-in-out infinite;
-  }
-}
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.45;
-  }
 }
 </style>

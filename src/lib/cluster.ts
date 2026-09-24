@@ -93,11 +93,6 @@ export interface ClusterContent {
     readonly runbooksTitle: string;
     readonly runbooksBody: string;
   };
-  readonly console: {
-    readonly nodesOnline: string;
-    readonly servicesUp: string;
-    readonly uptime: string;
-  };
   /** Call to action closing the page (no dead end). */
   readonly talk: {
     readonly head: string;
@@ -142,7 +137,10 @@ const NODE_ROLE: Record<Locale, Record<string, string>> = {
 const buildNodes = (locale: Locale): readonly ClusterNode[] =>
   NODE_ORDER.map((id) => ({
     id,
-    spec: NODE_SPEC[id],
+    spec:
+      locale === "fr"
+        ? NODE_SPEC[id].replace(/(\d)\.(\d)/g, "$1,$2").replace(/GB/g, "Go")
+        : NODE_SPEC[id],
     role: NODE_ROLE[locale][id],
   }));
 
@@ -199,7 +197,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     pulse: {
       heading: "Cluster pulse",
       nodes: "nodes online",
-      guests: "guests running",
+      guests: "VMs and containers running",
       cpu: "CPU",
       mem: "memory",
       window: "rolling window, snapshot",
@@ -243,11 +241,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
       runbooksTitle: "Runbooks as a repo",
       runbooksBody:
         "The cluster's setup, runbooks, and automation live in a versioned repo, operated like code. Adding a node or restoring a service follows a written procedure.",
-    },
-    console: {
-      nodesOnline: "nodes online",
-      servicesUp: "endpoints up",
-      uptime: "uptime",
     },
     talk: {
       head: "Everything here, I built and run myself",
@@ -303,7 +296,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     live: {
       cpu: "CPU",
       mem: "mémoire",
-      uptime: "uptime",
+      uptime: "en service",
       online: "en ligne",
       offline: "hors ligne",
       asOf: "relevé le",
@@ -324,7 +317,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     pulse: {
       heading: "Pouls du cluster",
       nodes: "nœuds en ligne",
-      guests: "invités actifs",
+      guests: "VM et conteneurs actifs",
       cpu: "CPU",
       mem: "mémoire",
       window: "fenêtre glissante, instantané",
@@ -342,7 +335,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     pipelineHead: {
       title: "Comment un projet auto-hébergé se déploie",
       intro:
-        "Un push sur main lance trois jobs sur un runner auto-hébergé et arrive en direct en environ deux minutes, avec un rollback automatique si le test de fumée échoue. Ce site précis (Astro, déployé sur GitHub Pages) utilise un autre pipeline ; celui-ci est celui de mes projets auto-hébergés.",
+        "Un push sur main lance trois jobs sur un runner auto-hébergé et passe en production en deux minutes environ, avec un rollback automatique si le test de fumée échoue. Ce site précis (Astro, déployé sur GitHub Pages) utilise un autre pipeline ; celui-ci est celui de mes projets auto-hébergés.",
     },
     pipeline: {
       stages: [
@@ -350,7 +343,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
         { name: "image", detail: "build, scan Trivy, push vers le registre", approx: "~50 s" },
         {
           name: "deploy",
-          detail: "pull, test de fumée de l'URL live, rollback si échec",
+          detail: "pull, test de fumée sur l'URL publique, rollback si échec",
           approx: "~15 s",
         },
       ],
@@ -368,11 +361,6 @@ const CONTENT: Record<Locale, ClusterContent> = {
       runbooksTitle: "Les runbooks dans un dépôt",
       runbooksBody:
         "La configuration, les runbooks et l'automatisation du cluster vivent dans un dépôt versionné, exploités comme du code. Ajouter un nœud ou restaurer un service suit une procédure écrite.",
-    },
-    console: {
-      nodesOnline: "nœuds en ligne",
-      servicesUp: "points d'accès en ligne",
-      uptime: "uptime",
     },
     talk: {
       head: "Tout ce qui est ici, je l'ai construit et je l'exploite",

@@ -9,7 +9,6 @@ import SectionHeader from "./SectionHeader.astro";
 import ClusterNodes from "../islands/ClusterNodes.vue";
 import ClusterPulse from "../islands/ClusterPulse.vue";
 import ClusterServices from "../islands/ClusterServices.vue";
-import ClusterConsole from "../islands/ClusterConsole.vue";
 import RequestPath from "./RequestPath.astro";
 import DeployPipeline from "./DeployPipeline.astro";
 import { getUI } from "../lib/ui";
@@ -62,20 +61,20 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
         <SectionHeader title={c.nodesHead.title}>{c.nodesHead.intro}</SectionHeader>
         <div class="pulse-wrap">
           <ClusterPulse
-            client:visible
             strings={c.pulse}
             agg={snapshot.cluster}
             cpuHist={snapshot.history.map((h) => h.cpuPct)}
             memHist={snapshot.history.map((h) => h.memPct)}
             asOf={asOf}
+            lang={locale}
           />
         </div>
         <ClusterNodes
-          client:visible
           strings={c.live}
           nodes={c.nodes}
           snapshot={snapshot.nodes}
           asOf={asOf}
+          lang={locale}
         />
       </section>
 
@@ -87,7 +86,6 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
       <section id="services">
         <SectionHeader title={c.servicesHead.title}>{c.servicesHead.intro}</SectionHeader>
         <ClusterServices
-          client:visible
           strings={c.services}
           up={snapshot.servicesUp}
           total={snapshot.servicesTotal}
@@ -121,16 +119,6 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
             <p>{c.ops.runbooksBody}</p>
           </div>
         </div>
-        <ClusterConsole
-          client:visible
-          strings={c.console}
-          nodesOnline={snapshot.cluster.nodesOnline}
-          nodesTotal={snapshot.cluster.nodesTotal}
-          servicesUp={snapshot.servicesUp}
-          servicesTotal={snapshot.servicesTotal}
-          uptimeDays={snapshot.uptimeDays}
-          nodes={snapshot.nodes}
-        />
       </section>
 
       <aside id="hire" class="talk">
