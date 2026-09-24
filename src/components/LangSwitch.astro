@@ -79,6 +79,11 @@ const { locale, locales, switchLabel, names, titles, storageKey, paths } = Astro
     padding-block: 0.25rem;
     padding-inline: 0.3rem;
   }
+  @media (pointer: coarse) {
+    .opt {
+      padding: 0.7rem 0.45rem;
+    }
+  }
   a.opt:hover,
   a.opt:focus-visible {
     color: var(--ink);

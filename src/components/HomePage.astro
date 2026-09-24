@@ -11,13 +11,12 @@ import MoreWork from "./MoreWork.astro";
 import About from "./About.astro";
 import Contact from "./Contact.astro";
 import PowerTrace from "./PowerTrace.astro";
-import HomelabStatus from "../islands/HomelabStatus.vue";
+import HomelabSnapshot from "./HomelabSnapshot.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import { site, refs, getSiteCopy, links } from "../lib/site";
 import { getContent } from "../lib/content";
 import { getUI } from "../lib/ui";
 import { type Locale, blogHome, blogPost } from "../lib/i18n";
-import snapshot from "../data/cluster-snapshot.json";
 
 interface Props {
   locale: Locale;
@@ -33,6 +32,7 @@ const proofLinks = links.filter(
   (l) => l.confirmed && ["ORCID", "GitHub", "LinkedIn"].includes(l.label),
 );
 const heads = ui.sectionHeads;
+const cvHref = locale === "fr" ? "/Ethan-Puyaubreau-CV-FR.pdf" : "/Ethan-Puyaubreau-CV.pdf";
 
 // Latest blog posts for the "Writing" teaser section. Newest first, capped at 3
 // so it stays a teaser and does not compete with the case studies above it.
@@ -53,11 +53,6 @@ const fmtDate = (d: Date): string =>
     month: "short",
     day: "numeric",
   });
-
-const snapshotDate = new Date(snapshot.generatedAt).toLocaleDateString(
-  locale === "fr" ? "fr-FR" : "en-US",
-  { year: "numeric", month: "short", day: "numeric" },
-);
 ---
 
 <Base locale={locale}>
@@ -70,7 +65,9 @@ const snapshotDate = new Date(snapshot.generatedAt).toLocaleDateString(
 
   <main id="main" tabindex="-1">
     <section id="top" class="hero container">
-      <p class="hero-who">{copy.role}</p>
+      <p class="hero-who">
+        {copy.role} · {ui.hero.availability}
+      </p>
       <h1 class="hero-title">{ui.hero.title}</h1>
       <div class="hero-body">
         <div class="hero-text">
@@ -87,10 +84,13 @@ const snapshotDate = new Date(snapshot.generatedAt).toLocaleDateString(
                 {l.label}
               </a>
             ))}
+            <a href={cvHref} download>
+              {ui.cv} ({ui.cvKind})
+            </a>
           </p>
         </div>
         <figure class="hero-figure">
-          <PowerTrace label={ui.hero.figureLabel} />
+          <PowerTrace label={ui.hero.figureLabel} locale={locale} />
           <figcaption>
             {ui.hero.figureCaption} <a href={ui.hero.figureLinkHref}>{ui.hero.figureLinkLabel}</a>
           </figcaption>
@@ -104,25 +104,12 @@ const snapshotDate = new Date(snapshot.generatedAt).toLocaleDateString(
         {content.caseStudies.map((study) => (
           <CaseStudyEntry study={study} ui={ui}>
             {study.id === "homelab" && (
-              <HomelabStatus
-                slot="artifact"
-                client:visible
-                strings={ui.homelabStatus}
-                nodesOnline={snapshot.cluster.nodesOnline}
-                nodesTotal={snapshot.cluster.nodesTotal}
-                guestsRunning={snapshot.cluster.guestsRunning}
-                guestsTotal={snapshot.cluster.guestsTotal}
-                cpuPct={snapshot.cluster.cpuPct}
-                memPct={snapshot.cluster.memPct}
-                uptimeDays={snapshot.uptimeDays}
-                asOf={snapshotDate}
-              />
+              <HomelabSnapshot slot="artifact" strings={ui.homelabStatus} locale={locale} />
             )}
           </CaseStudyEntry>
         ))}
         <MoreWork items={content.moreWork} head={ui.moreWorkHead} label={ui.moreWorkLabel} />
       </section>
-
 
       {posts.length > 0 && (
         <section id="writing">
@@ -133,7 +120,6 @@ const snapshotDate = new Date(snapshot.generatedAt).toLocaleDateString(
                 <a href={blogPost(locale, p.data.slug)}>
                   <span class="w-date">{fmtDate(p.data.pubDate)}</span>
                   <span class="w-title">{p.data.title}</span>
-                  <span class="w-desc">{p.data.description}</span>
                 </a>
               </li>
             ))}
@@ -202,7 +188,20 @@ const snapshotDate = new Date(snapshot.generatedAt).toLocaleDateString(
   }
   .hero-title {
     font-size: var(--step-6);
-    max-width: 22ch;
+    max-width: 25ch;
+  }
+  @media (max-width: 640px) {
+    .hero {
+      padding-top: calc(3.5rem + var(--space-l));
+    }
+    .hero-body {
+      margin-top: var(--space-l);
+    }
+  }
+  @media (pointer: coarse) {
+    .hero-links a {
+      padding-block: 0.7rem;
+    }
   }
   .hero-lede {
     max-width: 50ch;

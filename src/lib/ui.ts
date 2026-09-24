@@ -10,6 +10,8 @@ import { withFrenchSpacing } from "./french-spacing.mjs";
 
 export interface HeroStrings {
   readonly title: string;
+  /** Place and availability, next to the role above the title. */
+  readonly availability: string;
   /** Lede split around the inline Kokkos link. */
   readonly ledeBeforeLink: string;
   readonly ledeLinkLabel: string;
@@ -104,6 +106,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     contactMailSubject: "HPC / infrastructure role: getting in touch (available Jan 2027)",
     hero: {
       title: "I measure what computing costs, and I run the machines it runs on.",
+      availability: "Paris · available from January 2027",
       ledeBeforeLink: "GPU energy measurement for ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
@@ -111,9 +114,9 @@ const STRINGS: Record<Locale, UIStrings> = {
       figureLabel:
         "GPU power over time for two ArborX DBSCAN implementations on an NVIDIA H100 NVL, aligned on the start of the DBSCAN computation. fdbscan runs for 2.68 seconds and uses 769 joules; fdbscan-dense runs for 2.20 seconds and uses 569 joules.",
       figureCaption:
-        "Two ArborX DBSCAN implementations on an NVIDIA H100 NVL, same result. The shaded area is the energy of the DBSCAN computation. Over 64 runs each, the dense one is 19% faster and uses 25% less energy: it also draws 9% less power.",
-      figureLinkLabel: "From the SMC 2025 poster",
-      figureLinkHref: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
+        "One run of each ArborX DBSCAN implementation on an NVIDIA H100 NVL, same result. The shaded area is the energy of the DBSCAN computation. Over 64 runs each, the dense one takes 19% less time and 25% less energy.",
+      figureLinkLabel: "How it was measured",
+      figureLinkHref: "/blog/kokkos-gpu-energy",
     },
     sectionHeads: {
       work: {
@@ -160,13 +163,13 @@ const STRINGS: Record<Locale, UIStrings> = {
       talkHead: "Questions, corrections, or work: my address is below.",
     },
     homelabStatus: {
-      heading: "the cluster, a snapshot",
+      heading: "The cluster, a snapshot",
       nodes: "nodes",
-      guests: "guests",
+      guests: "VMs and containers",
       cpu: "CPU",
       mem: "memory",
       uptime: "uptime",
-      caption: "A snapshot from the cluster's own Proxmox API, captured at build time.",
+      caption: "From the cluster's own Proxmox API, captured at build time",
       asOf: "as of",
     },
   },
@@ -178,6 +181,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     contactMailSubject: "Poste HPC / infrastructure : prise de contact (dispo janv. 2027)",
     hero: {
       title: "Je mesure ce que coûte le calcul, et j'exploite les machines qui le font tourner.",
+      availability: "Paris · disponible à partir de janvier 2027",
       ledeBeforeLink: "Mesure d'énergie GPU pour ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
@@ -185,9 +189,9 @@ const STRINGS: Record<Locale, UIStrings> = {
       figureLabel:
         "Puissance GPU dans le temps pour deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL, alignées sur le début du calcul DBSCAN. fdbscan tourne 2,68 secondes et consomme 769 joules ; fdbscan-dense tourne 2,20 secondes et consomme 569 joules.",
       figureCaption:
-        "Deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL, même résultat. L'aire colorée, c'est l'énergie du calcul DBSCAN. Sur 64 exécutions de chacune, la version dense est 19 % plus rapide et consomme 25 % d'énergie en moins : elle tire aussi 9 % de watts en moins.",
-      figureLinkLabel: "Tiré du poster SMC 2025",
-      figureLinkHref: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
+        "Une exécution de chaque implémentation de DBSCAN d'ArborX sur un NVIDIA H100 NVL, même résultat. L'aire colorée représente l'énergie consommée par le calcul DBSCAN. Sur 64 exécutions de chacune, la version dense prend 19 % de temps et 25 % d'énergie en moins.",
+      figureLinkLabel: "Comment c'est mesuré",
+      figureLinkHref: "/fr/blog/kokkos-gpu-energy",
     },
     sectionHeads: {
       work: {
@@ -217,7 +221,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     notFoundDescription: "Page introuvable.",
     blog: {
       kicker: "Écrits",
-      indexTitle: "Notes techniques",
+      indexTitle: "Écrits",
       indexIntro:
         "Des articles sur le HPC, le calcul GPU, l'infrastructure, et les projets derrière.",
       metaDescription:
@@ -235,13 +239,13 @@ const STRINGS: Record<Locale, UIStrings> = {
       talkHead: "Questions, corrections ou propositions : mon adresse est en dessous.",
     },
     homelabStatus: {
-      heading: "le cluster, un instantané",
+      heading: "Le cluster, un instantané",
       nodes: "nœuds",
-      guests: "invités",
+      guests: "VM et conteneurs",
       cpu: "CPU",
       mem: "mémoire",
-      uptime: "uptime",
-      caption: "Un instantané de l'API Proxmox du cluster, capturé au moment du build.",
+      uptime: "disponibilité",
+      caption: "Tiré de l'API Proxmox du cluster, au moment du build",
       asOf: "au",
     },
   },

@@ -41,7 +41,7 @@
   --step-3: clamp(1.73rem, 1.51rem + 1.1vw, 2.31rem);
   --step-4: clamp(2.07rem, 1.75rem + 1.61vw, 2.89rem);
   --step-5: clamp(2.49rem, 2.02rem + 2.33vw, 3.62rem);
-  --step-6: clamp(2.6rem, 2.1rem + 2.9vw, 4.1rem);
+  --step-6: clamp(2.2rem, 1.7rem + 3.2vw, 4.1rem);
   --step-7: clamp(2.9rem, 2.3rem + 3.6vw, 4.8rem);
 
   --tracking-label: 0.02em;
