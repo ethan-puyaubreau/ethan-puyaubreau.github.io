@@ -103,7 +103,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       figureLabel:
         "GPU power over time for two ArborX DBSCAN implementations on an NVIDIA H100 NVL, aligned on the start of the DBSCAN computation. fdbscan runs for 2.68 seconds and uses 769 joules; fdbscan-dense runs for 2.20 seconds and uses 569 joules.",
       figureCaption:
-        "One run of each ArborX DBSCAN implementation on an NVIDIA H100 NVL, same result. The shaded area is the energy of the DBSCAN computation. Over 64 runs each, the dense one takes 19% less time and 25% less energy.",
+        "One run of each ArborX DBSCAN implementation on an NVIDIA H100 NVL, same result. The shaded area is the energy of the DBSCAN computation. Over 64 runs each, the dense one takes 19% less time and 25% less energy (medians).",
       figureLinkLabel: "How it was measured",
       figureLinkHref: "/blog/kokkos-gpu-energy",
     },
@@ -171,7 +171,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       figureLabel:
         "Puissance GPU dans le temps pour deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL, alignées sur le début du calcul DBSCAN. fdbscan tourne 2,68 secondes et consomme 769 joules ; fdbscan-dense tourne 2,20 secondes et consomme 569 joules.",
       figureCaption:
-        "Une exécution de chaque implémentation de DBSCAN d'ArborX sur un NVIDIA H100 NVL, même résultat. L'aire colorée représente l'énergie consommée par le calcul DBSCAN. Sur 64 exécutions de chacune, la version dense prend 19 % de temps et 25 % d'énergie en moins.",
+        "Une exécution de chaque implémentation de DBSCAN d'ArborX sur un NVIDIA H100 NVL, même résultat. L'aire colorée représente l'énergie consommée par le calcul DBSCAN. Sur 64 exécutions de chacune, la version dense prend 19 % de temps et 25 % d'énergie en moins (médianes).",
       figureLinkLabel: "Comment c'est mesuré",
       figureLinkHref: "/fr/blog/kokkos-gpu-energy",
     },

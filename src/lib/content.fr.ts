@@ -36,7 +36,7 @@ export const fr: SiteContent = {
       body: [
         {
           h: "Le problème",
-          p: "Kokkos fait tourner un même code source C++ sur des GPU NVIDIA, AMD et Intel, et le même noyau consomme une puissance différente sur chacun. Les équipes applicatives n'avaient aucun moyen portable de la voir, sur des machines du DOE où la puissance est devenue une contrainte majeure.",
+          p: "Kokkos fait tourner un même code source C++ sur des GPU NVIDIA, AMD et Intel, et le même noyau consomme une puissance différente sur chacun. Kokkos Tools ne savait pas rapporter l'énergie par région, sur des machines du DOE où la puissance est devenue une contrainte majeure.",
         },
         {
           h: "Comment c'est construit",
@@ -44,7 +44,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Où ça en est",
-          p: "J'ai écrit le démon d'échantillonnage (#300) ; mon encadrant à l'ORNL, Jakob Bludau, l'a mené au bout de la relecture après mon séjour, et il a été fusionné dans kokkos-tools en mars 2026. Le cœur (#299) et les connecteurs NVML et Variorum (#301, #302) sont encore ouverts. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois fusionnées : le démon et deux correctifs de build. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié ; le poster SMC est cité dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
+          p: "J'ai écrit le démon d'échantillonnage (#300) ; mon encadrant à l'ORNL, Jakob Bludau, l'a mené au bout de la relecture après mon séjour, et il a été fusionné dans kokkos-tools en mars 2026. Le cœur (#299) et les connecteurs NVML et Variorum (#301, #302) sont encore ouverts. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont certaines redécoupées ensuite ; trois fusionnées : le démon et deux correctifs de build. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié ; le poster SMC est cité dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
         },
       ],
       links: [

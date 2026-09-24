@@ -319,7 +319,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       stages: [
         {
           name: "verify",
-          detail: "lint, types, build et les tests de bout en bout",
+          detail: "lint, types, build et les vérifications rapides",
           approx: "~45 s",
         },
         { name: "image", detail: "build, scan Trivy, push vers le registre", approx: "~50 s" },
@@ -360,7 +360,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       { name: "Traefik", note: "Reverse proxy, certificats Let's Encrypt" },
       { name: "Docker", note: "Chaque service, conteneurisé" },
       { name: "Gitea + Actions", note: "Forge auto-hébergée et CI/CD" },
-      { name: "Cloudflare DNS", note: "DNS et le challenge ACME" },
+      { name: "Cloudflare DNS", note: "DNS et le défi ACME" },
       { name: "AdGuard Home", note: "DNS du LAN avec filtrage" },
       { name: "Tailscale", note: "Accès nomade au LAN" },
       { name: "Coolify", note: "Un petit PaaS pour les apps annexes" },

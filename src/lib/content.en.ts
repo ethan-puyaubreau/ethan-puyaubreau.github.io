@@ -33,7 +33,7 @@ export const en: SiteContent = {
       body: [
         {
           h: "The problem",
-          p: "Kokkos runs one C++ source on NVIDIA, AMD, and Intel GPUs, and the same kernel draws different power on each. Application teams had no portable way to see it, on DOE machines where power is now a first-class constraint.",
+          p: "Kokkos runs one C++ source on NVIDIA, AMD, and Intel GPUs, and the same kernel draws different power on each. Kokkos Tools had no way to report energy per region, on DOE machines where power is now a first-class constraint.",
         },
         {
           h: "How it is built",
@@ -41,7 +41,7 @@ export const en: SiteContent = {
         },
         {
           h: "Where it stands",
-          p: "I wrote the sampling daemon (#300); my ORNL mentor, Jakob Bludau, carried it through review after my stay, and it was merged into kokkos-tools in March 2026. The core (#299) and the NVML and Variorum connectors (#301, #302) are still open. Nine pull requests to kokkos-tools and LAMMPS in all, three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25, which my apprenticeship schedule did not allow.",
+          p: "I wrote the sampling daemon (#300); my ORNL mentor, Jakob Bludau, carried it through review after my stay, and it was merged into kokkos-tools in March 2026. The core (#299) and the NVML and Variorum connectors (#301, #302) are still open. Nine pull requests to kokkos-tools and LAMMPS in all, some later split into smaller ones; three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25, which my apprenticeship schedule did not allow.",
         },
       ],
       links: [
