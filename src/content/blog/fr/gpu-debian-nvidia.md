@@ -1,6 +1,6 @@
 ---
 title: "Démonter le nœud GPU, de Proxmox à un Debian nu"
-description: "Ce nœud tournait sous Proxmox. Je l'ai effacé pour un Debian 13 nu afin que le GPU soit piloté directement par le noyau de l'hôte, sans hyperviseur entre les deux, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a piégé, c'est le Secure Boot."
+description: "Ce nœud tournait sous Proxmox. Je l'ai effacé pour un Debian 13 nu afin que le GPU soit piloté directement par le noyau de l'hôte, sans hyperviseur entre les deux, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a piégé, c'est le Secure Boot. (Il est depuis revenu sous Proxmox.)"
 pubDate: 2026-06-18
 updatedDate: 2026-09-23
 lang: fr

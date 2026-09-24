@@ -1,6 +1,6 @@
 ---
 title: "Tearing the GPU node down from Proxmox to bare Debian"
-description: "The GPU node ran Proxmox. I wiped it for bare Debian 13 so the GPU would sit directly under the host kernel, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that caught me was Secure Boot."
+description: "The GPU node ran Proxmox. I wiped it for bare Debian 13 so the GPU would sit directly under the host kernel, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that caught me was Secure Boot. (It has since gone back to Proxmox.)"
 pubDate: 2026-06-18
 updatedDate: 2026-09-23
 lang: en
