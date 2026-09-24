@@ -1,0 +1,134 @@
+---
+// Two measured NVML power traces from the SMC 2025 poster (ArborX DBSCAN on an
+// NVIDIA H100 NVL), drawn at build time as static SVG, one panel per run on a
+// shared time axis. Each run is aligned on the moment the GPU leaves idle, so
+// equal runtimes line up; the shaded area under each curve is its energy.
+// Data: src/data/dbscan-traces.json, from the poster's raw traces (trapezoidal
+// energy over the plotted window: 924.9 J and 784.6 J).
+import traces from "../data/dbscan-traces.json";
+
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+
+const W = 640;
+const PANEL_H = 118;
+const GAP = 34;
+const PAD = { l: 44, r: 150, t: 8, b: 30 };
+const H = PAD.t + PANEL_H * 2 + GAP + PAD.b;
+const T_BEFORE = 0.5; // seconds of idle shown before the onset
+const T_SPAN = 3.3; // seconds shown in total
+const P_MAX = 360; // watts at the top of a panel
+const ONSET_W = 150; // a sample above this is "running"
+
+const x = (t: number) => PAD.l + (t / T_SPAN) * (W - PAD.l - PAD.r);
+
+type Panel = {
+  key: string;
+  energyJ: number;
+  top: number;
+  line: string;
+  area: string;
+  y: (p: number) => number;
+};
+const panels: Panel[] = (["fdbscan", "fdbscan-dense"] as const).map((key, i) => {
+  const { energyJ, samples } = traces[key];
+  const top = PAD.t + i * (PANEL_H + GAP);
+  const y = (p: number) => top + (1 - p / P_MAX) * PANEL_H;
+  const onset = samples.find(([, w]) => w > ONSET_W)?.[0] ?? 0;
+  const pts = samples
+    .map(([t, w]) => [t - onset + T_BEFORE, w] as const)
+    .filter(([t]) => t >= 0 && t <= T_SPAN);
+  const line = pts
+    .map(([t, w], j) => `${j ? "L" : "M"}${x(t).toFixed(1)} ${y(w).toFixed(1)}`)
+    .join(" ");
+  const first = pts[0];
+  const last = pts[pts.length - 1];
+  const area = `${line} L${x(last[0]).toFixed(1)} ${y(0)} L${x(first[0]).toFixed(1)} ${y(0)} Z`;
+  return { key, energyJ, top, line, area, y };
+});
+
+const fmtJ = (j: number) => `${Math.round(j)} J`;
+const xTicks = [0, 1, 2, 3];
+---
+
+<svg class="trace" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label}>
+  {panels.map((p, i) => (
+    <g class:list={["panel", i === 1 ? "is-dense" : "is-scan"]}>
+      <line class="axis" x1={PAD.l} x2={W - PAD.r} y1={p.y(0)} y2={p.y(0)} />
+      <line class="grid" x1={PAD.l} x2={W - PAD.r} y1={p.y(300)} y2={p.y(300)} />
+      <text class="tick" x={PAD.l - 8} y={p.y(300) + 5} text-anchor="end">
+        300 W
+      </text>
+      <path class="area" d={p.area} />
+      <path class="line" d={p.line} />
+      <text class="name" x={W - PAD.r + 18} y={p.top + 40}>
+        {p.key}
+      </text>
+      <text class="joules" x={W - PAD.r + 18} y={p.top + 76}>
+        {fmtJ(p.energyJ)}
+      </text>
+    </g>
+  ))}
+  {xTicks.map((t) => (
+    <text class="tick" x={x(t)} y={H - 6} text-anchor="middle">
+      {t} s
+    </text>
+  ))}
+</svg>
+
+<style>
+  .trace {
+    width: 100%;
+    height: auto;
+  }
+  .axis {
+    stroke: var(--line-strong);
+    stroke-width: 1;
+  }
+  .grid {
+    stroke: var(--hairline);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+  }
+  .tick {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    fill: var(--muted);
+  }
+  .name {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    fill: var(--ink-dim);
+  }
+  .joules {
+    font-family: var(--font-mono);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .line {
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+  }
+  .is-scan .area {
+    fill: rgb(17 17 17 / 0.08);
+  }
+  .is-scan .line {
+    stroke: var(--ink);
+  }
+  .is-scan .joules {
+    fill: var(--ink);
+  }
+  .is-dense .area {
+    fill: var(--accent-fill);
+  }
+  .is-dense .line {
+    stroke: var(--accent);
+  }
+  .is-dense .joules {
+    fill: var(--accent);
+  }
+</style>

@@ -14,7 +14,7 @@ const { about, timeline, role, timelineLabel } = Astro.props;
 ---
 
 <div class="about">
-  <div class="prose" data-reveal>
+  <div class="prose">
     <figure class="portrait">
       <Image
         src={portrait}
@@ -28,20 +28,20 @@ const { about, timeline, role, timelineLabel } = Astro.props;
         <span class="loc">{site.location}</span>
       </figcaption>
     </figure>
-    {about.map((p) => <p>{p}</p>)}
+    {about.map((p) => (
+      <p>{p}</p>
+    ))}
   </div>
 
   <aside class="track" aria-label={timelineLabel}>
     <ol>
-      {
-        timeline.map((t, i) => (
-          <li data-reveal style={`--ri: ${i}`}>
-            <span class="when">{t.when}</span>
-            <span class="what">{t.what}</span>
-            <span class="where">{t.where}</span>
-          </li>
-        ))
-      }
+      {timeline.map((t) => (
+        <li>
+          <span class="when">{t.when}</span>
+          <span class="what">{t.what}</span>
+          <span class="where">{t.where}</span>
+        </li>
+      ))}
     </ol>
   </aside>
 </div>
@@ -84,13 +84,12 @@ const { about, timeline, role, timelineLabel } = Astro.props;
     gap: 0.15rem;
   }
   .realname {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
+    font-weight: 650;
+    font-size: var(--step-1);
     color: var(--ink);
   }
   .loc {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     color: var(--muted);
   }
 
@@ -98,32 +97,21 @@ const { about, timeline, role, timelineLabel } = Astro.props;
     list-style: none;
     margin: 0;
     padding: 0;
-    border-left: 1px solid var(--line);
   }
   .track li {
     display: grid;
-    gap: 0.15rem;
-    padding: 0 0 var(--space-m) var(--space-s);
-    position: relative;
-  }
-  .track li::before {
-    content: "";
-    position: absolute;
-    left: -4px;
-    top: 0.5rem;
-    width: 7px;
-    height: 7px;
-    background: var(--accent);
-    border-radius: 50%;
+    gap: 0.1rem;
+    padding-block: var(--space-s);
+    border-top: 1px solid var(--line);
   }
   .when {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-wide);
-    color: var(--accent);
+    font-size: var(--step--1);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
   }
   .what {
     color: var(--ink);
+    font-weight: 600;
   }
   .where {
     font-size: var(--step--1);

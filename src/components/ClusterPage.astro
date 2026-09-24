@@ -71,7 +71,7 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
 
     <div class="container">
       <section id="nodes">
-        <SectionHeader num="01" label={c.sections[0].label} title={c.nodesHead.title}>
+        <SectionHeader title={c.nodesHead.title}>
           {c.nodesHead.intro}
         </SectionHeader>
         <div class="pulse-wrap" data-reveal>
@@ -94,14 +94,14 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
       </section>
 
       <section id="path">
-        <SectionHeader num="02" label={c.sections[1].label} title={c.pathHead.title}>
+        <SectionHeader title={c.pathHead.title}>
           {c.pathHead.intro}
         </SectionHeader>
         <RequestPath stages={c.path} label={c.pathHead.title} />
       </section>
 
       <section id="services">
-        <SectionHeader num="03" label={c.sections[2].label} title={c.servicesHead.title}>
+        <SectionHeader title={c.servicesHead.title}>
           {c.servicesHead.intro}
         </SectionHeader>
         <ClusterServices
@@ -113,7 +113,7 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
       </section>
 
       <section id="pipeline">
-        <SectionHeader num="04" label={c.sections[3].label} title={c.pipelineHead.title}>
+        <SectionHeader title={c.pipelineHead.title}>
           {c.pipelineHead.intro}
         </SectionHeader>
         <DeployPipeline
@@ -123,7 +123,7 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
       </section>
 
       <section id="stack">
-        <SectionHeader num="05" label={c.sections[4].label} title={c.stackHead.title}>
+        <SectionHeader title={c.stackHead.title}>
           {c.stackHead.intro}
         </SectionHeader>
         <ul class="stack-grid" aria-label={c.stackHead.title}>
@@ -140,7 +140,7 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
       </section>
 
       <section id="operations">
-        <SectionHeader num="06" label={c.sections[5].label} title={c.opsHead.title}>
+        <SectionHeader title={c.opsHead.title}>
           {c.opsHead.intro}
         </SectionHeader>
         <div class="ops" data-reveal>

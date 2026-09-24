@@ -20,11 +20,9 @@ const home = localeHome(locale);
   description={ui.notFoundDescription}
 >
   <main id="main" class="container nf">
-    <p class="label">{ui.notFoundKicker}</p>
     <h1>{ui.notFoundTitle}</h1>
     <p class="nf-lede">{ui.notFoundLede}</p>
     <a class="nf-back" href={home}>
-      <span aria-hidden="true">←</span>
       {ui.notFoundBack}
     </a>
   </main>
@@ -40,7 +38,6 @@ const home = localeHome(locale);
   }
   .nf h1 {
     font-size: var(--step-7);
-    color: var(--accent);
     font-variant-numeric: tabular-nums;
   }
   .nf-lede {
@@ -49,18 +46,13 @@ const home = localeHome(locale);
   }
   .nf-back {
     margin-top: var(--space-m);
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--ink);
-    border-bottom: 1px solid var(--line-strong);
-    padding-bottom: 2px;
+    font-weight: 600;
     align-self: flex-start;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
   .nf-back:hover {
-    color: var(--accent);
-    border-color: var(--accent);
+    text-decoration-color: currentColor;
   }
 </style>

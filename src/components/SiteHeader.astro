@@ -1,66 +1,49 @@
 ---
-import { Image } from "astro:assets";
-import { site, links } from "../lib/site";
+import { site } from "../lib/site";
 import type { NavSection } from "../lib/content";
 import type { UIStrings } from "../lib/ui";
 import { type Locale, LOCALES, DEFAULT_LOCALE, LOCALE_STORAGE_KEY, blogHome } from "../lib/i18n";
-import CommandPalette from "../islands/CommandPalette.vue";
 import LangSwitch from "./LangSwitch.astro";
-import avatar from "../assets/avatar.jpg";
+import Mark from "./Mark.astro";
 
 interface Props {
   locale: Locale;
   sections: readonly NavSection[];
   ui: UIStrings;
   /** Where the brand links. Defaults to the in-page top; sub-pages set this to
-      the locale home so the logo behaves like a home link. */
+      the locale home so the mark behaves like a home link. */
   brandHref?: string;
   /** Per-locale URL for the language switch (sub-pages keep you on the page). */
   langPaths?: Partial<Record<Locale, string>>;
-  /** Pages without a dark hero (e.g. blog) start the bar solid, not theme-dark. */
+  /** Kept for the callers that still pass it; the bar is always solid now. */
   solid?: boolean;
 }
-const { locale, sections, ui, brandHref = "#top", langPaths, solid = false } = Astro.props;
+
+const { locale, sections, ui, brandHref = "#top", langPaths } = Astro.props;
 const blogHref = blogHome(locale);
-
-const paletteLinks = links
-  .filter((l) => l.confirmed && l.href)
-  .map((l) => ({ label: l.label, href: l.href }));
-
-// 4-item portfolio nav stays inline from 1248px. The 5-item nav (writing added)
-// only fits once the widened header is fully expanded, so it returns above
-// 1500px and is palette-only below. A 6+ item nav (cluster) never fits inline.
-const navItems = sections.length;
-const navWide = navItems === 5;
-const navHidden = navItems >= 6;
+// In-page anchors only make sense on the page that has them.
+const inPage = brandHref === "#top";
 ---
 
-<header
-  id="site-header"
-  class:list={[
-    "site-header",
-    { "theme-dark": !solid, "nav-wide": navWide, "nav-hidden": navHidden },
-  ]}
->
-  <div class="container bar">
+<header id="site-header" class="site-header">
+  <div class="bar">
     <a class="brand" href={brandHref} aria-label={`${site.name}, ${ui.homeLabel}`}>
-      <Image src={avatar} alt="" width={56} densities={[1, 2]} loading="eager" class="mark-img" />
+      <Mark size={26} />
       <span class="brand-name">{site.name}</span>
     </a>
 
-    <nav class="sections" aria-label={ui.sectionsLabel}>
-      {
-        sections.map((s) => (
-          <a href={`#${s.id}`}>
-            <span class="n">{s.num}</span>
-            {s.label}
-          </a>
-        ))
-      }
-    </nav>
+    {inPage && (
+      <nav class="sections" aria-label={ui.sectionsLabel}>
+        {sections.map((s) => (
+          <a href={`#${s.id}`}>{s.label}</a>
+        ))}
+      </nav>
+    )}
 
     <div class="bar-right">
-      <a class="navlink" href={blogHref}>Blog</a>
+      <a class="navlink" href={blogHref}>
+        Blog
+      </a>
       <LangSwitch
         locale={locale}
         locales={LOCALES}
@@ -71,182 +54,80 @@ const navHidden = navItems >= 6;
         storageKey={LOCALE_STORAGE_KEY}
         paths={langPaths}
       />
-      <CommandPalette
-        client:idle
-        sections={sections}
-        links={paletteLinks}
-        email={site.email}
-        blogHref={blogHref}
-        strings={ui.palette}
-      />
     </div>
   </div>
 </header>
-
-<script is:inline>
-  // The bar floats over the dark hero plate, then lands on paper. Flip its theme
-  // when the hero scrolls under the bar, with no flash and no layout shift.
-  (function () {
-    function init() {
-      const header = document.getElementById("site-header");
-      const hero = document.getElementById("top");
-      if (!header || !hero || !("IntersectionObserver" in window)) return;
-      const io = new IntersectionObserver(
-        function (entries) {
-          header.classList.toggle("theme-dark", entries[0].isIntersecting);
-        },
-        { rootMargin: "-56px 0px 0px 0px", threshold: 0 },
-      );
-      io.observe(hero);
-    }
-    // The script is parsed inside the header, before <main>#top exists, so
-    // defer until the DOM is ready or #top is never found and the bar stays dark.
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-    else init();
-  })();
-</script>
 
 <style>
   .site-header {
     position: fixed;
     inset: 0 0 auto;
     z-index: var(--z-nav);
-    border-bottom: 1px solid var(--line);
-    /* Opaque once it lands on paper, so scrolling content never bleeds through. */
     background: var(--bg);
-    box-shadow: 0 1px 0 var(--hairline);
-    transition:
-      background var(--dur) var(--ease-out),
-      border-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out);
-  }
-  /* over the hero: transparent, light text, just a legibility wash at the top */
-  .site-header.theme-dark {
-    background: linear-gradient(to bottom, rgb(6 7 10 / 0.6), rgb(6 7 10 / 0));
-    backdrop-filter: none;
-    border-bottom-color: transparent;
-    box-shadow: none;
+    border-bottom: 1px solid var(--line);
   }
   .bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-m);
     height: 3.5rem;
-    /* The bar runs wider than the content column (.container caps at
-       --content-max); scoped here so only the header breaks out, not the page. */
     max-width: var(--header-max);
+    margin-inline: auto;
     padding-inline: var(--header-gutter);
   }
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.55rem;
     flex-shrink: 0;
   }
-  .mark-img {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--line-strong);
-  }
   .brand-name {
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: var(--step-1);
-    color: var(--ink);
-    /* Keep the full name on one line: the chooser made the bar tighter, and
-       without this the flex item shrinks to the longest word and wraps. */
+    font-weight: 650;
+    font-size: var(--step-0);
+    letter-spacing: -0.01em;
     white-space: nowrap;
+  }
+  .sections {
+    display: flex;
+    gap: var(--space-m);
+    margin-left: auto;
+  }
+  .sections a,
+  .navlink {
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+  .sections a:hover,
+  .navlink:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
   }
   .bar-right {
     display: flex;
     align-items: center;
-    gap: var(--space-s);
+    gap: var(--space-m);
     flex-shrink: 0;
+    margin-left: auto;
   }
-  /* Persistent cross-page link to the blog: the only way casual visitors learn
-     the blog exists, since the section nav is in-page anchors only. */
-  .navlink {
-    white-space: nowrap;
-    flex-shrink: 0;
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--ink-dim);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 0.32rem 0.6rem;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out),
-      background var(--dur-fast) var(--ease-out);
+  .sections + .bar-right {
+    margin-left: var(--space-m);
+    padding-left: var(--space-m);
+    border-left: 1px solid var(--line);
   }
-  .navlink:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-  }
-  /* On the dark hero the bar is transparent over a bright galaxy; give the pills
-     a faint dark plate so their text and border stay legible. */
-  .theme-dark .navlink {
-    background: rgb(6 7 10 / 0.35);
-  }
-  .sections {
-    display: flex;
-    gap: clamp(0.85rem, 1.5vw, 1.5rem);
-    /* The only item that yields when the bar is tight: it clips rather than
-       pushing into (overlapping) the brand or the controls. It is hidden below
-       the breakpoint where even the widest nav (cluster, 6 items) fits. */
-    min-width: 0;
-    flex-shrink: 1;
-    overflow: hidden;
-  }
-  .sections a {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-wide);
-    color: var(--ink-dim);
-    display: inline-flex;
-    gap: 0.45rem;
-    align-items: baseline;
-    padding-block: 0.25rem;
-    border-bottom: 1px solid transparent;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
-  }
-  .sections a:hover {
-    color: var(--ink);
-    border-color: var(--line-strong);
-  }
-  .sections .n {
-    color: var(--accent);
-  }
-
-  /* The 4-item portfolio nav fits the widened bar from 1248px up; below that it
-     hands off to the command palette. */
-  @media (max-width: 1248px) {
+  @media (max-width: 900px) {
     .sections {
       display: none;
     }
-  }
-  /* The 5-item nav (writing) only fits once the wider header (--header-max) is
-     fully expanded, so it returns at 1500px and is palette-only below. */
-  .site-header.nav-wide .sections {
-    display: none;
-  }
-  @media (min-width: 1500px) {
-    .site-header.nav-wide .sections {
-      display: flex;
+    .sections + .bar-right {
+      margin-left: auto;
+      padding-left: 0;
+      border-left: 0;
     }
   }
-  /* A 6+ item nav (cluster) never fits inline: palette-only at every width. */
-  .site-header.nav-hidden .sections {
-    display: none;
-  }
-  @media (max-width: 820px) {
+  @media (max-width: 400px) {
     .brand-name {
       display: none;
     }

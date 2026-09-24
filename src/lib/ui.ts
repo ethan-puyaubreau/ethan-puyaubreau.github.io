@@ -1,58 +1,29 @@
 /**
  * UI chrome strings: the literal copy that lives in components and pages rather
- * than in the content data (hero, section headers, footer, palette, hero
- * fallback, 404, meta defaults, language switch). One typed shape per locale.
+ * than in the content data (hero, section headers, footer, 404, meta
+ * defaults, language switch). One typed shape per locale.
  *
  * House style: no em dashes anywhere, EN or FR. Voice stays dry and precise.
  */
 import type { Locale } from "./i18n";
 import { withFrenchSpacing } from "./french-spacing.mjs";
 
-export interface PaletteStrings {
-  readonly trigger: string;
-  readonly placeholder: string;
-  /** Prefix for a section hint, e.g. "Section 01". */
-  readonly sectionHint: string;
-  readonly copyEmail: string;
-  readonly opensNewTab: string;
-  readonly noMatch: string;
-  readonly dialogLabel: string;
-  readonly closeLabel: string;
-  /** Hint shown next to the Blog command. */
-  readonly blogHint: string;
-}
-
 export interface HeroStrings {
-  /** Title split so the emphasis lands on the right words per language. */
-  readonly titleLead: string;
-  readonly titleEm1: string;
-  readonly titleMid: string;
-  readonly titleEm2: string;
-  readonly titleTail: string;
+  readonly title: string;
   /** Lede split around the inline Kokkos link. */
   readonly ledeBeforeLink: string;
   readonly ledeLinkLabel: string;
   readonly ledeAfterLink: string;
-  readonly cue: string;
-  /** Verifiable proof strip under the hero: institutions and a usage number. */
-  readonly proof: string;
+  /** The measured power traces under the title. */
+  readonly figureLabel: string;
+  readonly figureCaption: string;
+  readonly figureLinkLabel: string;
+  readonly figureLinkHref: string;
 }
 
 export interface SectionCopy {
   readonly title: string;
   readonly intro?: string;
-}
-
-export interface HeroFallbackStrings {
-  readonly noWebgpu: string;
-  readonly noAdapter: string;
-  readonly noContext: string;
-  readonly deviceLost: string;
-  readonly canvasLabel: string;
-  readonly posterLabel: string;
-  readonly hudRender: string;
-  readonly hudBodies: string;
-  readonly hudGravity: string;
 }
 
 export interface HomelabStatusStrings {
@@ -98,9 +69,6 @@ export interface UIStrings {
   /** Keyed by section id (work, expertise, about, contact). */
   readonly sectionHeads: Record<string, SectionCopy>;
   // Component labels.
-  readonly factRole: string;
-  readonly factWhen: string;
-  readonly flagship: string;
   readonly stackLabel: string;
   readonly provenBy: string;
   readonly moreWorkHead: string;
@@ -119,7 +87,6 @@ export interface UIStrings {
   readonly langName: Record<Locale, string>;
   readonly langSwitchTo: Record<Locale, string>;
   // 404.
-  readonly notFoundKicker: string;
   readonly notFoundLede: string;
   readonly notFoundBack: string;
   readonly notFoundTitle: string;
@@ -127,8 +94,6 @@ export interface UIStrings {
   // Blog.
   readonly blog: BlogStrings;
   // Islands (passed as props).
-  readonly palette: PaletteStrings;
-  readonly heroFallback: HeroFallbackStrings;
   readonly homelabStatus: HomelabStatusStrings;
 }
 
@@ -139,37 +104,33 @@ const STRINGS: Record<Locale, UIStrings> = {
       "High-performance computing and infrastructure engineer. GPU energy tooling for Kokkos at Oak Ridge, HPC for nuclear simulation at EDF, and a five-node cluster I run with Docker and CI/CD.",
     contactMailSubject: "HPC / infrastructure role: getting in touch (available Jan 2027)",
     hero: {
-      titleLead: "From the ",
-      titleEm1: "GPU kernel",
-      titleMid: "to the ",
-      titleEm2: "cluster",
-      titleTail: " in production.",
+      title: "I measure what computing costs, and I run the machines it runs on.",
       ledeBeforeLink:
         "I build high-performance computing tools, and I run the infrastructure that ships them: GPU energy measurement for ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
         " at Oak Ridge, HPC for nuclear simulation at EDF, and a five-node cluster running about 20 services in production, operated end to end from Docker to CI/CD.",
-      cue: "Selected work",
-      proof: "ORNL · EDF · 5-node production cluster",
+      figureLabel:
+        "GPU power over time for two ArborX DBSCAN implementations on an NVIDIA H100 NVL. Both plateau near 300 watts for the same duration; fdbscan uses 925 joules and fdbscan-dense 785 joules.",
+      figureCaption:
+        "Two ArborX DBSCAN implementations on an NVIDIA H100 NVL: same result, same runtime. The shaded area is the energy.",
+      figureLinkLabel: "From the SMC 2025 poster",
+      figureLinkHref: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
     },
     sectionHeads: {
       work: {
         title: "Things I built",
-        intro: "Case studies below, the flagship first.",
       },
       expertise: {
         title: "By domain",
         intro: "Five areas, each tied to the project where I used it.",
       },
-      about: { title: "Polytech → EDF → Oak Ridge" },
+      about: { title: "Background" },
       contact: { title: "The short version" },
     },
-    factRole: "Role",
-    factWhen: "When",
-    flagship: "Flagship",
     stackLabel: "Stack",
     provenBy: "Used in",
-    moreWorkHead: "Also on the bench",
+    moreWorkHead: "Other projects",
     moreWorkLabel: "More work",
     cv: "CV",
     cvKind: "PDF",
@@ -183,14 +144,13 @@ const STRINGS: Record<Locale, UIStrings> = {
     langSwitchLabel: "Language",
     langName: { en: "EN", fr: "FR" },
     langSwitchTo: { en: "View in English", fr: "Voir en français" },
-    notFoundKicker: "/ signal lost",
-    notFoundLede: "No body at these coordinates. The page drifted out of frame or never existed.",
-    notFoundBack: "Back to the field",
+    notFoundLede: "This page does not exist, or it has moved.",
+    notFoundBack: "Back to the home page",
     notFoundTitle: "404",
     notFoundDescription: "Page not found.",
     blog: {
       kicker: "Writing",
-      indexTitle: "Notes from the bench",
+      indexTitle: "Writing",
       indexIntro: "Write-ups on HPC, GPU computing, infrastructure, and the projects behind them.",
       metaDescription:
         "Write-ups on high-performance computing, GPU computing, infrastructure, and the projects behind them, by Ethan Puyaubreau.",
@@ -205,29 +165,6 @@ const STRINGS: Record<Locale, UIStrings> = {
       authorAvailable: "Open to HPC and infrastructure roles from January 2027.",
       contactCta: "Get in touch",
       talkHead: "Questions, corrections, or work: my address is below.",
-    },
-    palette: {
-      trigger: "Jump to",
-      placeholder: "Jump to a section or link…",
-      sectionHint: "Section",
-      copyEmail: "Copy email address",
-      opensNewTab: "Opens in a new tab",
-      noMatch: "No match.",
-      dialogLabel: "Command menu",
-      closeLabel: "Close command menu",
-      blogHint: "Read the blog",
-    },
-    heroFallback: {
-      noWebgpu:
-        "This galaxy runs on WebGPU, which your browser doesn't expose yet. Chrome, Edge, or Safari 18+ will render it live.",
-      noAdapter: "No WebGPU adapter is available here (typically a locked-down or headless GPU).",
-      noContext: "Couldn't acquire a WebGPU drawing context.",
-      deviceLost: "The GPU device was lost. A reload usually brings it back.",
-      canvasLabel: "Live WebGPU simulation: a 16,384-body galaxy integrated on the GPU",
-      posterLabel: "Galaxy simulation poster",
-      hudRender: "render",
-      hudBodies: "bodies",
-      hudGravity: "gravity",
     },
     homelabStatus: {
       heading: "the cluster, a snapshot",
@@ -247,34 +184,30 @@ const STRINGS: Record<Locale, UIStrings> = {
       "Ingénieur calcul haute performance et infrastructure. Outillage d'énergie GPU pour Kokkos à Oak Ridge, HPC pour la simulation nucléaire chez EDF, et un cluster de cinq nœuds que j'exploite avec Docker et CI/CD.",
     contactMailSubject: "Poste HPC / infrastructure : prise de contact (dispo janv. 2027)",
     hero: {
-      titleLead: "Du ",
-      titleEm1: "calcul GPU",
-      titleMid: "au ",
-      titleEm2: "cluster",
-      titleTail: " en production.",
+      title: "Je mesure ce que coûte le calcul, et j'exploite les machines qui le font tourner.",
       ledeBeforeLink:
         "Je construis des outils de calcul haute performance, et j'exploite l'infrastructure qui les met en production : la mesure d'énergie GPU pour ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
         " à Oak Ridge, le HPC pour la simulation nucléaire chez EDF, et un cluster de cinq nœuds qui fait tourner une vingtaine de services en production, exploité de bout en bout, de Docker à la CI/CD.",
-      cue: "Réalisations",
-      proof: "ORNL · EDF · cluster 5 nœuds en production",
+      figureLabel:
+        "Puissance GPU dans le temps pour deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL. Les deux plafonnent autour de 300 watts pendant la même durée ; fdbscan consomme 925 joules et fdbscan-dense 785 joules.",
+      figureCaption:
+        "Deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL : même résultat, même durée. L'aire colorée, c'est l'énergie.",
+      figureLinkLabel: "Tiré du poster SMC 2025",
+      figureLinkHref: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
     },
     sectionHeads: {
       work: {
         title: "Ce que j'ai construit",
-        intro: "Les études de cas suivent, le projet phare d'abord.",
       },
       expertise: {
         title: "Par domaine",
         intro: "Cinq domaines, chacun relié au projet où je l'ai pratiqué.",
       },
-      about: { title: "Polytech → EDF → Oak Ridge" },
+      about: { title: "Parcours" },
       contact: { title: "La version courte" },
     },
-    factRole: "Rôle",
-    factWhen: "Quand",
-    flagship: "Projet phare",
     stackLabel: "Technologies",
     provenBy: "Utilisé sur",
     moreWorkHead: "Autres projets",
@@ -291,10 +224,8 @@ const STRINGS: Record<Locale, UIStrings> = {
     langSwitchLabel: "Langue",
     langName: { en: "EN", fr: "FR" },
     langSwitchTo: { en: "View in English", fr: "Voir en français" },
-    notFoundKicker: "/ signal perdu",
-    notFoundLede:
-      "Aucun corps à ces coordonnées. La page a dérivé hors du cadre, ou n'a jamais existé.",
-    notFoundBack: "Retour au champ",
+    notFoundLede: "Cette page n'existe pas, ou elle a changé d'adresse.",
+    notFoundBack: "Retour à l'accueil",
     notFoundTitle: "404",
     notFoundDescription: "Page introuvable.",
     blog: {
@@ -315,30 +246,6 @@ const STRINGS: Record<Locale, UIStrings> = {
       authorAvailable: "Ouvert aux postes HPC et infrastructure dès janvier 2027.",
       contactCta: "Me contacter",
       talkHead: "Questions, corrections ou propositions : mon adresse est en dessous.",
-    },
-    palette: {
-      trigger: "Aller à",
-      placeholder: "Aller à une section ou un lien…",
-      sectionHint: "Section",
-      copyEmail: "Copier l'adresse e-mail",
-      opensNewTab: "Ouvre dans un nouvel onglet",
-      noMatch: "Aucun résultat.",
-      dialogLabel: "Menu de commandes",
-      closeLabel: "Fermer le menu de commandes",
-      blogHint: "Lire le blog",
-    },
-    heroFallback: {
-      noWebgpu:
-        "Cette galaxie tourne sur WebGPU, que votre navigateur n'expose pas encore. Chrome, Edge ou Safari 18+ la rendront en direct.",
-      noAdapter:
-        "Aucun adaptateur WebGPU n'est disponible ici (typiquement un GPU verrouillé ou sans affichage).",
-      noContext: "Impossible d'obtenir un contexte de dessin WebGPU.",
-      deviceLost: "Le périphérique GPU a été perdu. Un rechargement le ramène en général.",
-      canvasLabel: "Simulation WebGPU en direct : une galaxie de 16 384 corps intégrée sur le GPU",
-      posterLabel: "Affiche de la simulation de galaxie",
-      hudRender: "rendu",
-      hudBodies: "corps",
-      hudGravity: "gravité",
     },
     homelabStatus: {
       heading: "le cluster, un instantané",

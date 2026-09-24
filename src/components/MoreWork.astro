@@ -10,35 +10,33 @@ const { items, head, label } = Astro.props;
 ---
 
 <aside class="more" aria-label={label}>
-  <p class="label more-head">{head}</p>
+  <h3 class="more-head">{head}</h3>
   <ul>
-    {
-      items.map((item, i) => (
-        <li data-reveal style={`--ri: ${i}`}>
-          <span class="name">{item.name}</span>
-          <span class="blurb">{item.blurb}</span>
-          {item.href ? (
-            <a href={item.href} rel="noopener" target="_blank">
-              {item.hrefLabel} <span aria-hidden="true">↗</span>
-            </a>
-          ) : (
-            <span class="soon">{item.noLinkLabel}</span>
-          )}
-        </li>
-      ))
-    }
+    {items.map((item) => (
+      <li>
+        <span class="name">{item.name}</span>
+        <span class="blurb">{item.blurb}</span>
+        {item.href ? (
+          <a href={item.href} rel="noopener" target="_blank">
+            {item.hrefLabel}
+          </a>
+        ) : (
+          <span class="soon">{item.noLinkLabel}</span>
+        )}
+      </li>
+    ))}
   </ul>
 </aside>
 
 <style>
   .more {
     margin-top: var(--space-l);
-    padding-top: var(--space-m);
+    padding-top: var(--space-l);
     border-top: 1px solid var(--line);
   }
   .more-head {
-    margin-bottom: var(--space-s);
-    color: var(--accent-deep);
+    font-size: var(--step-1);
+    margin-bottom: var(--space-2xs);
   }
   ul {
     list-style: none;
@@ -57,8 +55,7 @@ const { items, head, label } = Astro.props;
     border-top: 0;
   }
   .name {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
+    font-weight: 650;
     color: var(--ink);
   }
   .blurb {
@@ -67,25 +64,18 @@ const { items, head, label } = Astro.props;
     max-width: 56ch;
   }
   a {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-wide);
-    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 500;
     white-space: nowrap;
-    border-bottom: 1px solid var(--line-strong);
-    padding-bottom: 2px;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
   a:hover {
-    color: var(--accent);
-    border-color: var(--accent);
+    text-decoration-color: currentColor;
   }
   .soon {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-wide);
+    font-size: var(--step--1);
     color: var(--muted);
     white-space: nowrap;
   }

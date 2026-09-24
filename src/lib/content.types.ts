@@ -9,7 +9,6 @@
 
 export interface NavSection {
   readonly id: string;
-  readonly num: string;
   readonly label: string;
 }
 
@@ -20,14 +19,12 @@ export interface Link {
 
 export interface CaseStudy {
   readonly id: string;
-  readonly num: string;
   readonly kicker: string;
   readonly title: string;
   readonly role: string;
   readonly period: string;
   readonly stack: readonly string[];
-  readonly flagship?: boolean;
-  /** One line, used in the palette and as the lede. */
+  /** One line, used as the lede. */
   readonly summary: string;
   /** Labelled narrative blocks: the problem, the work, the result. */
   readonly body: readonly { readonly h: string; readonly p: string }[];

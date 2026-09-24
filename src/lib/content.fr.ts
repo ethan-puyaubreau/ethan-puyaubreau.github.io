@@ -9,23 +9,21 @@ import type { SiteContent } from "./content.types";
 
 export const fr: SiteContent = {
   sections: [
-    { id: "work", num: "01", label: "Réalisations" },
-    { id: "expertise", num: "02", label: "Expertise" },
-    { id: "writing", num: "03", label: "Écrits" },
-    { id: "about", num: "04", label: "Parcours" },
-    { id: "contact", num: "05", label: "Contact" },
+    { id: "work", label: "Réalisations" },
+    { id: "expertise", label: "Expertise" },
+    { id: "writing", label: "Écrits" },
+    { id: "about", label: "Parcours" },
+    { id: "contact", label: "Contact" },
   ],
 
   caseStudies: [
     {
       id: "ornl-kokkos",
-      num: "01",
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Mesurer où part l'énergie sur le GPU",
       role: "Graduate Research Fellow (programme GRO)",
       period: "Été 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Rust"],
-      flagship: true,
       summary:
         "Outillage de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs NVML et Variorum proposés en amont, et kokkos-energy, un outil d'analyse en ligne de commande.",
       body: [
@@ -60,7 +58,6 @@ export const fr: SiteContent = {
     },
     {
       id: "edf-asics",
-      num: "02",
       kicker: "EDF Lab Paris-Saclay · groupe ASICS",
       title: "HPC pour la simulation nucléaire",
       role: "Apprenti ingénieur",
@@ -83,8 +80,7 @@ export const fr: SiteContent = {
     },
     {
       id: "homelab",
-      num: "03",
-      kicker: "cluster homelab · auto-hébergé",
+      kicker: "Homelab auto-hébergé",
       title: "Exploiter ma propre production",
       role: "Architecte et exploitant",
       period: "En cours",
@@ -105,7 +101,6 @@ export const fr: SiteContent = {
     },
     {
       id: "endgame",
-      num: "04",
       kicker: "Opération Endgame",
       title: "Organiser un événement pour plus de 120 participants",
       role: "Fondateur et organisateur",
@@ -122,7 +117,6 @@ export const fr: SiteContent = {
     },
     {
       id: "commus",
-      num: "05",
       kicker: "Annuaire communautaire",
       title: "Cartographier une communauté",
       role: "Full-stack",
@@ -143,7 +137,7 @@ export const fr: SiteContent = {
     {
       name: "n-body galaxy",
       blurb:
-        "Le champ derrière cette page : 16 384 corps en gravité mutuelle, intégrés en direct dans des compute shaders WebGPU. Un projet personnel.",
+        "Une galaxie jusqu'à 65 536 corps en gravité mutuelle, intégrés en direct dans des compute shaders WebGPU. Un projet personnel.",
       href: "https://ethan-puyaubreau.github.io/nbody-webgpu/",
       hrefLabel: "En ligne",
     },

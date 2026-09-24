@@ -6,23 +6,21 @@ import type { SiteContent } from "./content.types";
 
 export const en: SiteContent = {
   sections: [
-    { id: "work", num: "01", label: "Selected work" },
-    { id: "expertise", num: "02", label: "Expertise" },
-    { id: "writing", num: "03", label: "Writing" },
-    { id: "about", num: "04", label: "Trajectory" },
-    { id: "contact", num: "05", label: "Contact" },
+    { id: "work", label: "Selected work" },
+    { id: "expertise", label: "Expertise" },
+    { id: "writing", label: "Writing" },
+    { id: "about", label: "Trajectory" },
+    { id: "contact", label: "Contact" },
   ],
 
   caseStudies: [
     {
       id: "ornl-kokkos",
-      num: "01",
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Measuring where the energy goes on the GPU",
       role: "Graduate Research Fellow (GRO program)",
       period: "Summer 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Rust"],
-      flagship: true,
       summary:
         "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, NVML and Variorum connectors open upstream, and kokkos-energy, a command-line analysis tool.",
       body: [
@@ -57,7 +55,6 @@ export const en: SiteContent = {
     },
     {
       id: "edf-asics",
-      num: "02",
       kicker: "EDF Lab Paris-Saclay · ASICS group",
       title: "HPC for nuclear simulation",
       role: "Apprentice engineer",
@@ -80,8 +77,7 @@ export const en: SiteContent = {
     },
     {
       id: "homelab",
-      num: "03",
-      kicker: "homelab cluster · self-hosted",
+      kicker: "Homelab, self-hosted",
       title: "Running my own production",
       role: "Architect & operator",
       period: "Ongoing",
@@ -102,7 +98,6 @@ export const en: SiteContent = {
     },
     {
       id: "endgame",
-      num: "04",
       kicker: "Opération Endgame",
       title: "Running an event for 120+ participants",
       role: "Founder & organizer",
@@ -119,7 +114,6 @@ export const en: SiteContent = {
     },
     {
       id: "commus",
-      num: "05",
       kicker: "Community directory",
       title: "Mapping a community",
       role: "Full-stack",
@@ -140,7 +134,7 @@ export const en: SiteContent = {
     {
       name: "n-body galaxy",
       blurb:
-        "The field behind this page: 16,384 bodies under mutual gravity, stepped live in WebGPU compute shaders. A side project.",
+        "A galaxy of up to 65,536 bodies under mutual gravity, stepped live in WebGPU compute shaders. A side project.",
       href: "https://ethan-puyaubreau.github.io/nbody-webgpu/",
       hrefLabel: "Live",
     },
