@@ -19,16 +19,6 @@ const home = localeHome(locale);
   title={`${ui.notFoundTitle} · ${site.name}`}
   description={ui.notFoundDescription}
 >
-  <!-- GitHub Pages serves this page for any unknown path. Pages are built without a
-       trailing slash (/fr, /blog), so /fr/ lands here: send it to /fr. -->
-  <script is:inline>
-    (function () {
-      const p = location.pathname;
-      if (p.length > 1 && p.endsWith("/")) {
-        location.replace(p.replace(/\/+$/, "") + location.search + location.hash);
-      }
-    })();
-  </script>
   <main id="main" class="container nf">
     <h1>{ui.notFoundTitle}</h1>
     <p class="nf-lede">{ui.notFoundLede}</p>

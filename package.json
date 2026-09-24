@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "node scripts/slash-index.mjs",
     "preview": "astro preview",
     "sync": "astro sync",
     "check": "astro check",
