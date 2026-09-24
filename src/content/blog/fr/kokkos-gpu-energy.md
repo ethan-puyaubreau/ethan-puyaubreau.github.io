@@ -102,7 +102,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 <p>NVML répond à une seule question : ce qu'a consommé ce GPU NVIDIA. La mesure est par carte, en milliwatts, NVIDIA uniquement, et ne voit rien hors de la carte. Le connecteur a donc un second backend bâti sur Variorum, indépendant du fournisseur, qui lit la puissance au niveau du nœud et du socket, y compris le CPU (via RAPL, les compteurs de puissance intégrés aux processeurs Intel et AMD), la DRAM, et certains GPU non NVIDIA. NVML donne ce que le GPU a consommé, Variorum ce que le nœud entier a consommé. Une région qui paraît bon marché sur la carte peut tout de même brasser assez de données pour faire chauffer le CPU et les contrôleurs mémoire autour d'elle, et seule la vue au niveau du nœud le détecte. On se tourne vers NVML quand la question porte sur ce qu'a dépensé le GPU lui-même, et vers Variorum quand on veut la facture énergétique que la salle machine voit réellement.</p>
 
 <figure>
-<svg viewBox="0 0 760 340" role="img" aria-label="Le pipeline du connecteur. L'application Kokkos déclenche les callbacks Tools à chaque région parallèle ; le connecteur énergie reçoit une trace de puissance d'un thread échantillonneur qui lit la puissance hors bande à intervalle fixe ; NVML et Variorum alimentent l'échantillonneur ; le connecteur intègre la trace par région en joules, qui partent vers kokkos-energy, l'outil d'analyse." xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 760 340" role="img" aria-label="Le pipeline du connecteur. L'application Kokkos déclenche les callbacks Tools à chaque région parallèle ; le connecteur énergie reçoit une trace de puissance d'un thread échantillonneur qui lit la puissance hors bande à intervalle fixe ; NVML et Variorum alimentent l'échantillonneur ; le connecteur intègre la trace par région en joules, qui partent vers energy-dashboard-for-kokkos, l'outil d'analyse." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-k1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
       <path d="M0,0 L9,4.5 L0,9 z" fill="#111111"/>
@@ -121,9 +121,10 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
     <rect x="464" y="60" width="134" height="52" rx="8" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
     <text x="531" y="82">joules par région</text>
     <text x="531" y="99" font-size="10.5" fill="#5f5f5c">sommés sur les appels</text>
-    <rect x="622" y="60" width="122" height="52" rx="8" fill="#eeeeeb" stroke="#3d3d3d" stroke-width="1.4"/>
-    <text x="683" y="82" fill="#111111">kokkos-energy</text>
-    <text x="683" y="99" font-size="10.5" fill="#3d3d3d">table · trace · HTML</text>
+    <rect x="622" y="54" width="122" height="64" rx="8" fill="#eeeeeb" stroke="#3d3d3d" stroke-width="1.4"/>
+    <text x="683" y="74" fill="#111111">energy-dashboard-</text>
+    <text x="683" y="89" fill="#111111">for-kokkos</text>
+    <text x="683" y="106" font-size="10.5" fill="#3d3d3d">table · trace · HTML</text>
   </g>
   <g stroke="#111111" stroke-width="1.5" fill="none">
     <line x1="148" y1="86" x2="170" y2="86" marker-end="url(#ar-k1)"/>
@@ -158,4 +159,4 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <p>Une fois l'énergie imputée à la région qui l'a dépensée, on peut enfin optimiser la grandeur réellement facturée, au lieu d'utiliser le temps comme approximation en espérant que les deux concordent. Ils ne concordent pas toujours : le code le plus rapide n'est pas toujours le plus sobre, parce qu'aller vite peut vouloir dire faire tourner le silicium à son plafond de puissance, et une phase plus lente limitée par la mémoire peut être la moins chère à exécuter un million de fois. Même entre deux implémentations correctes du même algorithme, l'écart d'énergie (25 %) peut dépasser l'écart de temps (19 %).</p>
 
-<p>Le démon d'échantillonnage est fusionné dans <code>kokkos/kokkos-tools</code> (#300) ; le cœur et les connecteurs NVML et Variorum (#299, #301, #302) sont encore en revue en amont. La trace CSV alimentait d'abord un tableau de bord Grafana et PostgreSQL ; elle passe désormais par <a href="https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos">kokkos-energy</a>, un binaire Rust unique, sans démon ni Docker, qui affiche un tableau d'énergie par région, exporte une chronologie Perfetto et produit un rapport HTML autonome. Les résultats complets sont sur la page du <a href="https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/">poster que j'ai cosigné avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié</a> (SMC 2025). Ce qui manque encore, c'est une résolution plus fine que la carte entière et que le rafraîchissement de 100 ms : l'imputation reste à l'échelle du GPU, et je n'ai pas de réponse propre pour les flux concurrents.</p>
+<p>Le démon d'échantillonnage est fusionné dans <code>kokkos/kokkos-tools</code> (#300) ; le cœur et les connecteurs NVML et Variorum (#299, #301, #302) sont encore en revue en amont. La trace CSV alimentait d'abord un tableau de bord Grafana et PostgreSQL ; elle passe désormais par <a href="https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos">energy-dashboard-for-kokkos</a>, un binaire Rust unique, sans démon ni Docker, qui affiche un tableau d'énergie par région, exporte une chronologie Perfetto et produit un rapport HTML autonome. Les résultats complets sont sur la page du <a href="https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/">poster que j'ai cosigné avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié</a> (SMC 2025). Ce qui manque encore, c'est une résolution plus fine que la carte entière et que le rafraîchissement de 100 ms : l'imputation reste à l'échelle du GPU, et je n'ai pas de réponse propre pour les flux concurrents.</p>
