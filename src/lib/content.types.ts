@@ -32,6 +32,18 @@ export interface CaseStudy {
   readonly links?: readonly Link[];
   /** Shown verbatim on the page, an honest caveat, not a placeholder. */
   readonly caveat?: string;
+  /** Short entries show only their context line, title and summary. */
+  readonly compact?: boolean;
+  /** Measured results, shown beside the text as figures. */
+  readonly figures?: readonly { readonly value: string; readonly label: string }[];
+  /** An image beside the text, linked. */
+  readonly image?: {
+    readonly src: string;
+    readonly alt: string;
+    readonly href: string;
+    readonly width: number;
+    readonly height: number;
+  };
 }
 
 export interface MoreWorkItem {
@@ -42,14 +54,6 @@ export interface MoreWorkItem {
   readonly hrefLabel?: string;
   /** Shown when there is no link (e.g. "in maintenance"). */
   readonly noLinkLabel?: string;
-}
-
-export interface Domain {
-  readonly title: string;
-  readonly blurb: string;
-  readonly items: readonly string[];
-  /** Anchors to the case study that demonstrates it. */
-  readonly provenBy: { readonly label: string; readonly id: string };
 }
 
 export interface TimelineEntry {
@@ -74,7 +78,6 @@ export interface SiteContent {
   readonly sections: readonly NavSection[];
   readonly caseStudies: readonly CaseStudy[];
   readonly moreWork: readonly MoreWorkItem[];
-  readonly expertise: readonly Domain[];
   readonly about: readonly string[];
   readonly timeline: readonly TimelineEntry[];
   readonly availability: Availability;

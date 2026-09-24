@@ -10,7 +10,6 @@ import type { SiteContent } from "./content.types";
 export const fr: SiteContent = {
   sections: [
     { id: "work", label: "Réalisations" },
-    { id: "expertise", label: "Expertise" },
     { id: "writing", label: "Écrits" },
     { id: "about", label: "Parcours" },
     { id: "contact", label: "Contact" },
@@ -19,6 +18,13 @@ export const fr: SiteContent = {
   caseStudies: [
     {
       id: "ornl-kokkos",
+      image: {
+        src: "/work/smc2025-poster.jpg",
+        alt: "Le poster SMC 2025, Understanding GPU Energy Dynamics in HPC Applications",
+        href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
+        width: 600,
+        height: 800,
+      },
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Mesurer où part l'énergie sur le GPU",
       role: "Graduate Research Fellow (programme GRO)",
@@ -33,11 +39,11 @@ export const fr: SiteContent = {
         },
         {
           h: "Ce que j'ai construit",
-          p: "Un ensemble de connecteurs Kokkos Tools qui échantillonnent la puissance pendant l'exécution des noyaux et attribuent l'énergie intégrée aux régions Kokkos qui l'ont causée : un backend NVML pour les GPU NVIDIA, un backend Variorum pour la puissance au niveau nœud, un démon d'arrière-plan échantillonnant à intervalle fixe, et un export CSV. Côté analyse, un tableau de bord Grafana et PostgreSQL a d'abord fait le travail ; c'est désormais kokkos-energy, un binaire Rust unique qui transforme la trace en tableau d'énergie par région, en chronologie Perfetto et en rapport HTML autonome. L'outil s'accroche à l'interface de profilage de Kokkos : le code applicatif reste intact.",
+          p: "Des connecteurs Kokkos Tools qui échantillonnent la puissance pendant l'exécution des noyaux et attribuent l'énergie aux régions Kokkos qui l'ont causée : NVML pour les GPU NVIDIA, Variorum pour le nœud entier, un démon d'échantillonnage en arrière-plan et un export CSV. Côté analyse, c'est désormais kokkos-energy, un binaire Rust unique qui affiche un tableau d'énergie par région et exporte une chronologie Perfetto et un rapport HTML autonome. Le code applicatif reste intact.",
         },
         {
           h: "Où ça en est",
-          p: "Le démon d'échantillonnage périodique est intégré à kokkos-tools (#300) ; le cœur et les connecteurs NVML et Variorum sont proposés en amont (#299, #301, #302), avec ROCm SMI esquissé pour AMD : neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Les résultats ont fait l'objet de deux posters, lors d'une session interne de l'ORNL et à la Smoky Mountains Conference 2025, ce dernier cosigné avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, « Understanding GPU Energy Dynamics in HPC Applications », et cité dans le rapport de projet S4PST 2024–2025 (ORNL/SPR-2026/4406).",
+          p: "Le démon d'échantillonnage est intégré à kokkos-tools (#300) ; le cœur et les connecteurs NVML et Variorum sont proposés en amont (#299, #301, #302). Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025.",
         },
       ],
       links: [
@@ -58,6 +64,11 @@ export const fr: SiteContent = {
     },
     {
       id: "edf-asics",
+      figures: [
+        { value: "bit à bit", label: "résultats identiques à la référence" },
+        { value: "−12 %", label: "temps de calcul, jusqu'à" },
+        { value: "−40 %", label: "mémoire au pic" },
+      ],
       kicker: "EDF Lab Paris-Saclay · groupe ASICS",
       title: "HPC pour la simulation nucléaire",
       role: "Apprenti ingénieur",
@@ -101,6 +112,7 @@ export const fr: SiteContent = {
     },
     {
       id: "endgame",
+      compact: true,
       kicker: "Opération Endgame",
       title: "Organiser un événement pour plus de 120 participants",
       role: "Fondateur et organisateur",
@@ -117,6 +129,7 @@ export const fr: SiteContent = {
     },
     {
       id: "commus",
+      compact: true,
       kicker: "Annuaire communautaire",
       title: "Cartographier une communauté",
       role: "Full-stack",
@@ -156,68 +169,8 @@ export const fr: SiteContent = {
     },
   ],
 
-  expertise: [
-    {
-      title: "GPU et HPC",
-      blurb:
-        "Écrire pour le GPU et raisonner sur ce que cela coûte, en temps et désormais en énergie.",
-      items: [
-        "CUDA",
-        "OpenMP et MPI",
-        "Kokkos et portabilité des performances",
-        "Télémétrie puissance et énergie GPU",
-      ],
-      provenBy: { label: "ORNL × Kokkos", id: "ornl-kokkos" },
-    },
-    {
-      title: "Ingénierie de la performance et outillage",
-      blurb:
-        "Des outils C++ internes qui gardent un grand code scientifique mesurable, et le pipeline de build autour.",
-      items: [
-        "Profilage mémoire (LD_PRELOAD)",
-        "Mesure temporelle et instrumentation (PyBind11)",
-        "Systèmes de build C++ (CMake)",
-        "Packaging Debian et CI (GitLab CI/CD, Jenkins)",
-      ],
-      provenBy: { label: "EDF · ASICS", id: "edf-asics" },
-    },
-    {
-      title: "Infrastructure et DevOps",
-      blurb:
-        "Le chemin complet, du commit à la requête servie, et le travail de fiabilité qui va avec, sur du matériel dont je réponds.",
-      items: [
-        "Clustering Proxmox VE",
-        "Kubernetes / K3s",
-        "Traefik, TLS et reverse proxy",
-        "Docker et CI/CD Gitea",
-      ],
-      provenBy: { label: "cluster homelab", id: "homelab" },
-    },
-    {
-      title: "Full-stack et temps réel",
-      blurb: "Interfaces et systèmes temps réel, dont celui qui affiche cette page.",
-      items: ["Vue 3 / Nuxt 3", "TypeScript", "Auto-hébergement et déploiement", "Astro"],
-      provenBy: { label: "annuaire communautaire", id: "commus" },
-    },
-    {
-      title: "Sécurité",
-      blurb:
-        "Les bases défensives qu'une infra auto-hébergée, exposée sur Internet, oblige à bien tenir.",
-      items: [
-        "TLS et PKI (Let's Encrypt, ACME)",
-        "Segmentation réseau (VLAN, WireGuard)",
-        "Durcissement bordure et reverse proxy",
-        "Hygiène des secrets et des accès",
-      ],
-      provenBy: { label: "cluster homelab", id: "homelab" },
-    },
-  ],
-
   about: [
-    "Je mène deux pistes de front. La première, c'est le calcul haute performance : le travail GPU et de performance qui rend un code scientifique rapide. La seconde, c'est l'infrastructure qui met le logiciel en production et l'y maintient : conteneurs, pipelines, reverse proxies, et le cluster en dessous. Les deux se rejoignent vite : le code que j'optimise finit sur des machines que quelqu'un doit exploiter, et j'ai tenu les deux bouts.",
-    "À Oak Ridge National Laboratory, j'ai construit l'outillage de mesure d'énergie GPU pour Kokkos, la couche de portabilité qui fait tourner les codes du Département de l'Énergie américain sur ses supercalculateurs. Le démon d'échantillonnage périodique est intégré en amont dans Kokkos Tools, et le travail est devenu un poster, cosigné avec mes encadrants de l'ORNL, Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, à la Smoky Mountains Conference 2025.",
-    "En parallèle, j'ai passé trois ans en alternance sur le HPC pour la simulation nucléaire chez EDF, et j'exploite mon propre cluster de production de cinq nœuds : une vingtaine de services derrière Traefik et TLS, déployés avec Docker et de la CI/CD, avec scan d'image et rollback automatique. Quand quelque chose casse à trois heures du matin, il n'y a personne d'autre à appeler.",
-    "Je sors diplômé de Polytech Paris-Saclay (diplôme d'ingénieur, septembre 2026) et je cherche un CDI à partir de janvier 2027. Les laboratoires HPC sont un terrain naturel, dans la Bay Area (Berkeley Lab, LLNL) comme à Paris (le CEA, par exemple), mais l'infrastructure, le DevOps, le SRE et le platform engineering m'intéressent tout autant, sur site ou dans le cloud ; idéalement un poste qui touche aux deux.",
+    "Je mène deux pistes de front : le travail GPU et de performance qui rend un code scientifique rapide, et l'infrastructure qui met le logiciel en production et l'y maintient. Je sors diplômé de Polytech Paris-Saclay (diplôme d'ingénieur, septembre 2026) et je cherche un CDI à partir de janvier 2027 : laboratoires HPC, dans la Bay Area comme à Paris, ou équipes infrastructure, DevOps, SRE et plateforme ; idéalement un poste qui touche aux deux.",
   ],
 
   timeline: [

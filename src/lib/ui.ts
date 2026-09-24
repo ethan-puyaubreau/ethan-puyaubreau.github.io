@@ -66,11 +66,10 @@ export interface UIStrings {
   /** Shared subject for sitewide contact mailto links. */
   readonly contactMailSubject: string;
   readonly hero: HeroStrings;
-  /** Keyed by section id (work, expertise, about, contact). */
+  /** Keyed by section id (work, about, contact). */
   readonly sectionHeads: Record<string, SectionCopy>;
   // Component labels.
   readonly stackLabel: string;
-  readonly provenBy: string;
   readonly moreWorkHead: string;
   readonly moreWorkLabel: string;
   readonly cv: string;
@@ -105,11 +104,10 @@ const STRINGS: Record<Locale, UIStrings> = {
     contactMailSubject: "HPC / infrastructure role: getting in touch (available Jan 2027)",
     hero: {
       title: "I measure what computing costs, and I run the machines it runs on.",
-      ledeBeforeLink:
-        "I build high-performance computing tools, and I run the infrastructure that ships them: GPU energy measurement for ",
+      ledeBeforeLink: "GPU energy measurement for ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
-        " at Oak Ridge, HPC for nuclear simulation at EDF, and a five-node cluster running about 20 services in production, operated end to end from Docker to CI/CD.",
+        " at Oak Ridge National Laboratory, HPC tooling for nuclear simulation at EDF, and a five-node cluster I run in production myself.",
       figureLabel:
         "GPU power over time for two ArborX DBSCAN implementations on an NVIDIA H100 NVL, aligned on the start of the DBSCAN computation. fdbscan runs for 2.68 seconds and uses 769 joules; fdbscan-dense runs for 2.20 seconds and uses 569 joules.",
       figureCaption:
@@ -121,15 +119,10 @@ const STRINGS: Record<Locale, UIStrings> = {
       work: {
         title: "Things I built",
       },
-      expertise: {
-        title: "By domain",
-        intro: "Five areas, each tied to the project where I used it.",
-      },
       about: { title: "Background" },
-      contact: { title: "The short version" },
+      contact: { title: "Contact" },
     },
     stackLabel: "Stack",
-    provenBy: "Used in",
     moreWorkHead: "Other projects",
     moreWorkLabel: "More work",
     cv: "CV",
@@ -185,11 +178,10 @@ const STRINGS: Record<Locale, UIStrings> = {
     contactMailSubject: "Poste HPC / infrastructure : prise de contact (dispo janv. 2027)",
     hero: {
       title: "Je mesure ce que coûte le calcul, et j'exploite les machines qui le font tourner.",
-      ledeBeforeLink:
-        "Je construis des outils de calcul haute performance, et j'exploite l'infrastructure qui les met en production : la mesure d'énergie GPU pour ",
+      ledeBeforeLink: "Mesure d'énergie GPU pour ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
-        " à Oak Ridge, le HPC pour la simulation nucléaire chez EDF, et un cluster de cinq nœuds qui fait tourner une vingtaine de services en production, exploité de bout en bout, de Docker à la CI/CD.",
+        " à l'Oak Ridge National Laboratory, outillage HPC pour la simulation nucléaire chez EDF, et un cluster de cinq nœuds que j'exploite moi-même en production.",
       figureLabel:
         "Puissance GPU dans le temps pour deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL, alignées sur le début du calcul DBSCAN. fdbscan tourne 2,68 secondes et consomme 769 joules ; fdbscan-dense tourne 2,20 secondes et consomme 569 joules.",
       figureCaption:
@@ -201,15 +193,10 @@ const STRINGS: Record<Locale, UIStrings> = {
       work: {
         title: "Ce que j'ai construit",
       },
-      expertise: {
-        title: "Par domaine",
-        intro: "Cinq domaines, chacun relié au projet où je l'ai pratiqué.",
-      },
       about: { title: "Parcours" },
-      contact: { title: "La version courte" },
+      contact: { title: "Contact" },
     },
     stackLabel: "Technologies",
-    provenBy: "Utilisé sur",
     moreWorkHead: "Autres projets",
     moreWorkLabel: "Autres travaux",
     cv: "CV",

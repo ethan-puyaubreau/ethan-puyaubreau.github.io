@@ -16,7 +16,6 @@ export type {
   Link,
   CaseStudy,
   MoreWorkItem,
-  Domain,
   TimelineEntry,
   Availability,
   SiteContent,

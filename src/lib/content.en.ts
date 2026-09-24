@@ -6,16 +6,22 @@ import type { SiteContent } from "./content.types";
 
 export const en: SiteContent = {
   sections: [
-    { id: "work", label: "Selected work" },
-    { id: "expertise", label: "Expertise" },
+    { id: "work", label: "Work" },
     { id: "writing", label: "Writing" },
-    { id: "about", label: "Trajectory" },
+    { id: "about", label: "Background" },
     { id: "contact", label: "Contact" },
   ],
 
   caseStudies: [
     {
       id: "ornl-kokkos",
+      image: {
+        src: "/work/smc2025-poster.jpg",
+        alt: "The SMC 2025 poster, Understanding GPU Energy Dynamics in HPC Applications",
+        href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
+        width: 600,
+        height: 800,
+      },
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Measuring where the energy goes on the GPU",
       role: "Graduate Research Fellow (GRO program)",
@@ -30,11 +36,11 @@ export const en: SiteContent = {
         },
         {
           h: "What I built",
-          p: "A set of Kokkos Tools connectors that sample power while kernels run and attribute the integrated energy to the Kokkos regions that caused it: an NVML backend for NVIDIA GPUs, a Variorum backend for node-level power, a background daemon sampling on a fixed interval, and CSV export. The analysis side, first a Grafana and PostgreSQL dashboard, is now kokkos-energy: a single Rust binary that turns the trace into a per-region energy table, a Perfetto timeline, and a standalone HTML report. It hooks the Kokkos profiling interface, so application code is untouched.",
+          p: "Kokkos Tools connectors that sample power while kernels run and attribute the energy to the Kokkos regions that caused it: NVML for NVIDIA GPUs, Variorum for the whole node, a background sampling daemon, and CSV export. The analysis side is now kokkos-energy, a single Rust binary that prints a per-region energy table and exports a Perfetto timeline and a standalone HTML report. Application code stays untouched.",
         },
         {
           h: "Where it stands",
-          p: "The periodic-sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302), with ROCm SMI sketched for AMD: nine pull requests to kokkos-tools and LAMMPS in all, three merged. The results were presented as two posters, at an ORNL internal session and at the 2025 Smoky Mountains Conference, the latter with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, 'Understanding GPU Energy Dynamics in HPC Applications', cited in the S4PST 2024–2025 project report (ORNL/SPR-2026/4406).",
+          p: "The sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302). Nine pull requests to kokkos-tools and LAMMPS in all, three merged. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, cited in the S4PST 2024–2025 project report.",
         },
       ],
       links: [
@@ -55,6 +61,11 @@ export const en: SiteContent = {
     },
     {
       id: "edf-asics",
+      figures: [
+        { value: "bit for bit", label: "identical results to the reference" },
+        { value: "−12%", label: "compute time, up to" },
+        { value: "−40%", label: "peak memory" },
+      ],
       kicker: "EDF Lab Paris-Saclay · ASICS group",
       title: "HPC for nuclear simulation",
       role: "Apprentice engineer",
@@ -98,6 +109,7 @@ export const en: SiteContent = {
     },
     {
       id: "endgame",
+      compact: true,
       kicker: "Opération Endgame",
       title: "Running an event for 120+ participants",
       role: "Founder & organizer",
@@ -114,6 +126,7 @@ export const en: SiteContent = {
     },
     {
       id: "commus",
+      compact: true,
       kicker: "Community directory",
       title: "Mapping a community",
       role: "Full-stack",
@@ -153,66 +166,8 @@ export const en: SiteContent = {
     },
   ],
 
-  expertise: [
-    {
-      title: "GPU & HPC",
-      blurb: "Writing for the GPU and reasoning about what it costs, in time and now in energy.",
-      items: [
-        "CUDA",
-        "OpenMP & MPI",
-        "Kokkos & performance portability",
-        "GPU power & energy telemetry",
-      ],
-      provenBy: { label: "ORNL × Kokkos", id: "ornl-kokkos" },
-    },
-    {
-      title: "Performance engineering & tooling",
-      blurb:
-        "Internal C++ tools that keep a large scientific codebase measurable, and the build pipeline around them.",
-      items: [
-        "Memory profiling (LD_PRELOAD)",
-        "CPU timing & instrumentation (PyBind11)",
-        "C++ build systems (CMake)",
-        "Debian packaging & CI (GitLab CI/CD, Jenkins)",
-      ],
-      provenBy: { label: "EDF · ASICS", id: "edf-asics" },
-    },
-    {
-      title: "Infrastructure & DevOps",
-      blurb:
-        "The full path from a commit to a request served, and the reliability work behind it, on hardware I'm accountable for.",
-      items: [
-        "Proxmox VE clustering",
-        "Kubernetes / K3s",
-        "Traefik, TLS & reverse proxy",
-        "Docker & Gitea CI/CD",
-      ],
-      provenBy: { label: "homelab cluster", id: "homelab" },
-    },
-    {
-      title: "Full-stack & real-time",
-      blurb: "Interfaces and live systems, including the one rendering this page.",
-      items: ["Vue 3 / Nuxt 3", "TypeScript", "Self-hosting & deployment", "Astro"],
-      provenBy: { label: "community directory", id: "commus" },
-    },
-    {
-      title: "Security",
-      blurb: "The defensive basics a self-hosted, internet-facing cluster forces you to get right.",
-      items: [
-        "TLS & PKI (Let's Encrypt, ACME)",
-        "Network segmentation (VLAN, WireGuard)",
-        "Edge & reverse-proxy hardening",
-        "Secrets & access hygiene",
-      ],
-      provenBy: { label: "homelab cluster", id: "homelab" },
-    },
-  ],
-
   about: [
-    "I work two tracks at once. One is high-performance computing: the GPU and performance work that makes scientific code fast. The other is the infrastructure that puts software into production and keeps it there: containers, pipelines, reverse proxies, and the cluster underneath. The two meet quickly: the code I tune ends up on machines someone has to operate, and I have worked both ends.",
-    "At Oak Ridge National Laboratory I built GPU energy-measurement tooling for Kokkos, the portability layer that runs US Department of Energy codes on its supercomputers. The periodic-sampling daemon is merged upstream into Kokkos Tools, and the work became a poster with my ORNL mentors, Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, at the 2025 Smoky Mountains Conference.",
-    "Alongside that I spent three years as an apprentice on HPC for nuclear simulation at EDF, and I run a five-node production cluster of my own: around twenty services behind Traefik and TLS, deployed with Docker and CI/CD, with image scanning and automatic rollback. When something breaks at three in the morning, there is nobody else to call.",
-    "I am graduating from Polytech Paris-Saclay (engineering degree, September 2026) and am looking for a permanent role from January 2027. HPC labs are a natural fit, in the Bay Area (Berkeley Lab, LLNL) as in Paris (the CEA, for one), but I am just as interested in infrastructure, DevOps, SRE, and platform engineering, on-prem or in the cloud; ideally a role that touches both.",
+    "I work on two tracks: the GPU and performance work that makes scientific code fast, and the infrastructure that puts software into production and keeps it there. I am graduating from Polytech Paris-Saclay (engineering degree, September 2026) and looking for a permanent role from January 2027: HPC labs, in the Bay Area as in Paris, or infrastructure, DevOps, SRE and platform teams; ideally a role that touches both.",
   ],
 
   timeline: [

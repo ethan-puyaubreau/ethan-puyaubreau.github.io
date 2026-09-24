@@ -8,7 +8,6 @@ import SiteFooter from "./SiteFooter.astro";
 import SectionHeader from "./SectionHeader.astro";
 import CaseStudyEntry from "./CaseStudy.astro";
 import MoreWork from "./MoreWork.astro";
-import Expertise from "./Expertise.astro";
 import About from "./About.astro";
 import Contact from "./Contact.astro";
 import PowerTrace from "./PowerTrace.astro";
@@ -124,10 +123,6 @@ const snapshotDate = new Date(snapshot.generatedAt).toLocaleDateString(
         <MoreWork items={content.moreWork} head={ui.moreWorkHead} label={ui.moreWorkLabel} />
       </section>
 
-      <section id="expertise">
-        <SectionHeader title={heads.expertise.title}>{heads.expertise.intro}</SectionHeader>
-        <Expertise domains={content.expertise} provenByLabel={ui.provenBy} />
-      </section>
 
       {posts.length > 0 && (
         <section id="writing">

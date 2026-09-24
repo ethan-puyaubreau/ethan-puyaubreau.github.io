@@ -7,52 +7,101 @@ interface Props {
   ui: UIStrings;
 }
 const { study, ui } = Astro.props;
+const hasSide = Boolean(study.image || study.figures || Astro.slots.has("artifact"));
 ---
 
-<article id={study.id} class="case">
-  <p class="case-meta">
-    <span>{study.kicker}</span>
-    <span>{study.role}</span>
-    <span>{study.period}</span>
-  </p>
-  <h3 class="case-title">{study.title}</h3>
-  <p class="summary">{study.summary}</p>
-  {study.body.map((b) => (
-    <div class="block">
-      <h4>{b.h}</h4>
-      <p>{b.p}</p>
-    </div>
-  ))}
-  {study.caveat && <p class="caveat">{study.caveat}</p>}
-  <slot name="artifact" />
-  <p class="stack">
-    <span class="visually-hidden">{ui.stackLabel}: </span>
-    {study.stack.join(" · ")}
-  </p>
-  {study.links && study.links.length > 0 && (
-    <ul class="links">
-      {study.links.map((l) => (
-        <li>
-          <a href={l.href} rel="noopener" target={l.href.startsWith("http") ? "_blank" : undefined}>
-            {l.label}
-          </a>
-        </li>
+<article id={study.id} class:list={["case", { compact: study.compact, "has-side": hasSide }]}>
+  <div class="case-text">
+    <p class="case-meta">
+      <span>{study.kicker}</span>
+      <span>{study.role}</span>
+      <span>{study.period}</span>
+    </p>
+    <h3 class="case-title">{study.title}</h3>
+    <p class="summary">{study.summary}</p>
+    {!study.compact &&
+      study.body.map((b) => (
+        <div class="block">
+          <h4>{b.h}</h4>
+          <p>{b.p}</p>
+        </div>
       ))}
-    </ul>
+    {!study.compact && study.caveat && <p class="caveat">{study.caveat}</p>}
+    {!study.compact && (
+      <p class="stack">
+        <span class="visually-hidden">{ui.stackLabel}: </span>
+        {study.stack.join(" · ")}
+      </p>
+    )}
+    {study.links && study.links.length > 0 && (
+      <ul class="links">
+        {study.links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              rel="noopener"
+              target={l.href.startsWith("http") ? "_blank" : undefined}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+  {hasSide && (
+    <div class="case-side">
+      {study.image && (
+        <a class="case-image" href={study.image.href}>
+          <img
+            src={study.image.src}
+            alt={study.image.alt}
+            width={study.image.width}
+            height={study.image.height}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      )}
+      {study.figures && (
+        <dl class="figures">
+          {study.figures.map((f) => (
+            <div>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      <slot name="artifact" />
+    </div>
   )}
 </article>
 
 <style>
   .case {
-    max-width: var(--measure);
     padding-block: var(--space-xl);
     border-top: 1px solid var(--line);
     scroll-margin-top: 5rem;
   }
+  .case-text {
+    max-width: var(--measure);
+  }
+  @media (min-width: 1024px) {
+    .case.has-side {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+  .case.compact {
+    padding-block: var(--space-l);
+  }
   .case-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.15rem 0;
     font-size: var(--step--1);
     color: var(--muted);
   }
@@ -73,11 +122,18 @@ const { study, ui } = Astro.props;
     margin-top: var(--space-xs);
     font-size: var(--step-3);
   }
+  .compact .case-title {
+    font-size: var(--step-2);
+  }
   .summary {
     margin-top: var(--space-s);
     font-size: var(--step-1);
     line-height: 1.5;
     color: var(--ink);
+  }
+  .compact .summary {
+    font-size: var(--step-0);
+    color: var(--ink-dim);
   }
   .block {
     margin-top: var(--space-m);
@@ -118,5 +174,53 @@ const { study, ui } = Astro.props;
   }
   .links a:hover {
     text-decoration-color: currentColor;
+  }
+
+  .case-side {
+    display: grid;
+    gap: var(--space-m);
+    margin-top: var(--space-l);
+  }
+  @media (min-width: 1024px) {
+    .case-side {
+      margin-top: 0;
+      position: sticky;
+      top: 5rem;
+    }
+  }
+  .case-image {
+    display: block;
+    max-width: 20rem;
+    border: 1px solid var(--line);
+  }
+  .case-image img {
+    width: 100%;
+    height: auto;
+  }
+  .case-image:hover {
+    border-color: var(--line-strong);
+  }
+  .figures {
+    margin: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+  .figures div {
+    display: flex;
+    flex-direction: column-reverse;
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-2xs);
+  }
+  .figures dd {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .figures dt {
+    font-size: var(--step--1);
+    color: var(--muted);
   }
 </style>
