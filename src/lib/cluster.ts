@@ -122,7 +122,7 @@ const NODE_ROLE: Record<Locale, Record<string, string>> = {
     gpu: "Capacity and GPU. The media stack, the Kubernetes VM, and local LLM inference.",
   },
   fr: {
-    edge: "La bordure. Le routeur VyOS, Traefik et la supervision de disponibilité.",
+    edge: "Le nœud frontal. Le routeur VyOS, Traefik et la supervision de disponibilité.",
     apps: "Apps et sites auto-hébergés, plus le DNS du LAN et Home Assistant.",
     aux: "Un petit nœud d'appoint : une seconde VM routeur et les gabarits de VM.",
     core: "Le nœud principal. Une forge Git, les runners CI, Nextcloud, un PaaS.",
@@ -306,7 +306,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       guests: "VM et conteneurs actifs",
       cpu: "CPU",
       mem: "mémoire",
-      services: "points d'accès actifs",
+      services: "adresses surveillées joignables",
       window: "CPU et mémoire sur la dernière semaine, un point toutes les 8 h",
       asOf: "relevé le",
     },

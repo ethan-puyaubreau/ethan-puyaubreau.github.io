@@ -33,11 +33,11 @@ export const en: SiteContent = {
       body: [
         {
           h: "The problem",
-          p: "Kokkos lets one C++ source run across NVIDIA, AMD, and Intel GPUs, which is exactly why energy is hard to reason about: the same kernel draws different power on every backend, and application teams had no portable way to see it. On DOE machines, where power is now a first-class constraint, that blind spot matters.",
+          p: "Kokkos runs one C++ source on NVIDIA, AMD, and Intel GPUs, and the same kernel draws different power on each. Application teams had no portable way to see it, on DOE machines where power is now a first-class constraint.",
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through the Kokkos Tools interface, so an application is measured as it is, without a rebuild or a patch. The upstream connectors read NVIDIA power through NVML or any vendor Variorum supports; I also wrote an AMD path through ROCm SMI that is not public yet. The analysis tool, energy-dashboard-for-kokkos, rewritten in 2026 as a single Rust binary, has a documented trace format, unit tests plus a test on a real GPU trace, and releases built by CI. The traces and the script behind the DBSCAN figures are public, and a CI job recomputes them.",
+          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The upstream connectors read power through NVML or Variorum; an AMD path through ROCm SMI is not public yet. energy-dashboard-for-kokkos, rewritten in Rust in 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
         },
         {
           h: "Where it stands",

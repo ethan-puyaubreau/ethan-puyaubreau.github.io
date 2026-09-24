@@ -36,11 +36,11 @@ export const fr: SiteContent = {
       body: [
         {
           h: "Le problème",
-          p: "Kokkos permet de faire tourner une même source C++ sur des GPU NVIDIA, AMD et Intel, et c'est précisément pour cela que l'énergie est difficile à évaluer : le même noyau consomme une puissance différente sur chaque backend, et les équipes applicatives n'avaient aucun moyen portable de la voir. Sur les machines du DOE, où la puissance est devenue une contrainte majeure, cet angle mort pèse lourd.",
+          p: "Kokkos fait tourner une même source C++ sur des GPU NVIDIA, AMD et Intel, et le même noyau consomme une puissance différente sur chacun. Les équipes applicatives n'avaient aucun moyen portable de la voir, sur des machines du DOE où la puissance est devenue une contrainte majeure.",
         },
         {
           h: "Comment c'est construit",
-          p: "Les outils se branchent à l'exécution par l'interface Kokkos Tools : une application se mesure telle quelle, sans recompilation ni correctif. Les connecteurs soumis en amont lisent la puissance NVIDIA via NVML, ou celle de tout constructeur pris en charge par Variorum ; j'ai aussi écrit une version AMD via ROCm SMI, pas encore publiée. L'outil d'analyse, energy-dashboard-for-kokkos, réécrit en 2026 sous la forme d'un binaire Rust unique, a un format de trace documenté, des tests unitaires et un test sur une trace GPU réelle, et des versions construites par la CI. Les traces et le script derrière les chiffres DBSCAN sont publics, et une tâche de CI les recalcule.",
+          p: "Les outils se branchent à l'exécution par Kokkos Tools : une application se mesure sans recompilation ni correctif. Les connecteurs soumis en amont lisent la puissance via NVML ou Variorum ; une version AMD via ROCm SMI n'est pas encore publiée. energy-dashboard-for-kokkos, réécrit en Rust en 2026, a un format de trace documenté, des tests sur une trace GPU réelle et des versions construites par la CI. Les traces et le script derrière les chiffres DBSCAN sont publics, et la CI les recalcule.",
         },
         {
           h: "Où ça en est",
@@ -99,7 +99,7 @@ export const fr: SiteContent = {
     {
       name: "Homelab",
       blurb:
-        "Le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : une vingtaine de services derrière un seul Traefik, la CI Gitea et Coolify aujourd'hui, GitLab CI/CD, K3s, Ceph et Ansible au fil des ans, et un pipeline de déploiement qui revient en arrière si le contrôle de santé échoue.",
+        "Le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : une vingtaine de services derrière un seul Traefik, la CI Gitea et Coolify aujourd'hui, GitLab CI/CD, K3s, Ceph et Ansible au fil des ans, et un pipeline de déploiement qui revient en arrière si la sonde de santé échoue.",
       href: "/fr/cluster",
       hrefLabel: "Le cluster",
     },
