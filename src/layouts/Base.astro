@@ -1,6 +1,4 @@
 ---
-import "@fontsource-variable/fraunces/full.css";
-import "@fontsource-variable/fraunces/full-italic.css";
 import "@fontsource-variable/archivo";
 import "@fontsource-variable/jetbrains-mono";
 import "../styles/tokens.css";
@@ -65,12 +63,6 @@ const alternates = isPaired
     ]
   : [];
 
-// Scroll reveal: tag html.reveal, then reveal [data-reveal] elements as they
-// enter view (one-shot, unobserved after). Runs in both motion modes (the CSS
-// makes it a plain opacity fade under reduced motion, fade + rise otherwise);
-// a no-op without JS, so content is never trapped hidden. CSS in global.css.
-const revealScript = `(function(){try{var d=document;d.documentElement.classList.add('reveal');var run=function(){var els=d.querySelectorAll('[data-reveal]');if(!('IntersectionObserver'in window)){els.forEach(function(el){el.classList.add('in-view');});return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in-view');io.unobserve(e.target);}});},{rootMargin:'0px 0px -15% 0px',threshold:0});els.forEach(function(el){io.observe(el);});};if(d.readyState!=='loading')run();else d.addEventListener('DOMContentLoaded',run);}catch(e){}})();`;
-
 // Structured data ties this domain to the ORCID and Google Scholar records.
 const jsonLd = {
   "@context": "https://schema.org",
@@ -92,7 +84,9 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    {alternates.map((a) => (
+      <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+    ))}
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -100,7 +94,7 @@ const jsonLd = {
       href={locale === "fr" ? "/fr/rss.xml" : "/rss.xml"}
     />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f3efe6" />
+    <meta name="theme-color" content="#f7f7f5" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -113,12 +107,10 @@ const jsonLd = {
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content={OG_LOCALE[locale]} />
-    {
-      isPaired &&
-        (Object.keys(OG_LOCALE) as Locale[])
-          .filter((l) => l !== locale)
-          .map((l) => <meta property="og:locale:alternate" content={OG_LOCALE[l]} />)
-    }
+    {isPaired &&
+      (Object.keys(OG_LOCALE) as Locale[])
+        .filter((l) => l !== locale)
+        .map((l) => <meta property="og:locale:alternate" content={OG_LOCALE[l]} />)}
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -129,11 +121,12 @@ const jsonLd = {
     <meta name="twitter:image" content={ogImageUrl} />
 
     <meta name="generator" content={Astro.generator} />
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    <script is:inline set:html={revealScript} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
   </head>
   <body data-build={buildSha} data-locale={locale}>
-    <a class="skip-link" href="#main">{ui.skipToContent}</a>
+    <a class="skip-link" href="#main">
+      {ui.skipToContent}
+    </a>
     <slot />
   </body>
 </html>

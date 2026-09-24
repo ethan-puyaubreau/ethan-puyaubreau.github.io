@@ -12,7 +12,6 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: 4.5rem; /* clear the fixed 3.5rem header on anchor jumps */
-  scrollbar-gutter: stable;
   background: var(--bg);
 }
 
@@ -56,8 +55,7 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 450;
-  font-optical-sizing: auto;
+  font-weight: 650;
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
   text-wrap: balance;
@@ -68,14 +66,14 @@ p {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
   border-radius: var(--radius);
 }
 
 /* Selection inverts against the current ground, so it reads on paper and plate. */
 ::selection {
-  background: var(--accent);
+  background: var(--ink);
   color: var(--bg);
 }
 
@@ -87,12 +85,12 @@ p {
   padding-inline: var(--gutter);
 }
 
+/* Small meta text: sans, sentence case. Mono is kept for data and commands. */
 .label {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
   font-weight: 500;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--muted);
 }
 
@@ -114,41 +112,14 @@ p {
   left: var(--space-2xs);
   z-index: var(--z-palette);
   padding: 0.5rem 1rem;
-  background: var(--accent);
-  color: #fff;
-  font-family: var(--font-mono);
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-sans);
   transform: translateY(-150%);
   transition: transform var(--dur) var(--ease-out);
 }
 .skip-link:focus {
   transform: translateY(0);
-}
-
-/* ---------- scroll reveal ---------- */
-/* Opt-in and JS-gated: an inline script adds html.reveal (a no-op without JS,
-   so content is always visible). The base reveal is a gentle OPACITY fade that
-   runs in both motion modes; the translateY rise is added only when motion is
-   welcome. Opacity/transform only (no layout shift); the observer unobserves
-   after .in-view, so nothing re-animates on scroll-up. Stagger via --ri. */
-html.reveal [data-reveal] {
-  opacity: 0;
-  transition: opacity var(--dur-slow) var(--ease-out);
-  transition-delay: calc(var(--ri, 0) * 70ms);
-}
-html.reveal [data-reveal].in-view {
-  opacity: 1;
-}
-@media (prefers-reduced-motion: no-preference) {
-  html.reveal [data-reveal] {
-    transform: translateY(22px);
-    transition:
-      opacity var(--dur-slow) var(--ease-out),
-      transform var(--dur-slow) var(--ease-out);
-    transition-delay: calc(var(--ri, 0) * 70ms);
-  }
-  html.reveal [data-reveal].in-view {
-    transform: none;
-  }
 }
 
 /* Honour reduced-motion globally: kill animation, keep everything usable. */
@@ -162,10 +133,5 @@ html.reveal [data-reveal].in-view {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-  /* A pure opacity fade is not vestibular motion: keep the reveal fade (no
-     rise) so reduced-motion users get a gentle entrance, not an instant jump. */
-  html.reveal [data-reveal] {
-    transition: opacity var(--dur) var(--ease-out) !important;
   }
 }

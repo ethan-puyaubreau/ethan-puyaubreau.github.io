@@ -20,33 +20,31 @@ const { locale, locales, switchLabel, names, titles, storageKey, paths } = Astro
 ---
 
 <nav class="lang" aria-label={switchLabel} data-lang-switch data-storage-key={storageKey}>
-  {
-    locales.map((l, i) => (
-      <>
-        {i > 0 && (
-          <span class="sep" aria-hidden="true">
-            /
-          </span>
-        )}
-        {l === locale ? (
-          <span class="opt current" aria-current="true" lang={l}>
-            {names[l]}
-          </span>
-        ) : (
-          <a
-            class="opt"
-            href={paths?.[l] ?? localeHome(l)}
-            hreflang={l}
-            lang={l}
-            title={titles[l]}
-            data-locale={l}
-          >
-            {names[l]}
-          </a>
-        )}
-      </>
-    ))
-  }
+  {locales.map((l, i) => (
+    <>
+      {i > 0 && (
+        <span class="sep" aria-hidden="true">
+          /
+        </span>
+      )}
+      {l === locale ? (
+        <span class="opt current" aria-current="true" lang={l}>
+          {names[l]}
+        </span>
+      ) : (
+        <a
+          class="opt"
+          href={paths?.[l] ?? localeHome(l)}
+          hreflang={l}
+          lang={l}
+          title={titles[l]}
+          data-locale={l}
+        >
+          {names[l]}
+        </a>
+      )}
+    </>
+  ))}
 </nav>
 
 <script is:inline>
@@ -71,30 +69,25 @@ const { locale, locales, switchLabel, names, titles, storageKey, paths } = Astro
   .lang {
     display: inline-flex;
     align-items: baseline;
-    gap: 0.4rem;
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-wide);
+    gap: 0.2rem;
+    font-size: var(--step--1);
+    font-weight: 500;
   }
   .opt {
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
     color: var(--muted);
-    border-bottom: 1px solid transparent;
     /* a comfortable tap target (WCAG 2.5.8) without disturbing the baseline row */
     padding-block: 0.25rem;
-    padding-inline: 0.35rem;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
+    padding-inline: 0.3rem;
   }
   a.opt:hover,
   a.opt:focus-visible {
     color: var(--ink);
-    border-color: var(--line-strong);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
   }
   .opt.current {
-    color: var(--accent);
+    color: var(--ink);
+    font-weight: 650;
   }
   .sep {
     color: var(--faint);
