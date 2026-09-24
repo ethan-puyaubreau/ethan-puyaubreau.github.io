@@ -32,11 +32,12 @@ test("home: masthead and the five case studies render", async ({ page }) => {
   await expect(page.locator("#work article.case")).toHaveCount(5);
 });
 
-test("home: hero island mounts (live canvas or graceful fallback)", async ({ page }) => {
-  await page.goto("/", { waitUntil: "load" });
-  await page.waitForTimeout(1500);
-  const status = page.locator("#top canvas, #top [data-status]").first();
-  await expect(status).toBeVisible();
+test("home: the hero draws both measured traces with their energy", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const chart = page.locator("#top svg.trace");
+  await expect(chart).toBeVisible();
+  await expect(chart.locator(".panel")).toHaveCount(2);
+  await expect(chart.locator(".joules")).toHaveText(["925 J", "785 J"]);
 });
 
 test("home FR renders in French and the lang switch points to /fr", async ({ page }) => {
@@ -46,18 +47,9 @@ test("home FR renders in French and the lang switch points to /fr", async ({ pag
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
 });
 
-test("command palette opens and closes", async ({ page }) => {
+test("home: every page ships without client-side hydration on the hero", async ({ page }) => {
   await page.goto("/", { waitUntil: "load" });
-  const trigger = page.locator("button.trigger");
-  await expect(trigger).toBeVisible();
-  // client:idle: the click handler attaches once Vue hydrates on idle, not
-  // necessarily by "load".
-  await expect(async () => {
-    await trigger.click();
-    await expect(page.locator('.palette[role="dialog"]')).toBeVisible({ timeout: 500 });
-  }).toPass({ timeout: 5000 });
-  await page.keyboard.press("Escape");
-  await expect(page.locator('.palette[role="dialog"]')).toBeHidden();
+  await expect(page.locator("#top astro-island")).toHaveCount(0);
 });
 
 test("CV download link is locale-specific", async ({ page }) => {
@@ -100,12 +92,6 @@ test("cluster page renders the request path and the deploy pipeline", async ({ p
   await page.goto("/cluster", { waitUntil: "domcontentloaded" });
   await expect(page.locator("#path .station")).toHaveCount(6);
   await expect(page.locator("#pipeline .stage")).toHaveCount(3);
-});
-
-test("cluster constellation canvas mounts", async ({ page }) => {
-  await page.goto("/cluster", { waitUntil: "load" });
-  await page.waitForTimeout(800);
-  await expect(page.locator("canvas.field-canvas")).toBeVisible();
 });
 
 test("french cluster page renders in French", async ({ page }) => {
@@ -200,11 +186,12 @@ test("the header exposes a persistent, locale-aware Blog link", async ({ page })
   await expect(page.locator('.navlink[href="/fr/blog"]')).toBeVisible();
 });
 
-test("header: with 5 sections the nav retires to the palette and the bar never wraps", async ({
-  page,
-}) => {
+test("header: section links show on desktop and hide on phones", async ({ page }) => {
   await page.setViewportSize({ width: 1300, height: 900 });
   await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("#site-header .sections a")).toHaveCount(5);
+  await expect(page.locator("#site-header .sections")).toBeVisible();
+  await page.setViewportSize({ width: 600, height: 900 });
   await expect(page.locator("#site-header .sections")).toBeHidden();
 });
 
@@ -237,11 +224,11 @@ test("French pages use no-break spaces before double punctuation", async ({ page
 
 // Reveal-on-scroll must not strand a block that is taller than the viewport:
 // a ratio threshold is never reached by a long article body.
-test("long posts reveal their body once it scrolls into view", async ({ page }) => {
+test("posts are visible without any reveal script", async ({ page }) => {
   await page.goto("/blog/kokkos-gpu-energy", { waitUntil: "load" });
-  const prose = page.locator("[data-reveal].prose");
+  const prose = page.locator(".prose");
   await prose.scrollIntoViewIfNeeded();
-  await expect(prose).toHaveClass(/in-view/);
+  await expect(prose).toHaveCSS("opacity", "1");
 });
 
 test("the 404 page points back to home", async ({ page }) => {
