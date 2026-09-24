@@ -30,8 +30,6 @@ const fmtS = (s: number) => `${num(s, 2)}\u00A0s`;
 const fmtJ = (j: number) => `${num(Math.round(j), 0)}\u00A0J`;
 
 const keys = ["fdbscan", "fdbscan-dense"] as const;
-const delta = Math.round(traces["fdbscan-dense"].energyJ) - Math.round(traces.fdbscan.energyJ);
-const deltaLabel = `${delta < 0 ? "−" : "+"}${Math.abs(delta)}\u00A0J`;
 
 type Layout = {
   W: number;
@@ -76,7 +74,7 @@ const xTicks = [0, 1, 2, 3];
     role="img"
     aria-label={label}
   >
-    {panels.map((p, i) => {
+    {panels.map((p) => {
       const lx = L.above ? L.pad.l : L.W - L.pad.r + 18;
       return (
         <g class="panel">
@@ -100,11 +98,6 @@ const xTicks = [0, 1, 2, 3];
               <tspan class="secs" dx="8">
                 {fmtS(p.durationS)}
               </tspan>
-              {i === 1 && (
-                <tspan class="delta" dx="8">
-                  {deltaLabel}
-                </tspan>
-              )}
             </text>
           ) : (
             <g>
@@ -116,11 +109,6 @@ const xTicks = [0, 1, 2, 3];
               </text>
               <text class="secs" x={lx} y={p.top + 80}>
                 {fmtS(p.durationS)}
-                {i === 1 && (
-                  <tspan class="delta" dx="10">
-                    {deltaLabel}
-                  </tspan>
-                )}
               </text>
             </g>
           )}
@@ -185,11 +173,6 @@ const xTicks = [0, 1, 2, 3];
     letter-spacing: -0.02em;
     fill: var(--accent);
   }
-  .delta {
-    font-family: var(--font-mono);
-    font-weight: 600;
-    fill: var(--accent);
-  }
   .area {
     fill: var(--accent-fill);
   }
@@ -204,8 +187,7 @@ const xTicks = [0, 1, 2, 3];
     font-size: 12px;
   }
   .trace-narrow .name,
-  .trace-narrow .secs,
-  .trace-narrow .delta {
+  .trace-narrow .secs {
     font-size: 13px;
   }
   .trace-narrow .joules {
