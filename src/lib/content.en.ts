@@ -41,7 +41,7 @@ export const en: SiteContent = {
         },
         {
           h: "Where it stands",
-          p: "I wrote the sampling daemon (#300); my ORNL mentor, Jakob Bludau, carried it through review after my stay, and it was merged into kokkos-tools in March 2026. The core (#299) and the NVML and Variorum connectors (#301, #302) are still open, and bringing them to merge is my work this autumn. Nine pull requests to kokkos-tools and LAMMPS in all, three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25, which my apprenticeship schedule did not allow.",
+          p: "I wrote the sampling daemon (#300); my ORNL mentor, Jakob Bludau, carried it through review after my stay, and it was merged into kokkos-tools in March 2026. The core (#299) and the NVML and Variorum connectors (#301, #302) are still open. Nine pull requests to kokkos-tools and LAMMPS in all, three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25, which my apprenticeship schedule did not allow.",
         },
       ],
       links: [
