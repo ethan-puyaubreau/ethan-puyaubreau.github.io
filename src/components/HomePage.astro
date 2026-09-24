@@ -28,7 +28,7 @@ const content = getContent(locale);
 
 // Verifiable references surfaced in the hero (credibility before the argument).
 const proofLinks = links.filter(
-  (l) => l.confirmed && ["ORCID", "GitHub", "LinkedIn"].includes(l.label),
+  (l) => l.confirmed && ["ORCID", "Google Scholar", "GitHub", "LinkedIn"].includes(l.label),
 );
 const heads = ui.sectionHeads;
 const cvHref = locale === "fr" ? "/Ethan-Puyaubreau-CV-FR.pdf" : "/Ethan-Puyaubreau-CV.pdf";

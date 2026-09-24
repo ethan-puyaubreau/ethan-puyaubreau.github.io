@@ -51,8 +51,7 @@ export const links: readonly ExternalLink[] = [
   {
     label: "Google Scholar",
     href: "https://scholar.google.com/citations?user=VH9ZyxYAAAAJ",
-    // Off until the profile stops listing the S4PST report as his own work.
-    confirmed: false,
+    confirmed: true,
   },
 ];
 
