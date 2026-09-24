@@ -36,7 +36,7 @@ export const en: SiteContent = {
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The upstream connectors read power through NVML or Variorum; an AMD path through ROCm SMI is not public yet. energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
+          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The upstream connectors read power through NVML or Variorum; an AMD path through ROCm SMI, not public yet, is the version I ran on Frontier. energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
         },
         {
           h: "Where it stands",
