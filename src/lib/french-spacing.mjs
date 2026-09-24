@@ -1,7 +1,9 @@
 /**
  * French typography: the space before ; ! ? becomes a narrow no-break space,
  * the space before : and inside « » a no-break space, and the one between a
- * number and % likewise, so that punctuation never starts a line.
+ * number and % likewise, so that punctuation never starts a line. Digit
+ * groups are joined by a narrow no-break space (500 000) and the straight
+ * apostrophe between letters becomes a typographic one.
  * Shared by the French data (content, UI, cluster page) and, through the
  * remark plugin below, by the French blog posts.
  */
@@ -13,7 +15,9 @@ export function frenchSpacing(text) {
     .replace(/ :/g, " :")
     .replace(/« /g, "« ")
     .replace(/ »/g, " »")
-    .replace(/(\d) %/g, "$1 %");
+    .replace(/(\d) %/g, "$1 %")
+    .replace(/(\d)[ \u00A0](?=\d{3}(?!\d))/g, "$1\u202F")
+    .replace(/(\p{L})'(?=\p{L})/gu, "$1\u2019");
 }
 
 /**

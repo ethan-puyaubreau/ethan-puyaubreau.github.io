@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { test, expect } from "@playwright/test";
+import { frenchSpacing } from "../src/lib/french-spacing.mjs";
 
 // Smoke tests for the standalone engineer site (ethan-puyaubreau.github.io).
 // Home is at / (+ /fr); the cluster case study at /cluster; the blog at /blog.
@@ -28,15 +29,15 @@ test("home: masthead and the five case studies render", async ({ page }) => {
   await expect(page.locator("#work")).toBeVisible();
   await expect(page.locator("#about")).toBeVisible();
   await expect(page.locator("#contact")).toBeVisible();
-  await expect(page.locator("#work article.case")).toHaveCount(5);
+  await expect(page.locator("#work article.case")).toHaveCount(3);
 });
 
 test("home: the hero draws both measured traces with their energy", async ({ page }) => {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  const chart = page.locator("#top svg.trace");
-  await expect(chart).toBeVisible();
-  await expect(chart.locator(".panel")).toHaveCount(2);
-  await expect(chart.locator(".joules")).toHaveText(["769 J", "569 J"]);
+  const chart = page.locator("#top");
+  await expect(chart.locator("svg.trace-wide")).toBeVisible();
+  await expect(chart.locator(".panel")).toHaveCount(4);
+  await expect(chart.locator(".trace-wide .joules")).toHaveText(["769\u00A0J", "569\u00A0J"]);
 });
 
 test("home FR renders in French and the lang switch points to /fr", async ({ page }) => {
@@ -53,9 +54,9 @@ test("home: every page ships without client-side hydration on the hero", async (
 
 test("CV download link is locale-specific", async ({ page }) => {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.locator('a[href="/Ethan-Puyaubreau-CV.pdf"]')).toBeVisible();
+  await expect(page.locator('#top a[href="/Ethan-Puyaubreau-CV.pdf"]')).toBeVisible();
   await page.goto("/fr", { waitUntil: "domcontentloaded" });
-  await expect(page.locator('a[href="/Ethan-Puyaubreau-CV-FR.pdf"]')).toBeVisible();
+  await expect(page.locator('#top a[href="/Ethan-Puyaubreau-CV-FR.pdf"]')).toBeVisible();
 });
 
 test("no console errors on the home page", async ({ page }) => {
@@ -234,4 +235,10 @@ test("the 404 page points back to home", async ({ page }) => {
   await page.goto("/does-not-exist", { waitUntil: "domcontentloaded" });
   await expect(page.locator('a[href="/"]')).toBeVisible();
   await expect(page).toHaveTitle(/Ethan Puyaubreau/);
+});
+
+test("french typography helper", () => {
+  expect(frenchSpacing("500 000 lignes d'outils : 19 %")).toBe(
+    "500\u202F000 lignes d\u2019outils\u00A0: 19\u00A0%",
+  );
 });
