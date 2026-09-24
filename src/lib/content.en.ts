@@ -16,7 +16,8 @@ export const en: SiteContent = {
     {
       id: "ornl-kokkos",
       image: {
-        src: "/work/smc2025-poster.jpg",
+        src: "/work/smc2025-poster-600.webp",
+        srcset: "/work/smc2025-poster-320.webp 320w, /work/smc2025-poster-600.webp 600w",
         alt: "The SMC 2025 poster, Understanding GPU Energy Dynamics in HPC Applications",
         href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
         width: 600,
@@ -33,10 +34,6 @@ export const en: SiteContent = {
         {
           h: "The problem",
           p: "Kokkos lets one C++ source run across NVIDIA, AMD, and Intel GPUs, which is exactly why energy is hard to reason about: the same kernel draws different power on every backend, and application teams had no portable way to see it. On DOE machines, where power is now a first-class constraint, that blind spot matters.",
-        },
-        {
-          h: "What I built",
-          p: "Kokkos Tools connectors that sample power while kernels run and attribute the energy to the Kokkos regions that caused it: NVML for NVIDIA GPUs, Variorum for the whole node, a background sampling daemon, and CSV export. The analysis side is now kokkos-energy, a single Rust binary that prints a per-region energy table and exports a Perfetto timeline and a standalone HTML report. Application code stays untouched.",
         },
         {
           h: "Where it stands",
@@ -76,15 +73,14 @@ export const en: SiteContent = {
       body: [
         {
           h: "The context",
-          p: "EDF's ASICS group develops the scientific computing that nuclear simulation depends on. Alongside my engineering degree, I spent three years on COCAGNE, a reactor-core simulation platform of more than 500,000 lines of C++, on the performance and tooling that keep a codebase that size measurable.",
+          p: "EDF's ASICS group develops the scientific computing that nuclear simulation depends on. Alongside my engineering degree, I worked on COCAGNE, a reactor-core simulation platform of more than 500,000 lines of C++, on the performance and tooling that keep a codebase that size measurable.",
         },
         {
           h: "What I built",
-          p: "Two internal C++ performance-analysis tools: a memory-profiling library that intercepts allocation through LD_PRELOAD, and a hierarchical CPU-timing tool with Python bindings via PyBind11. I built a prototype of the core computation on a Ports and Components model, validated with those two tools: bit-for-bit identical to the reference, up to 12% faster, with 40% lower peak memory. I also built the Debian packaging pipeline on GitLab CI/CD and Jenkins.",
+          p: "Two internal C++ performance-analysis tools: a memory-profiling library that intercepts allocation through LD_PRELOAD, and a hierarchical CPU-timing tool with Python bindings via PyBind11. With them I validated a prototype of the core computation on a Ports and Components model (results alongside), and I built the Debian packaging pipeline on GitLab CI/CD and Jenkins.",
         },
       ],
-      caveat:
-        "A three-year industrial apprenticeship. The work above is cleared for public mention; the rest stays under confidentiality.",
+      caveat: "The work above is cleared for public mention; the rest stays under confidentiality.",
     },
     {
       id: "homelab",
@@ -98,52 +94,26 @@ export const en: SiteContent = {
       body: [
         {
           h: "The setup",
-          p: "Five Proxmox nodes (edge, apps, aux, core, gpu) behind a VyOS edge over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 self-hosted services: a Gitea forge, a Coolify PaaS, Nextcloud, a media stack, and several of my own projects. The cluster's runbooks and automation are themselves a repo.",
-        },
-        {
-          h: "Why it's here",
-          p: "I am the only person on call: uptime, backups, certificate renewal, monitoring, and the unglamorous failure modes you only meet running your own infrastructure. My self-hosted projects ship to it through a CI/CD pipeline that builds a versioned image, scans it for vulnerabilities, and rolls back automatically on a failed health check.",
+          p: "Five Proxmox nodes (edge, apps, aux, core, gpu) behind a VyOS edge router over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 self-hosted services: a Gitea forge, a Coolify PaaS, Nextcloud, media services, and several of my own projects. My projects ship through a pipeline that builds a versioned image, scans it, and rolls back automatically on a failed health check; I am the only person on call.",
         },
       ],
       links: [{ label: "Explore the cluster", href: "/cluster" }],
     },
-    {
-      id: "endgame",
-      compact: true,
-      kicker: "Opération Endgame",
-      title: "Running an event for 120+ participants",
-      role: "Founder & organizer",
-      period: "Since 2021",
-      stack: ["Project management", "Operations", "Real-time coordination"],
-      summary:
-        "An annual online operation I've run since 2021: planning, real-time coordination, and logistics for 120+ simultaneous participants, 150+ registered for the latest edition.",
-      body: [
-        {
-          h: "Running it",
-          p: "Opération Endgame is the annual event I have designed and run since 2021: four hours, a fixed start time, 120+ participants active at once (150+ registered for the latest edition), split across several coordinated roles for the duration. Briefings, communication channels, the running order, and the fallback plan for a technical failure are all prepared in advance. On the day, the start time does not move.",
-        },
-      ],
-    },
-    {
-      id: "commus",
-      compact: true,
-      kicker: "Community directory",
-      title: "Mapping a community",
-      role: "Full-stack",
-      period: "Ongoing",
-      stack: ["Vue 3", "TypeScript", "Python", "Self-hosted"],
-      summary:
-        "A directory of a French-speaking online community I built and host, with stats and infographics.",
-      body: [
-        {
-          h: "What it is",
-          p: "The directory indexes 57 entries, with filtering, comparison, and a set of infographics: a category breakdown, a timeline, an activity pulse. A Vue front end I host, kept current by a small updater service. It started from a concrete need: knowing who to invite to Opération Endgame.",
-        },
-      ],
-    },
   ],
 
   moreWork: [
+    {
+      name: "Opération Endgame",
+      blurb:
+        "An annual online event I have designed and run since 2021: four hours, a fixed start time, 120+ participants active at once, 150+ registered for the latest edition.",
+      noLinkLabel: "since 2021",
+    },
+    {
+      name: "Community directory",
+      blurb:
+        "A directory of a French-speaking online community that I built and host: 57 entries, filtering, comparison, and infographics.",
+      noLinkLabel: "ongoing",
+    },
     {
       name: "n-body galaxy",
       blurb:

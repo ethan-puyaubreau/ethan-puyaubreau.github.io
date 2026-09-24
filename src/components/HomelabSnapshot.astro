@@ -1,0 +1,86 @@
+---
+// The homelab case study's side panel: a few numbers from the cluster snapshot
+// committed at build time (src/data/cluster-snapshot.json). Static HTML: it is
+// a snapshot, so nothing here pretends to be live.
+import type { HomelabStatusStrings } from "../lib/ui";
+import type { Locale } from "../lib/i18n";
+import snapshot from "../data/cluster-snapshot.json";
+
+interface Props {
+  strings: HomelabStatusStrings;
+  locale: Locale;
+}
+const { strings, locale } = Astro.props;
+const tag = locale === "fr" ? "fr-FR" : "en-US";
+const pct = (v: number) =>
+  new Intl.NumberFormat(tag, { style: "percent", maximumFractionDigits: 1 }).format(v / 100);
+const days = (d: number) =>
+  new Intl.NumberFormat(tag, { style: "unit", unit: "day", unitDisplay: "short" }).format(
+    Math.round(d),
+  );
+const asOf = new Date(snapshot.generatedAt).toLocaleDateString(tag, {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+});
+const c = snapshot.cluster;
+const rows = [
+  { label: strings.nodes, value: `${c.nodesOnline}/${c.nodesTotal}` },
+  { label: strings.guests, value: `${c.guestsRunning}/${c.guestsTotal}` },
+  { label: strings.cpu, value: pct(c.cpuPct) },
+  { label: strings.mem, value: pct(c.memPct) },
+  { label: strings.uptime, value: days(snapshot.uptimeDays) },
+];
+---
+
+<figure class="status">
+  <figcaption class="head">{strings.heading}</figcaption>
+  <dl class="grid">
+    {rows.map((r) => (
+      <div>
+        <dt>{r.label}</dt>
+        <dd>{r.value}</dd>
+      </div>
+    ))}
+  </dl>
+  <p class="caption">
+    {strings.caption}, {strings.asOf} {asOf}.
+  </p>
+</figure>
+
+<style>
+  .status {
+    border: 1px solid var(--line);
+    padding: var(--space-s) var(--space-m) var(--space-m);
+  }
+  .head {
+    font-weight: 600;
+    font-size: var(--step--1);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+    gap: var(--space-s) var(--space-m);
+    margin: var(--space-s) 0 0;
+  }
+  .grid div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+  }
+  .grid dt {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .grid dd {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .caption {
+    margin: var(--space-m) 0 0;
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+</style>

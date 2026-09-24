@@ -19,7 +19,8 @@ export const fr: SiteContent = {
     {
       id: "ornl-kokkos",
       image: {
-        src: "/work/smc2025-poster.jpg",
+        src: "/work/smc2025-poster-600.webp",
+        srcset: "/work/smc2025-poster-320.webp 320w, /work/smc2025-poster-600.webp 600w",
         alt: "Le poster SMC 2025, Understanding GPU Energy Dynamics in HPC Applications",
         href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
         width: 600,
@@ -36,10 +37,6 @@ export const fr: SiteContent = {
         {
           h: "Le problème",
           p: "Kokkos permet de faire tourner une même source C++ sur des GPU NVIDIA, AMD et Intel, et c'est précisément pour cela que l'énergie est difficile à évaluer : le même noyau consomme une puissance différente sur chaque backend, et les équipes applicatives n'avaient aucun moyen portable de la voir. Sur les machines du DOE, où la puissance est désormais une contrainte de premier ordre, cet angle mort compte.",
-        },
-        {
-          h: "Ce que j'ai construit",
-          p: "Des connecteurs Kokkos Tools qui échantillonnent la puissance pendant l'exécution des noyaux et attribuent l'énergie aux régions Kokkos qui l'ont causée : NVML pour les GPU NVIDIA, Variorum pour le nœud entier, un démon d'échantillonnage en arrière-plan et un export CSV. Côté analyse, c'est désormais kokkos-energy, un binaire Rust unique qui affiche un tableau d'énergie par région et exporte une chronologie Perfetto et un rapport HTML autonome. Le code applicatif reste intact.",
         },
         {
           h: "Où ça en est",
@@ -79,20 +76,20 @@ export const fr: SiteContent = {
       body: [
         {
           h: "Le contexte",
-          p: "Le groupe ASICS d'EDF développe le calcul scientifique dont dépend la simulation nucléaire. En parallèle de mon diplôme d'ingénieur, j'ai passé trois ans sur COCAGNE, une plateforme de simulation de cœurs de réacteurs de plus de 500 000 lignes de C++, sur la performance et l'outillage qui gardent un code de cette taille mesurable.",
+          p: "Le groupe ASICS d'EDF développe le calcul scientifique dont dépend la simulation nucléaire. En parallèle de mon diplôme d'ingénieur, j'ai travaillé sur COCAGNE, une plateforme de simulation de cœurs de réacteurs de plus de 500 000 lignes de C++, sur la performance et l'outillage qui gardent un code de cette taille mesurable.",
         },
         {
           h: "Ce que j'ai construit",
-          p: "Deux outils internes d'analyse de performance en C++ : une bibliothèque de profilage mémoire qui intercepte l'allocation via LD_PRELOAD, et un outil de mesure temporelle hiérarchique avec bindings Python via PyBind11. J'ai développé un prototype du calcul de cœur sur un modèle Ports et Composants, validé avec ces deux outils : résultats identiques bit à bit à la référence, jusqu'à 12 % plus rapide, avec 40 % de mémoire en moins au pic. J'ai aussi bâti le pipeline de packaging Debian sur GitLab CI/CD et Jenkins.",
+          p: "Deux outils internes d'analyse de performance en C++ : une bibliothèque de profilage mémoire qui intercepte l'allocation via LD_PRELOAD, et un outil de mesure temporelle hiérarchique avec bindings Python via PyBind11. Avec eux, j'ai validé un prototype du calcul de cœur sur un modèle Ports et Composants (résultats ci-contre), et j'ai bâti le pipeline de packaging Debian sur GitLab CI/CD et Jenkins.",
         },
       ],
       caveat:
-        "Une alternance de trois ans en milieu industriel. Le travail ci-dessus est validé pour une mention publique ; le reste relève de la confidentialité.",
+        "Le travail ci-dessus est validé pour une mention publique ; le reste relève de la confidentialité.",
     },
     {
       id: "homelab",
       kicker: "Homelab auto-hébergé",
-      title: "Exploiter ma propre production",
+      title: "Héberger et exploiter mes propres services",
       role: "Architecte et exploitant",
       period: "En cours",
       stack: ["Proxmox", "Traefik", "Docker", "Coolify", "VyOS / WireGuard"],
@@ -101,52 +98,26 @@ export const fr: SiteContent = {
       body: [
         {
           h: "L'installation",
-          p: "Cinq nœuds Proxmox (edge, apps, aux, core, gpu) derrière une bordure VyOS sur un lien WireGuard. Un seul Traefik termine le TLS Let's Encrypt pour une vingtaine de services auto-hébergés : une forge Gitea, un PaaS Coolify, Nextcloud, une pile média, et plusieurs de mes propres projets. Les runbooks et l'automatisation du cluster sont eux-mêmes un dépôt.",
-        },
-        {
-          h: "Pourquoi ce cluster",
-          p: "Je suis seul d'astreinte : disponibilité, sauvegardes, renouvellement des certificats, supervision, et les modes de défaillance ingrats qu'on ne rencontre qu'en exploitant sa propre infrastructure. Mes projets auto-hébergés y arrivent par une chaîne CI/CD qui construit une image versionnée, la scanne, et fait un rollback automatique si le contrôle de santé échoue.",
+          p: "Cinq nœuds Proxmox (edge, apps, aux, core, gpu) derrière un routeur de bordure VyOS, relié par WireGuard. Un seul Traefik assure la terminaison TLS Let's Encrypt pour une vingtaine de services auto-hébergés : une forge Gitea, un PaaS Coolify, Nextcloud, des services multimédias et plusieurs de mes projets. Mes projets passent en production par un pipeline qui construit une image versionnée, la scanne et revient automatiquement en arrière si le contrôle de santé échoue ; je suis seul d'astreinte.",
         },
       ],
       links: [{ label: "Explorer le cluster", href: "/cluster" }],
     },
-    {
-      id: "endgame",
-      compact: true,
-      kicker: "Opération Endgame",
-      title: "Organiser un événement pour plus de 120 participants",
-      role: "Fondateur et organisateur",
-      period: "Depuis 2021",
-      stack: ["Gestion de projet", "Opérations", "Coordination temps réel"],
-      summary:
-        "Une opération annuelle en ligne que j'organise depuis 2021 : planification, coordination en temps réel et logistique pour plus de 120 participants simultanés, plus de 150 inscrits à la dernière édition.",
-      body: [
-        {
-          h: "L'organiser",
-          p: "L'Opération Endgame est le rendez-vous annuel que je conçois et organise depuis 2021 : quatre heures, une heure de départ fixe, plus de 120 participants actifs en même temps (plus de 150 inscrits à la dernière édition), répartis sur plusieurs rôles coordonnés pour la durée de l'événement. Briefing, canaux de communication, ordre de déroulement et plan de bascule en cas d'incident technique se préparent en amont. Le jour J, l'heure de départ ne bouge pas.",
-        },
-      ],
-    },
-    {
-      id: "commus",
-      compact: true,
-      kicker: "Annuaire communautaire",
-      title: "Cartographier une communauté",
-      role: "Full-stack",
-      period: "En cours",
-      stack: ["Vue 3", "TypeScript", "Python", "Auto-hébergé"],
-      summary:
-        "Un annuaire d'une communauté francophone en ligne que j'ai conçu et que j'héberge, avec des statistiques et des infographies.",
-      body: [
-        {
-          h: "Ce que c'est",
-          p: "L'annuaire recense 57 entrées, avec filtrage, comparaison et un jeu d'infographies : une répartition par catégorie, une chronologie, un pouls d'activité. Un front Vue que j'héberge, tenu à jour par un petit service de mise à jour. Le projet est parti d'un besoin concret : savoir qui inviter à l'Opération Endgame.",
-        },
-      ],
-    },
   ],
 
   moreWork: [
+    {
+      name: "Opération Endgame",
+      blurb:
+        "Un événement annuel en ligne que je conçois et organise depuis 2021 : quatre heures, une heure de départ fixe, plus de 120 participants actifs en même temps, plus de 150 inscrits à la dernière édition.",
+      noLinkLabel: "depuis 2021",
+    },
+    {
+      name: "Annuaire communautaire",
+      blurb:
+        "L'annuaire d'une communauté francophone en ligne, que j'ai conçu et que j'héberge : 57 entrées, filtrage, comparaison et infographies.",
+      noLinkLabel: "en cours",
+    },
     {
       name: "n-body galaxy",
       blurb:

@@ -32,13 +32,13 @@ export interface CaseStudy {
   readonly links?: readonly Link[];
   /** Shown verbatim on the page, an honest caveat, not a placeholder. */
   readonly caveat?: string;
-  /** Short entries show only their context line, title and summary. */
-  readonly compact?: boolean;
   /** Measured results, shown beside the text as figures. */
   readonly figures?: readonly { readonly value: string; readonly label: string }[];
   /** An image beside the text, linked. */
   readonly image?: {
     readonly src: string;
+    /** Width descriptors for the same image; shown at up to 20rem. */
+    readonly srcset?: string;
     readonly alt: string;
     readonly href: string;
     readonly width: number;

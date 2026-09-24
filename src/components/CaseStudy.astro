@@ -10,29 +10,27 @@ const { study, ui } = Astro.props;
 const hasSide = Boolean(study.image || study.figures || Astro.slots.has("artifact"));
 ---
 
-<article id={study.id} class:list={["case", { compact: study.compact, "has-side": hasSide }]}>
+<article id={study.id} class:list={["case", { "has-side": hasSide }]}>
   <div class="case-text">
     <p class="case-meta">
-      <span>{study.kicker}</span>
-      <span>{study.role}</span>
-      <span>{study.period}</span>
+      <span class="org">{study.kicker}</span>
+      <span>
+        {study.role} · {study.period}
+      </span>
     </p>
     <h3 class="case-title">{study.title}</h3>
     <p class="summary">{study.summary}</p>
-    {!study.compact &&
-      study.body.map((b) => (
-        <div class="block">
-          <h4>{b.h}</h4>
-          <p>{b.p}</p>
-        </div>
-      ))}
-    {!study.compact && study.caveat && <p class="caveat">{study.caveat}</p>}
-    {!study.compact && (
-      <p class="stack">
-        <span class="visually-hidden">{ui.stackLabel}: </span>
-        {study.stack.join(" · ")}
-      </p>
-    )}
+    {study.body.map((b) => (
+      <div class="block">
+        <h4>{b.h}</h4>
+        <p>{b.p}</p>
+      </div>
+    ))}
+    {study.caveat && <p class="caveat">{study.caveat}</p>}
+    <p class="stack">
+      <span class="visually-hidden">{ui.stackLabel} </span>
+      {study.stack.join(" · ")}
+    </p>
     {study.links && study.links.length > 0 && (
       <ul class="links">
         {study.links.map((l) => (
@@ -56,6 +54,8 @@ const hasSide = Boolean(study.image || study.figures || Astro.slots.has("artifac
         <a class="case-image" href={study.image.href}>
           <img
             src={study.image.src}
+            srcset={study.image.srcset}
+            sizes="(max-width: 22rem) 100vw, 20rem"
             alt={study.image.alt}
             width={study.image.width}
             height={study.image.height}
@@ -96,44 +96,25 @@ const hasSide = Boolean(study.image || study.figures || Astro.slots.has("artifac
       align-items: start;
     }
   }
-  .case.compact {
-    padding-block: var(--space-l);
-  }
   .case-meta {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     font-size: var(--step--1);
     color: var(--muted);
   }
-  .case-meta span + span::before {
-    content: "·";
-    margin-inline: 0.55rem;
-    color: var(--faint);
-  }
-  @media (max-width: 600px) {
-    .case-meta {
-      flex-direction: column;
-    }
-    .case-meta span + span::before {
-      content: none;
-    }
+  .case-meta .org {
+    color: var(--ink-dim);
+    font-weight: 600;
   }
   .case-title {
     margin-top: var(--space-xs);
     font-size: var(--step-3);
-  }
-  .compact .case-title {
-    font-size: var(--step-2);
   }
   .summary {
     margin-top: var(--space-s);
     font-size: var(--step-1);
     line-height: 1.5;
     color: var(--ink);
-  }
-  .compact .summary {
-    font-size: var(--step-0);
-    color: var(--ink-dim);
   }
   .block {
     margin-top: var(--space-m);
@@ -154,8 +135,7 @@ const hasSide = Boolean(study.image || study.figures || Astro.slots.has("artifac
   }
   .stack {
     margin-top: var(--space-m);
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     color: var(--muted);
   }
   .links {
@@ -174,6 +154,12 @@ const hasSide = Boolean(study.image || study.figures || Astro.slots.has("artifac
   }
   .links a:hover {
     text-decoration-color: currentColor;
+  }
+  @media (pointer: coarse) {
+    .links a {
+      display: inline-block;
+      padding-block: 0.6rem;
+    }
   }
 
   .case-side {

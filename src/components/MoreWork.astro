@@ -15,14 +15,16 @@ const { items, head, label } = Astro.props;
     {items.map((item) => (
       <li>
         <span class="name">{item.name}</span>
-        <span class="blurb">{item.blurb}</span>
-        {item.href ? (
-          <a href={item.href} rel="noopener" target="_blank">
-            {item.hrefLabel}
-          </a>
-        ) : (
-          <span class="soon">{item.noLinkLabel}</span>
-        )}
+        <p class="blurb">
+          {item.blurb}{" "}
+          {item.href ? (
+            <a href={item.href} rel="noopener" target="_blank">
+              {item.hrefLabel}
+            </a>
+          ) : (
+            <span class="soon">({item.noLinkLabel})</span>
+          )}
+        </p>
       </li>
     ))}
   </ul>
@@ -45,7 +47,7 @@ const { items, head, label } = Astro.props;
   }
   li {
     display: grid;
-    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
     gap: clamp(0.75rem, 3vw, 2rem);
     align-items: baseline;
     padding-block: var(--space-s);
@@ -60,8 +62,7 @@ const { items, head, label } = Astro.props;
   }
   .blurb {
     color: var(--ink-dim);
-    font-size: var(--step--1);
-    max-width: 56ch;
+    max-width: 62ch;
   }
   a {
     font-size: var(--step--1);
