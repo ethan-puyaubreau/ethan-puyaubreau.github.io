@@ -1,6 +1,6 @@
 ---
 title: "Tearing the GPU node down from Proxmox to bare Debian"
-description: "The GPU node ran Proxmox. I wiped it for bare Debian 13 so the GPU would answer to one machine instead of a hypervisor, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that bit me was Secure Boot."
+description: "The GPU node ran Proxmox. I wiped it for bare Debian 13 so the GPU would sit directly under the host kernel, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that caught me was Secure Boot."
 pubDate: 2026-06-18
 updatedDate: 2026-09-23
 lang: en
@@ -8,17 +8,17 @@ slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 ---
 
-<p>The GPU node in my homelab is a single-socket Xeon workstation that for a year ran Proxmox like the rest of the cluster. Last week I wiped it and reinstalled bare Debian 13 (Trixie), because the one job I actually want from that box, running CUDA workloads against its GPU, is the one job a hypervisor makes harder rather than easier. The reinstall took twenty minutes. Getting the driver to load took the rest of the evening, almost all of it on a single thing nobody warns you about: Secure Boot silently refusing an unsigned module.</p>
+<p>The GPU node in my homelab is a single-socket Xeon workstation that for a year ran Proxmox like the rest of the cluster. In June I wiped it and reinstalled bare Debian 13 (Trixie), because the one job I actually want from that box, running CUDA workloads against its GPU, is the one job a hypervisor makes harder. The reinstall took twenty minutes. Getting the driver to load took the rest of the evening, almost all of it on a single thing nobody warns you about: Secure Boot silently refusing a module signed with a key it did not know.</p>
 
 <p>The order of operations that actually works on Trixie is only a few steps, one of which is easy to miss.</p>
 
-<p><em>Update, September 2026: the node has since rejoined the Proxmox cluster, where it runs the media stack, the Kubernetes VM, and local LLM inference. Proxmox VE 9 is built on Debian 13, so the driver steps below apply unchanged on the host.</em></p>
+<p><em>Update, September 2026: the node has since rejoined the Proxmox cluster, where it runs the media services, the Kubernetes VM, and local LLM inference. The NVIDIA driver now lives on the Proxmox host itself, so there is still no VFIO passthrough involved. Proxmox VE 9 is built on Debian 13, so the steps below carry over to the host with one change: install the Proxmox kernel headers (<code>proxmox-default-headers</code>) instead of <code>linux-headers-amd64</code>.</em></p>
 
 <h2>Why a hypervisor was the wrong layer here</h2>
 
-<p>Proxmox earns its place when you are consolidating many guests onto one machine. GPU compute is the opposite shape. To give a virtual machine a real GPU you go through VFIO passthrough, the mechanism that detaches a device from the host and hands it to a guest. That means sorting out IOMMU groups, the device blocks the hardware refuses to separate, blacklisting the host from ever binding the card, then handing the whole device to exactly one guest. You end up talking to your GPU through a virtual machine, the card can only ever belong to one VM at a time anyway, and you are carrying all of that machinery for a node that does precisely one thing.</p>
+<p>Proxmox earns its place when you are consolidating many guests onto one machine. GPU compute is the opposite case. To give a virtual machine a real GPU you go through VFIO passthrough, the mechanism that detaches a device from the host and hands it to a guest. That means sorting out IOMMU groups, the device blocks the hardware refuses to separate, keeping the host's drivers off the card, then handing the whole device to exactly one guest. You end up talking to your GPU through a virtual machine, the card can only ever belong to one VM at a time anyway, and you are carrying all of that machinery for a node that does precisely one thing.</p>
 
-<p>A box whose entire purpose is one GPU does not need a hypervisor sitting between me and <code>nvidia-smi</code>. Remove the layer and the card is back on bare metal, with the passthrough tax gone along with it.</p>
+<p>A box that exists only to run one GPU does not need a hypervisor sitting between me and <code>nvidia-smi</code>. Remove the layer and the card is back on bare metal, with the passthrough tax gone along with it.</p>
 
 <figure>
 <svg viewBox="0 0 720 340" role="img" aria-label="Two software stacks compared. The Proxmox stack has five layers with VFIO passthrough as friction; the bare Debian stack has four layers with the GPU directly under the kernel." xmlns="http://www.w3.org/2000/svg">
@@ -61,7 +61,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 
 <h2>Keeping nouveau off the card</h2>
 
-<p>Debian ships <code>nouveau</code>, the open-source driver, and loads it at boot. The proprietary module will not bind while nouveau is holding the card. The <code>nvidia-driver</code> package installs its own blacklist for it, so the file below is belt and braces; the step that matters is rebuilding the initramfs, so nouveau stays out from early boot rather than after the kernel has already claimed the GPU.</p>
+<p>Debian ships <code>nouveau</code>, the open-source driver, and loads it at boot. The proprietary module will not bind while nouveau is holding the card. The <code>nvidia-driver</code> package installs its own blacklist for it, so the file below is belt and braces; the step that matters is rebuilding the initramfs, so the blacklist is already in place in early boot, before nouveau can load from the initramfs and claim the GPU.</p>
 
 <pre><code># /etc/modprobe.d/blacklist-nouveau.conf
 blacklist nouveau
@@ -72,13 +72,13 @@ sudo update-initramfs -u</code></pre>
 
 <h2>The driver itself: let DKMS do the building</h2>
 
-<p>Trixie keeps the NVIDIA driver in the <code>non-free</code> component and its firmware in <code>non-free-firmware</code>, so the sources have to be widened before any of it is installable. Then you install the kernel headers and the driver package, and Debian uses DKMS, the mechanism that rebuilds kernel modules on every upgrade, to compile the module against your running kernel. Hence the packaged driver rather than the <code>.run</code> installer: DKMS rebuilds the module automatically on the next kernel upgrade, so an <code>apt upgrade</code> does not quietly leave you with a black screen.</p>
+<p>Trixie keeps the NVIDIA driver in the <code>non-free</code> component and its firmware in <code>non-free-firmware</code>, so the sources have to be widened before any of it is installable. Then you install the kernel headers and the driver package, and DKMS compiles the module against your running kernel. That is the reason to use the packaged driver instead of the <code>.run</code> installer: DKMS rebuilds the module on every kernel upgrade, so an <code>apt upgrade</code> does not quietly leave you with a black screen.</p>
 
 <pre><code># add  contrib non-free non-free-firmware  to your apt sources, then:
 sudo apt update
 sudo apt install linux-headers-amd64 nvidia-driver</code></pre>
 
-<h2>Secure Boot: why nvidia-smi lied to me</h2>
+<h2>Secure Boot: why nvidia-smi could not see the driver</h2>
 
 <p>After the reboot I ran <code>nvidia-smi</code> and got this:</p>
 
@@ -87,13 +87,13 @@ NVIDIA-SMI has failed because it couldn't communicate with the
 NVIDIA driver. Make sure that the latest NVIDIA driver is installed
 and running.</code></pre>
 
-<p>The card was fine and the module had built without complaint. The kernel was simply refusing to load it, because Secure Boot was on and a DKMS-built module is unsigned. There are two ways out. You can turn Secure Boot off in firmware, or you can enroll a Machine Owner Key, sign the module with it, and keep the chain of trust intact. I kept Secure Boot and enrolled a key, which is a one-time step in the firmware on the next reboot.</p>
+<p>The card was fine and the module had built without complaint. The kernel was simply refusing to load it, because Secure Boot was on and DKMS had signed the module with a local key the firmware did not trust yet. There are two ways out. You can turn Secure Boot off in firmware, or enroll that key as a Machine Owner Key and keep the chain of trust intact. I kept Secure Boot and enrolled the key, a one-time step in the MOK manager on the next boot. Nothing in the install itself fails loudly; you only find out at <code>nvidia-smi</code>.</p>
 
 <pre><code># enroll the DKMS signing key, set a one-time password, then reboot
 sudo mokutil --import /var/lib/dkms/mok.pub
 # at the blue MOK manager on reboot: Enroll MOK, enter the password, reboot</code></pre>
 
-<p>After that, <code>nvidia-smi</code> came up clean with the card and driver version. Nothing in the install fails loudly when that step is skipped.</p>
+<p>After that, <code>nvidia-smi</code> came up clean with the card and driver version.</p>
 
 <figure>
 <svg viewBox="0 0 720 560" role="img" aria-label="A vertical flowchart of the driver install: add sources, blacklist nouveau, install headers and driver via DKMS, then a Secure Boot decision that either enrolls a MOK or proceeds straight to reboot, ending at a working nvidia-smi." xmlns="http://www.w3.org/2000/svg">
@@ -115,8 +115,8 @@ sudo mokutil --import /var/lib/dkms/mok.pub
   <polygon points="300,258 382,300 300,342 218,300" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
   <text x="300" y="304" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620">Secure Boot on?</text>
   <rect x="475" y="274" width="206" height="52" rx="8" fill="#f6ead2" stroke="#c8821e" stroke-width="1.4"/>
-  <text x="578" y="296" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12.5" fill="#7a4e10">enroll a MOK, sign the module</text>
-  <text x="578" y="313" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" font-style="italic" fill="#9a6a1e">the step that bites you</text>
+  <text x="578" y="296" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12.5" fill="#7a4e10">enroll the DKMS key (MOK)</text>
+  <text x="578" y="313" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" font-style="italic" fill="#9a6a1e">the easy step to miss</text>
   <rect x="190" y="400" width="220" height="48" rx="8" fill="#faf7f0" stroke="#2b2620" stroke-width="1.3"/>
   <text x="300" y="429" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#2b2620">reboot</text>
   <rect x="120" y="476" width="360" height="48" rx="8" fill="#e7efe0" stroke="#5f8a3a" stroke-width="1.4"/>
@@ -138,6 +138,6 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 
 <h2>What I got back</h2>
 
-<p>A bare <code>nvidia-smi</code>, the full card with no virtual machine in the way, and a node that runs my CUDA and Kokkos builds straight against the hardware instead of through a guest. The rest of the cluster is still Proxmox: those nodes are doing the consolidation job Proxmox is good at. This node was not doing that job.</p>
+<p><code>nvidia-smi</code> on bare metal, the full card with no virtual machine in the way, and a node that runs my CUDA and Kokkos builds straight against the hardware instead of through a guest. The rest of the cluster is still Proxmox: those nodes are doing the consolidation job Proxmox is good at. This node was not doing that job.</p>
 
 <p>Keeping one bare-metal node beside a Proxmox cluster was awkward on the monitoring side: it had to be watched on its own, outside the tools that cover every other node. The node has since gone back to Proxmox (see the update at the top).</p>
