@@ -40,7 +40,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Comment c'est construit",
-          p: "Les outils se branchent à l'exécution par l'interface Kokkos Tools : une application se mesure telle quelle, sans recompilation ni correctif. Les connecteurs soumis en amont lisent la puissance NVIDIA via NVML, ou celle de tout constructeur pris en charge par Variorum ; j'ai aussi écrit une version AMD via ROCm SMI, pas encore publiée. L'outil d'analyse, energy-dashboard-for-kokkos, réécrit en 2026 sous la forme d'un binaire Rust unique, a un format de trace documenté, des tests unitaires et un test sur une trace GPU réelle, et des versions construites par la CI.",
+          p: "Les outils se branchent à l'exécution par l'interface Kokkos Tools : une application se mesure telle quelle, sans recompilation ni correctif. Les connecteurs soumis en amont lisent la puissance NVIDIA via NVML, ou celle de tout constructeur pris en charge par Variorum ; j'ai aussi écrit une version AMD via ROCm SMI, pas encore publiée. L'outil d'analyse, energy-dashboard-for-kokkos, réécrit en 2026 sous la forme d'un binaire Rust unique, a un format de trace documenté, des tests unitaires et un test sur une trace GPU réelle, et des versions construites par la CI. Les traces et le script derrière les chiffres DBSCAN sont publics, et une tâche de CI les recalcule.",
         },
         {
           h: "Où ça en est",

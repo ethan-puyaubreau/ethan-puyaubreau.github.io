@@ -37,7 +37,7 @@ export const en: SiteContent = {
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through the Kokkos Tools interface, so an application is measured as it is, without a rebuild or a patch. The upstream connectors read NVIDIA power through NVML or any vendor Variorum supports; I also wrote an AMD path through ROCm SMI that is not public yet. The analysis tool, energy-dashboard-for-kokkos, rewritten in 2026 as a single Rust binary, has a documented trace format, unit tests plus a test on a real GPU trace, and releases built by CI.",
+          p: "The tools attach at run time through the Kokkos Tools interface, so an application is measured as it is, without a rebuild or a patch. The upstream connectors read NVIDIA power through NVML or any vendor Variorum supports; I also wrote an AMD path through ROCm SMI that is not public yet. The analysis tool, energy-dashboard-for-kokkos, rewritten in 2026 as a single Rust binary, has a documented trace format, unit tests plus a test on a real GPU trace, and releases built by CI. The traces and the script behind the DBSCAN figures are public, and a CI job recomputes them.",
         },
         {
           h: "Where it stands",
