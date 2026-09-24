@@ -83,8 +83,7 @@ export const fr: SiteContent = {
           p: "Deux outils internes d'analyse de performance en C++ : une bibliothèque de profilage mémoire qui intercepte l'allocation via LD_PRELOAD, et un outil de mesure temporelle hiérarchique avec bindings Python via PyBind11. Avec eux, j'ai validé un prototype du calcul de cœur sur un modèle Ports et Composants (résultats ci-contre), et j'ai bâti le pipeline de packaging Debian sur GitLab CI/CD et Jenkins.",
         },
       ],
-      caveat:
-        "Le travail ci-dessus est validé pour une mention publique ; le reste relève de la confidentialité.",
+      caveat: "Seul le travail ci-dessus peut être cité publiquement ; le reste est confidentiel.",
     },
     {
       id: "homelab",
@@ -121,14 +120,14 @@ export const fr: SiteContent = {
     {
       name: "n-body galaxy",
       blurb:
-        "Une galaxie jusqu'à 65 536 corps en gravité mutuelle, intégrés en direct dans des compute shaders WebGPU. Un projet personnel.",
+        "Jusqu'à 65 536 corps en interaction gravitationnelle, intégrés en temps réel dans des compute shaders WebGPU. Un projet personnel.",
       href: "https://ethan-puyaubreau.github.io/nbody-webgpu/",
       hrefLabel: "En ligne",
     },
     {
       name: "isochrone-app",
       blurb:
-        "Un explorateur d'isochrones hors ligne enveloppant un moteur de routage Valhalla auto-hébergé, livré sur desktop et web.",
+        "Un explorateur d'isochrones hors ligne, construit autour d'un moteur de routage Valhalla auto-hébergé, disponible en application de bureau et sur le web.",
       href: "https://github.com/ethan-puyaubreau/isochrone-app",
       hrefLabel: "GitHub",
     },

@@ -37,13 +37,19 @@ export function withFrenchSpacing(value) {
   return value;
 }
 
-// In raw HTML, only the text between tags is touched: never a tag, an
-// attribute, or the inside of <pre>, <code>, <script> or <style>.
+// In raw HTML, only prose is touched: the text between tags and the alt,
+// aria-label and title attributes; never markup, other attributes, or the
+// inside of <pre>, <code>, <script> or <style>.
 const HTML_TOKEN = /<(pre|code|script|style)\b[\s\S]*?<\/\1>|<[^>]+>|[^<]+/gi;
+const PROSE_ATTR = /\b(alt|aria-label|title)="([^"]*)"/g;
 
 /** @param {string} html */
 function spaceHtml(html) {
-  return html.replace(HTML_TOKEN, (m) => (m.startsWith("<") ? m : frenchSpacing(m)));
+  return html.replace(HTML_TOKEN, (m) => {
+    if (!m.startsWith("<")) return frenchSpacing(m);
+    if (/^<(pre|code|script|style)\b/i.test(m)) return m;
+    return m.replace(PROSE_ATTR, (_, name, value) => `${name}="${frenchSpacing(value)}"`);
+  });
 }
 
 /** Remark plugin: French spacing for posts under content/blog/fr/. */
