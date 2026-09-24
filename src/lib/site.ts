@@ -23,12 +23,12 @@ export interface SiteCopy {
 
 const SITE_COPY: Record<Locale, SiteCopy> = {
   en: {
-    role: "High-performance computing & infrastructure engineer",
-    positioning: "From the GPU kernel to the cluster in production.",
+    role: "Research software engineer, HPC",
+    positioning: "Research software that makes scientific computing measurable.",
   },
   fr: {
-    role: "Ingénieur calcul haute performance et infrastructure",
-    positioning: "Du calcul GPU au cluster en production.",
+    role: "Ingénieur logiciel pour la recherche, HPC",
+    positioning: "Du logiciel de recherche qui rend le calcul scientifique mesurable.",
   },
 };
 

@@ -231,7 +231,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     talk: {
       head: "Everything here, I built and run myself",
-      body: "The GPU work, the cluster, the CI/CD. I am open to HPC and infrastructure roles from January 2027.",
+      body: "The GPU work, the cluster, the CI/CD. I am open to research software engineer roles from January 2027.",
       cta: "Get in touch",
     },
     stackHead: {
@@ -342,7 +342,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     talk: {
       head: "Tout ce qui est ici, je l'ai construit et je l'exploite",
-      body: "Le travail GPU, le cluster, la CI/CD. Je suis ouvert à des postes HPC et infrastructure à partir de janvier 2027.",
+      body: "Le travail GPU, le cluster, la CI/CD. Je suis ouvert aux postes d'ingénieur logiciel pour la recherche à partir de janvier 2027.",
       cta: "Me contacter",
     },
     stackHead: {

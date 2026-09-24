@@ -30,7 +30,7 @@ const ui = getUI("en");
         </p>
         <h1>{ui.hero.title}</h1>
         <p class="role">
-          {copy.role} · {site.url.replace("https://", "")}
+          {copy.role} · <span class="url">{site.url.replace("https://", "")}</span>
         </p>
       </div>
       <div class="chart">
@@ -72,6 +72,9 @@ const ui = getUI("en");
         line-height: 1.04;
         font-weight: 650;
         letter-spacing: -0.03em;
+      }
+      .url {
+        white-space: nowrap;
       }
       .role {
         margin: 28px 0 0;

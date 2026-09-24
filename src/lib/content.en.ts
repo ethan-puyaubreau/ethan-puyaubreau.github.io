@@ -27,17 +27,21 @@ export const en: SiteContent = {
       title: "Measuring where the energy goes on the GPU",
       role: "Graduate Research Fellow (GRO program)",
       period: "Summer 2025",
-      stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Rust"],
+      stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, NVML and Variorum connectors open upstream, and kokkos-energy, a command-line analysis tool.",
+        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, vendor connectors open upstream and tested on Frontier, and energy-dashboard-for-kokkos, an open-source analysis tool.",
       body: [
         {
           h: "The problem",
           p: "Kokkos lets one C++ source run across NVIDIA, AMD, and Intel GPUs, which is exactly why energy is hard to reason about: the same kernel draws different power on every backend, and application teams had no portable way to see it. On DOE machines, where power is now a first-class constraint, that blind spot matters.",
         },
         {
+          h: "How it is built",
+          p: "The tools attach at run time through the Kokkos Tools interface, so an application is measured as it is, without a rebuild or a patch. The connectors read NVIDIA power through NVML, AMD power through ROCm SMI, or any vendor Variorum supports. The analysis tool, energy-dashboard-for-kokkos, is a single Rust binary with a documented trace format, tests on real traces, and versioned releases.",
+        },
+        {
           h: "Where it stands",
-          p: "The sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302). Nine pull requests to kokkos-tools and LAMMPS in all, three merged. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, cited in the S4PST 2024–2025 project report.",
+          p: "The sampling daemon is merged into kokkos-tools (#300); the core, NVML and Variorum connectors are open upstream (#299, #301, #302) and still in review with the maintainers in 2026. Nine pull requests to kokkos-tools and LAMMPS in all, three merged. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25.",
         },
       ],
       links: [
@@ -46,7 +50,7 @@ export const en: SiteContent = {
           href: "https://github.com/kokkos/kokkos-tools/pull/300",
         },
         {
-          label: "kokkos-energy",
+          label: "energy-dashboard-for-kokkos",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
         {
@@ -64,20 +68,20 @@ export const en: SiteContent = {
         { value: "−40%", label: "peak memory" },
       ],
       kicker: "EDF Lab Paris-Saclay · ASICS group",
-      title: "HPC for nuclear simulation",
+      title: "Making a nuclear simulation code measurable",
       role: "Apprentice engineer",
       period: "2023 to 2026",
-      stack: ["C++17", "Python", "CMake", "PostgreSQL", "Scibian 10/11"],
+      stack: ["C++17", "Python", "PyBind11", "CMake", "GitLab CI/CD", "Jenkins", "Sphinx"],
       summary:
-        "A three-year apprenticeship building C++ performance tooling for COCAGNE, EDF's reactor-core simulation platform: a scientific codebase of more than 500,000 lines.",
+        "A three-year apprenticeship on COCAGNE, EDF's reactor-core simulation platform of more than 500,000 lines of C++: the tools that measure its performance, a prototype of its next architecture, and the pipeline that packages it.",
       body: [
         {
           h: "The context",
-          p: "EDF's ASICS group develops the scientific computing that nuclear simulation depends on. Alongside my engineering degree, I worked on COCAGNE, a reactor-core simulation platform of more than 500,000 lines of C++, on the performance and tooling that keep a codebase that size measurable.",
+          p: "EDF's ASICS group develops the scientific computing behind nuclear simulation. I worked inside the team that develops the platform: weekly group meetings, code reviews given and received through GitLab merge requests, and five internal technical notes.",
         },
         {
           h: "What I built",
-          p: "Two internal C++ performance-analysis tools: a memory-profiling library that intercepts allocation through LD_PRELOAD, and a hierarchical CPU-timing tool with Python bindings via PyBind11. With them I validated a prototype of the core computation on a Ports and Components model (results alongside), and I built the Debian packaging pipeline on GitLab CI/CD and Jenkins.",
+          p: "Two C++ performance-analysis tools: a memory profiler that intercepts allocation through LD_PRELOAD, and a hierarchical timer with Python bindings (PyBind11) that loads at run time, so production builds stay untouched. With them I benchmarked the prototype I developed for a new modular architecture of the core computation (Ports and Components); the three figures in this section are its results. I also built the Debian packaging pipeline on GitLab CI/CD and Jenkins, and documented the tools in Sphinx so the team can keep using them.",
         },
       ],
       caveat: "The work above is cleared for public mention; the rest stays under confidentiality.",
@@ -87,14 +91,24 @@ export const en: SiteContent = {
       kicker: "Homelab, self-hosted",
       title: "Running my own production",
       role: "Architect & operator",
-      period: "Ongoing",
-      stack: ["Proxmox", "Traefik", "Docker", "Coolify", "VyOS / WireGuard"],
+      period: "Since 2020",
+      stack: [
+        "Proxmox",
+        "Docker",
+        "Traefik",
+        "Gitea / Coolify",
+        "GitLab CI",
+        "K3s",
+        "Ceph",
+        "Ansible",
+        "VyOS",
+      ],
       summary:
-        "A five-node Proxmox cluster hosting around 20 publicly reachable services on hardware I run and automate myself.",
+        "A five-node Proxmox cluster hosting around 20 services for about 60 regular users, on hardware I run and automate myself.",
       body: [
         {
           h: "The setup",
-          p: "Five Proxmox nodes (edge, apps, aux, core, gpu) behind a VyOS edge router over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 self-hosted services: a Gitea forge, a Coolify PaaS, Nextcloud, media services, and several of my own projects. My projects ship through a pipeline that builds a versioned image, scans it, and rolls back automatically on a failed health check; I am the only person on call.",
+          p: "Five Proxmox nodes behind a VyOS edge router over a WireGuard uplink. One Traefik terminates Let's Encrypt TLS for around 20 services: a Gitea forge with its own CI, a Coolify PaaS, Nextcloud, media services, and my own projects. Over five years the cluster has also run GitLab CI/CD, K3s, Ceph storage, and Ansible automation. My projects ship through a pipeline that builds a versioned image, scans it, and rolls back automatically on a failed health check; I am the only person on call.",
         },
       ],
       links: [{ label: "Explore the cluster", href: "/cluster" }],
@@ -103,15 +117,15 @@ export const en: SiteContent = {
 
   moreWork: [
     {
-      name: "Opération Endgame",
+      name: "DCS World events",
       blurb:
-        "An annual online event I have designed and run since 2021: four hours, a fixed start time, 120+ participants active at once, 150+ registered for the latest edition.",
+        "Large multiplayer events in the flight simulator DCS World, designed and run since 2021: 150 to 180+ participants, a volunteer staff of four to five that grows to about twelve for the finals, and a written debrief after every event.",
       noLinkLabel: "since 2021",
     },
     {
       name: "Community directory",
       blurb:
-        "A directory of a French-speaking online community that I built and host: 57 entries, filtering, comparison, and infographics.",
+        "A directory of French-speaking DCS World communities that I built and host: 57 entries, filtering, comparison, infographics, and a public API.",
       noLinkLabel: "ongoing",
     },
     {
@@ -131,13 +145,13 @@ export const en: SiteContent = {
     {
       name: "vireli",
       blurb:
-        "A gamified carbon-footprint PWA for an industry partner. I led the team of six: architecture, backend, and deployment.",
+        "A gamified carbon-footprint PWA built with an industry partner. I led the team of six (554 hours in all) and owned the architecture, backend, and deployment; all 18 requirements were delivered.",
       noLinkLabel: "in maintenance",
     },
   ],
 
   about: [
-    "I work on two tracks: the GPU and performance work that makes scientific code fast, and the infrastructure that puts software into production and keeps it there. I am graduating from Polytech Paris-Saclay (engineering degree, September 2026) and looking for a permanent role from January 2027: HPC labs, in the Bay Area as in Paris, or infrastructure, DevOps, SRE and platform teams; ideally a role that touches both.",
+    "I write research software for high-performance computing: tools that make scientific codes measurable, and the engineering around them (tests, packaging, CI/CD, releases, documentation) that lets other people rely on them. I graduate from Polytech Paris-Saclay in September 2026 with an engineering degree, equivalent to an M.Eng., and I am looking for a research software engineer role from January 2027, at a national lab, a university, or a research institute, in the US or in France.",
   ],
 
   timeline: [
@@ -151,10 +165,11 @@ export const en: SiteContent = {
   ],
 
   availability: {
-    headline: "Open to HPC, infrastructure & DevOps roles from January 2027",
-    detail: "For HPC labs or infrastructure and platform teams, in the Bay Area or Paris.",
+    headline: "Open to research software engineer roles from January 2027",
+    detail:
+      "HPC and scientific computing, at a national lab, a university, or a research institute, in the US or in France.",
     cta: "The fastest way to reach me",
     contactLabel: "Get in touch",
-    mailSubject: "HPC / infrastructure role: getting in touch (available Jan 2027)",
+    mailSubject: "Research software engineer role: getting in touch (available Jan 2027)",
   },
 };

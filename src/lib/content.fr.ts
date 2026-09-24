@@ -30,17 +30,21 @@ export const fr: SiteContent = {
       title: "Mesurer où part l'énergie sur le GPU",
       role: "Graduate Research Fellow (programme GRO)",
       period: "Été 2025",
-      stack: ["C++", "Kokkos", "CUDA", "NVML", "Variorum", "Rust"],
+      stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Outillage de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs NVML et Variorum proposés en amont, et kokkos-energy, un outil d'analyse en ligne de commande.",
+        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage intégré à Kokkos Tools, des connecteurs constructeurs proposés en amont et testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source.",
       body: [
         {
           h: "Le problème",
           p: "Kokkos permet de faire tourner une même source C++ sur des GPU NVIDIA, AMD et Intel, et c'est précisément pour cela que l'énergie est difficile à évaluer : le même noyau consomme une puissance différente sur chaque backend, et les équipes applicatives n'avaient aucun moyen portable de la voir. Sur les machines du DOE, où la puissance est désormais une contrainte de premier ordre, cet angle mort compte.",
         },
         {
+          h: "Comment c'est construit",
+          p: "Les outils se branchent à l'exécution par l'interface Kokkos Tools : une application se mesure telle quelle, sans recompilation ni correctif. Les connecteurs lisent la puissance NVIDIA via NVML, la puissance AMD via ROCm SMI, ou celle de tout constructeur pris en charge par Variorum. L'outil d'analyse, energy-dashboard-for-kokkos, est un binaire Rust unique, avec un format de trace documenté, des tests sur des traces réelles et des versions publiées.",
+        },
+        {
           h: "Où ça en est",
-          p: "Le démon d'échantillonnage est intégré à kokkos-tools (#300) ; le cœur et les connecteurs NVML et Variorum sont proposés en amont (#299, #301, #302). Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025.",
+          p: "Le démon d'échantillonnage est intégré à kokkos-tools (#300) ; le cœur et les connecteurs NVML et Variorum sont proposés en amont (#299, #301, #302) et toujours en revue avec les mainteneurs en 2026. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont trois intégrées. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, cités dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25.",
         },
       ],
       links: [
@@ -49,7 +53,7 @@ export const fr: SiteContent = {
           href: "https://github.com/kokkos/kokkos-tools/pull/300",
         },
         {
-          label: "kokkos-energy",
+          label: "energy-dashboard-for-kokkos",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
         {
@@ -67,20 +71,20 @@ export const fr: SiteContent = {
         { value: "−40 %", label: "mémoire au pic" },
       ],
       kicker: "EDF Lab Paris-Saclay · groupe ASICS",
-      title: "HPC pour la simulation nucléaire",
+      title: "Rendre mesurable un code de simulation nucléaire",
       role: "Apprenti ingénieur",
       period: "2023 à 2026",
-      stack: ["C++17", "Python", "CMake", "PostgreSQL", "Scibian 10/11"],
+      stack: ["C++17", "Python", "PyBind11", "CMake", "GitLab CI/CD", "Jenkins", "Sphinx"],
       summary:
-        "Une alternance de trois ans à construire l'outillage de performance C++ de COCAGNE, la plateforme de simulation de cœurs de réacteurs d'EDF : un code scientifique de plus de 500 000 lignes.",
+        "Une alternance de trois ans sur COCAGNE, la plateforme de simulation de cœurs de réacteurs d'EDF, plus de 500 000 lignes de C++ : les outils qui mesurent ses performances, un prototype de sa future architecture et le pipeline qui la package.",
       body: [
         {
           h: "Le contexte",
-          p: "Le groupe ASICS d'EDF développe le calcul scientifique dont dépend la simulation nucléaire. En parallèle de mon diplôme d'ingénieur, j'ai travaillé sur COCAGNE, une plateforme de simulation de cœurs de réacteurs de plus de 500 000 lignes de C++, sur la performance et l'outillage qui gardent un code de cette taille mesurable.",
+          p: "Le groupe ASICS d'EDF développe le calcul scientifique dont dépend la simulation nucléaire. J'ai travaillé au sein de l'équipe qui développe la plateforme : réunion de groupe hebdomadaire, revues de code données et reçues via les merge requests GitLab, et cinq notes techniques internes.",
         },
         {
           h: "Ce que j'ai construit",
-          p: "Deux outils internes d'analyse de performance en C++ : une bibliothèque de profilage mémoire qui intercepte l'allocation via LD_PRELOAD, et un outil de mesure temporelle hiérarchique avec bindings Python via PyBind11. Avec eux, j'ai validé un prototype du calcul de cœur sur un modèle Ports et Composants (résultats ci-contre), et j'ai bâti le pipeline de packaging Debian sur GitLab CI/CD et Jenkins.",
+          p: "Deux outils d'analyse de performance en C++ : un profileur mémoire qui intercepte l'allocation via LD_PRELOAD, et un outil de mesure temporelle hiérarchique avec bindings Python (PyBind11), chargé à l'exécution pour ne rien changer aux builds de production. Avec eux, j'ai mesuré le prototype que j'ai développé pour une nouvelle architecture modulaire du calcul de cœur (Ports et Composants) ; les trois chiffres de cette section en sont les résultats. J'ai aussi bâti le pipeline de packaging Debian sur GitLab CI/CD et Jenkins, et documenté les outils avec Sphinx pour que l'équipe puisse continuer à s'en servir.",
         },
       ],
       caveat: "Seul le travail ci-dessus peut être cité publiquement ; le reste est confidentiel.",
@@ -90,14 +94,24 @@ export const fr: SiteContent = {
       kicker: "Homelab auto-hébergé",
       title: "Héberger et exploiter mes propres services",
       role: "Architecte et exploitant",
-      period: "En cours",
-      stack: ["Proxmox", "Traefik", "Docker", "Coolify", "VyOS / WireGuard"],
+      period: "Depuis 2020",
+      stack: [
+        "Proxmox",
+        "Docker",
+        "Traefik",
+        "Gitea / Coolify",
+        "GitLab CI",
+        "K3s",
+        "Ceph",
+        "Ansible",
+        "VyOS",
+      ],
       summary:
-        "Un cluster Proxmox de cinq nœuds, hébergeant une vingtaine de services accessibles publiquement, sur du matériel que j'exploite et automatise moi-même.",
+        "Un cluster Proxmox de cinq nœuds qui héberge une vingtaine de services pour une soixantaine d'utilisateurs réguliers, sur du matériel que j'exploite et automatise moi-même.",
       body: [
         {
           h: "L'installation",
-          p: "Cinq nœuds Proxmox (edge, apps, aux, core, gpu) derrière un routeur de bordure VyOS, relié par WireGuard. Un seul Traefik assure la terminaison TLS Let's Encrypt pour une vingtaine de services auto-hébergés : une forge Gitea, un PaaS Coolify, Nextcloud, des services multimédias et plusieurs de mes projets. Mes projets passent en production par un pipeline qui construit une image versionnée, la scanne et revient automatiquement en arrière si le contrôle de santé échoue ; je suis seul d'astreinte.",
+          p: "Cinq nœuds Proxmox derrière un routeur de bordure VyOS, relié par WireGuard. Un seul Traefik assure la terminaison TLS Let's Encrypt pour une vingtaine de services : une forge Gitea avec sa CI, un PaaS Coolify, Nextcloud, des services multimédias et mes propres projets. En cinq ans, le cluster a aussi fait tourner GitLab CI/CD, K3s, du stockage Ceph et de l'automatisation Ansible. Mes projets passent en production par un pipeline qui construit une image versionnée, la scanne et revient automatiquement en arrière si le contrôle de santé échoue ; je suis seul d'astreinte.",
         },
       ],
       links: [{ label: "Explorer le cluster", href: "/cluster" }],
@@ -106,15 +120,15 @@ export const fr: SiteContent = {
 
   moreWork: [
     {
-      name: "Opération Endgame",
+      name: "Événements DCS World",
       blurb:
-        "Un événement annuel en ligne que je conçois et organise depuis 2021 : quatre heures, une heure de départ fixe, plus de 120 participants actifs en même temps, plus de 150 inscrits à la dernière édition.",
+        "De grands événements multijoueurs sur le simulateur de vol DCS World, que je conçois et organise depuis 2021 : 150 à plus de 180 participants, une équipe bénévole de quatre ou cinq personnes qui monte à une douzaine pour les finales, et un retour d'expérience écrit après chaque événement.",
       noLinkLabel: "depuis 2021",
     },
     {
       name: "Annuaire communautaire",
       blurb:
-        "L'annuaire d'une communauté francophone en ligne, que j'ai conçu et que j'héberge : 57 entrées, filtrage, comparaison et infographies.",
+        "L'annuaire des communautés francophones de DCS World, que j'ai conçu et que j'héberge : 57 entrées, filtrage, comparaison, infographies et une API publique.",
       noLinkLabel: "en cours",
     },
     {
@@ -134,13 +148,13 @@ export const fr: SiteContent = {
     {
       name: "vireli",
       blurb:
-        "Une PWA d'empreinte carbone gamifiée pour un partenaire industriel. J'ai dirigé l'équipe de six : architecture, backend et déploiement.",
+        "Une PWA d'empreinte carbone gamifiée, réalisée avec un partenaire industriel. J'ai dirigé l'équipe de six (554 heures au total) et pris en charge l'architecture, le backend et le déploiement ; les 18 exigences ont été livrées.",
       noLinkLabel: "en maintenance",
     },
   ],
 
   about: [
-    "Je mène deux pistes de front : le travail GPU et de performance qui rend un code scientifique rapide, et l'infrastructure qui met le logiciel en production et l'y maintient. Je sors diplômé de Polytech Paris-Saclay (diplôme d'ingénieur, septembre 2026) et je cherche un CDI à partir de janvier 2027 : laboratoires HPC, dans la Bay Area comme à Paris, ou équipes infrastructure, DevOps, SRE et plateforme ; idéalement un poste qui touche aux deux.",
+    "Je développe des logiciels de recherche pour le calcul haute performance : des outils qui rendent les codes scientifiques mesurables, et l'ingénierie autour (tests, packaging, CI/CD, versions publiées, documentation) qui permet à d'autres de s'y fier. Je sors diplômé de Polytech Paris-Saclay en septembre 2026 (diplôme d'ingénieur) et je cherche un poste d'ingénieur logiciel pour la recherche à partir de janvier 2027, dans un laboratoire national, une université ou un institut de recherche, en France ou aux États-Unis.",
   ],
 
   timeline: [
@@ -154,11 +168,12 @@ export const fr: SiteContent = {
   ],
 
   availability: {
-    headline: "Ouvert aux postes HPC, infrastructure et DevOps à partir de janvier 2027",
+    headline: "Ouvert aux postes d'ingénieur logiciel pour la recherche à partir de janvier 2027",
     detail:
-      "Pour des laboratoires HPC ou des équipes infrastructure et plateforme, dans la Bay Area ou à Paris.",
+      "Calcul haute performance et calcul scientifique, dans un laboratoire national, une université ou un institut de recherche, en France ou aux États-Unis.",
     cta: "Le plus rapide pour me joindre",
     contactLabel: "Me contacter",
-    mailSubject: "Poste HPC / infrastructure : prise de contact (dispo janv. 2027)",
+    mailSubject:
+      "Poste d'ingénieur logiciel pour la recherche : prise de contact (dispo janv. 2027)",
   },
 };
