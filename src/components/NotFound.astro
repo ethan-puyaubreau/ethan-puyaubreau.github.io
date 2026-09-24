@@ -23,7 +23,7 @@ const home = localeHome(locale);
        trailing slash (/fr, /blog), so /fr/ lands here: send it to /fr. -->
   <script is:inline>
     (function () {
-      var p = location.pathname;
+      const p = location.pathname;
       if (p.length > 1 && p.endsWith("/")) {
         location.replace(p.replace(/\/+$/, "") + location.search + location.hash);
       }
