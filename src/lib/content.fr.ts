@@ -10,7 +10,6 @@ import type { SiteContent } from "./content.types";
 export const fr: SiteContent = {
   sections: [
     { id: "work", label: "Réalisations" },
-    { id: "writing", label: "Articles" },
     { id: "about", label: "Parcours" },
     { id: "contact", label: "Contact" },
   ],
@@ -32,7 +31,7 @@ export const fr: SiteContent = {
       period: "Été 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage fusionné dans Kokkos Tools, des connecteurs de mesure soumis en amont, des outils testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en 2026.",
+        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances derrière de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage fusionné dans Kokkos Tools, des connecteurs de mesure soumis en amont, des outils testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en septembre 2026.",
       body: [
         {
           h: "Le problème",
@@ -40,7 +39,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Comment c'est construit",
-          p: "Les outils se branchent à l'exécution par Kokkos Tools : une application se mesure sans recompilation ni correctif. Les connecteurs soumis en amont lisent la puissance via NVML ou Variorum ; une version AMD via ROCm SMI n'est pas encore publiée. energy-dashboard-for-kokkos, réécrit en Rust en 2026, a un format de trace documenté, des tests sur une trace GPU réelle et des binaires publiés par la CI. Les traces et le script derrière les chiffres DBSCAN sont publics, et la CI les recalcule.",
+          p: "Les outils se branchent à l'exécution par Kokkos Tools : une application se mesure sans recompilation ni correctif. Les connecteurs soumis en amont lisent la puissance via NVML ou Variorum ; une version AMD via ROCm SMI n'est pas encore publiée. energy-dashboard-for-kokkos, réécrit en Rust en septembre 2026, a un format de trace documenté, des tests sur une trace GPU réelle et des binaires publiés par la CI. Les traces et le script derrière les chiffres DBSCAN sont publics, et la CI les recalcule.",
         },
         {
           h: "Où ça en est",
@@ -72,7 +71,7 @@ export const fr: SiteContent = {
       figures: [
         { value: "bit à bit", label: "résultats identiques à la référence" },
         { value: "−12 %", label: "temps de calcul, meilleur cas" },
-        { value: "−40 %", label: "pic mémoire" },
+        { value: "−38 %", label: "pic mémoire" },
       ],
       kicker: "EDF Lab Paris-Saclay · groupe ASICS",
       title: "Rendre mesurable un code de simulation nucléaire",

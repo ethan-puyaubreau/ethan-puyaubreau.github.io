@@ -7,7 +7,6 @@ import type { SiteContent } from "./content.types";
 export const en: SiteContent = {
   sections: [
     { id: "work", label: "Work" },
-    { id: "writing", label: "Writing" },
     { id: "about", label: "Background" },
     { id: "contact", label: "Contact" },
   ],
@@ -29,7 +28,7 @@ export const en: SiteContent = {
       period: "Summer 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
       summary:
-        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, measurement connectors submitted upstream, tools tested on Frontier, and energy-dashboard-for-kokkos, an open-source analysis tool I rewrote in 2026.",
+        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, measurement connectors submitted upstream, tools tested on Frontier, and energy-dashboard-for-kokkos, an open-source analysis tool I rewrote in September 2026.",
       body: [
         {
           h: "The problem",
@@ -37,7 +36,7 @@ export const en: SiteContent = {
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The upstream connectors read power through NVML or Variorum; an AMD path through ROCm SMI is not public yet. energy-dashboard-for-kokkos, rewritten in Rust in 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
+          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The upstream connectors read power through NVML or Variorum; an AMD path through ROCm SMI is not public yet. energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
         },
         {
           h: "Where it stands",
@@ -69,7 +68,7 @@ export const en: SiteContent = {
       figures: [
         { value: "bit for bit", label: "identical results to the reference" },
         { value: "−12%", label: "compute time, best case" },
-        { value: "−40%", label: "peak memory" },
+        { value: "−38%", label: "peak memory" },
       ],
       kicker: "EDF Lab Paris-Saclay · ASICS group",
       title: "Making a nuclear simulation code measurable",

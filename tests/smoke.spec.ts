@@ -189,7 +189,7 @@ test("the header exposes a persistent, locale-aware Blog link", async ({ page })
 test("header: section links show on desktop and hide on phones", async ({ page }) => {
   await page.setViewportSize({ width: 1300, height: 900 });
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.locator("#site-header .sections a")).toHaveCount(4);
+  await expect(page.locator("#site-header .sections a")).toHaveCount(3);
   await expect(page.locator("#site-header .sections")).toBeVisible();
   await page.setViewportSize({ width: 600, height: 900 });
   await expect(page.locator("#site-header .sections")).toBeHidden();

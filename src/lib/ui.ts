@@ -96,7 +96,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     hero: {
       title: "I build research software that measures what scientific computing costs.",
       availability: "Paris-Saclay · engineering degree 2026 · available from January 2027",
-      ledeBeforeLink: "Open-source energy tooling for ",
+      ledeBeforeLink: "Energy-measurement tooling for ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
         ", built at Oak Ridge National Laboratory and tested on Frontier, and three years of performance tooling for a nuclear reactor simulation code at EDF.",
@@ -164,7 +164,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       title:
         "Je développe des logiciels de recherche qui mesurent ce que coûte le calcul scientifique.",
       availability: "Paris-Saclay · diplômé en 2026 · disponible dès janvier 2027",
-      ledeBeforeLink: "Des outils open source de mesure d'énergie pour ",
+      ledeBeforeLink: "Des outils de mesure d'énergie pour ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
         ", développés à l'Oak Ridge National Laboratory et testés sur Frontier, et trois ans d'outillage de performance pour un code de simulation de réacteurs nucléaires chez EDF.",

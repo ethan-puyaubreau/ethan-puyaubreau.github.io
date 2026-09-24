@@ -156,7 +156,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
   </g>
   <text x="392" y="180" text-anchor="start" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" font-style="italic" fill="#5f5f5c">integrated trace</text>
 </svg>
-<figcaption>The callbacks only mark when each region opens and closes. The energy comes from a separate power trace the connector integrates over those windows, with NVML or Variorum underneath the sampler depending on whether you are asking about the card or the node.</figcaption>
+<figcaption>The callbacks only mark when each region opens and closes. The energy comes from a separate power trace the connector integrates over those windows, with NVML or Variorum underneath the sampler depending on whether you are asking about the card or the node. In the 2026 version the connector only records the trace, and energy-dashboard-for-kokkos does the integration.</figcaption>
 </figure>
 
 <h2>What per-region joules buy you</h2>
