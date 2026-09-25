@@ -1,6 +1,8 @@
 ---
 // Shared 404 composition, rendered by both /404 (EN) and /fr/404 (FR).
 // Minimal by design (no nav), matching the original. House style: no em dashes.
+// GitHub Pages serves only the root 404.html, so a missing /fr/ page gets the
+// English build; the inline script below switches it to the French copy.
 import Base from "../layouts/Base.astro";
 import { site } from "../lib/site";
 import { getUI } from "../lib/ui";
@@ -12,12 +14,15 @@ interface Props {
 const { locale } = Astro.props;
 const ui = getUI(locale);
 const home = localeHome(locale);
+const fr = getUI("fr");
+const frCopy = { lede: fr.notFoundLede, back: fr.notFoundBack, home: localeHome("fr") };
 ---
 
 <Base
   locale={locale}
   title={`${ui.notFoundTitle} · ${site.name}`}
   description={ui.notFoundDescription}
+  noindex
 >
   <main id="main" class="container nf">
     <h1>{ui.notFoundTitle}</h1>
@@ -26,6 +31,19 @@ const home = localeHome(locale);
       {ui.notFoundBack}
     </a>
   </main>
+  {
+    locale === "en" && (
+      <script is:inline define:vars={{ frCopy }}>
+        if (location.pathname.startsWith("/fr/")) {
+          document.documentElement.lang = "fr";
+          document.querySelector(".nf-lede").textContent = frCopy.lede;
+          const back = document.querySelector(".nf-back");
+          back.textContent = frCopy.back;
+          back.href = frCopy.home;
+        }
+      </script>
+    )
+  }
 </Base>
 
 <style>

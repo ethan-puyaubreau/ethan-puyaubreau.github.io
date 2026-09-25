@@ -9,7 +9,7 @@ import type { Locale } from "./i18n";
 import type { SiteContent } from "./content.types";
 import { en } from "./content.en";
 import { fr } from "./content.fr";
-import { withFrenchSpacing } from "./french-spacing.mjs";
+import { withFrenchSpacing, withEnglishTypography } from "./french-spacing.mjs";
 
 export type {
   NavSection,
@@ -21,7 +21,10 @@ export type {
   SiteContent,
 } from "./content.types";
 
-const CONTENT: Record<Locale, SiteContent> = { en, fr: withFrenchSpacing(fr) };
+const CONTENT: Record<Locale, SiteContent> = {
+  en: withEnglishTypography(en),
+  fr: withFrenchSpacing(fr),
+};
 
 /** Resolve the full content payload for a locale. */
 export function getContent(locale: Locale): SiteContent {

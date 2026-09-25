@@ -252,11 +252,16 @@ const articleLd = {
   .prose :global(figure) {
     margin: var(--space-l) 0;
   }
+  .prose :global(figure > a) {
+    display: block;
+  }
+  /* Diagrams keep a readable size on phones: the SVG scrolls sideways inside
+     its own focusable wrapper, and the caption stays put below it. */
   @media (max-width: 640px) {
-    .prose :global(figure:has(> svg)) {
+    .prose :global(.scroll) {
       overflow-x: auto;
     }
-    .prose :global(figure > svg) {
+    .prose :global(.scroll > svg) {
       min-width: 560px;
     }
   }
@@ -322,5 +327,11 @@ const articleLd = {
   }
   .author-cta:hover {
     text-decoration-color: currentColor;
+  }
+  @media (pointer: coarse) {
+    .back,
+    .author-cta {
+      padding-block: 0.7rem;
+    }
   }
 </style>

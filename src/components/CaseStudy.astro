@@ -51,7 +51,9 @@ const hasSide = Boolean(study.image || study.figures || Astro.slots.has("artifac
   {hasSide && (
     <div class="case-side">
       {study.image && (
-        <a class="case-image" href={study.image.href}>
+        // Same target as a text link in the list, so it is left out of the tab
+        // order: focus would otherwise jump back up beside the heading.
+        <a class="case-image" href={study.image.href} tabindex="-1" aria-hidden="true">
           <img
             src={study.image.src}
             srcset={study.image.srcset}

@@ -131,4 +131,10 @@ const [colophonBefore, colophonAfter] = colophon.split("{cluster}");
     color: var(--ink-dim);
     font-variant-numeric: tabular-nums;
   }
+  @media (pointer: coarse) {
+    .foot-nav a {
+      display: inline-block;
+      padding-block: 0.7rem;
+    }
+  }
 </style>

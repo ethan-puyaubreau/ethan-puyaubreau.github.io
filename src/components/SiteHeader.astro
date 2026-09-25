@@ -41,6 +41,16 @@ const inPage = brandHref === "#top";
     )}
 
     <div class="bar-right">
+      {inPage && (
+        <details class="menu">
+          <summary class="navlink"><span class="menu-label">{ui.sectionsLabel}</span></summary>
+          <nav aria-label={ui.sectionsLabel}>
+            {sections.map((s) => (
+              <a href={`#${s.id}`}>{s.label}</a>
+            ))}
+          </nav>
+        </details>
+      )}
       <a class="navlink" href={blogHref}>
         Blog
       </a>
@@ -57,6 +67,13 @@ const inPage = brandHref === "#top";
     </div>
   </div>
 </header>
+
+<script>
+  // Close the narrow-screen section menu once a section is picked.
+  for (const a of document.querySelectorAll<HTMLAnchorElement>(".menu a")) {
+    a.addEventListener("click", () => a.closest("details")?.removeAttribute("open"));
+  }
+</script>
 
 <style>
   .site-header {
@@ -117,9 +134,65 @@ const inPage = brandHref === "#top";
     padding-left: var(--space-m);
     border-left: 1px solid var(--line);
   }
+  .menu {
+    display: none;
+    position: relative;
+  }
+  .menu summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  .menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .menu summary::after {
+    content: " ▾";
+  }
+  /* Phones: the label gives way to an icon so EN / FR still fits; it stays
+     in the accessibility tree as the summary's name. */
+  @media (max-width: 520px) {
+    .bar-right {
+      gap: var(--space-s);
+    }
+    .menu-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .menu summary::after {
+      content: "☰";
+      font-size: 1.15em;
+    }
+  }
+  .menu nav {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.9rem);
+    display: grid;
+    min-width: 11rem;
+    padding-block: var(--space-2xs, 0.25rem);
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+  .menu nav a {
+    padding: 0.7rem 1rem;
+    font-size: var(--step--1);
+    color: var(--ink);
+  }
+  .menu nav a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
   @media (max-width: 900px) {
     .sections {
       display: none;
+    }
+    .menu {
+      display: block;
     }
     .sections + .bar-right {
       margin-left: auto;
@@ -134,7 +207,8 @@ const inPage = brandHref === "#top";
   }
   @media (pointer: coarse) {
     .navlink,
-    .brand {
+    .brand,
+    .menu summary {
       padding-block: 0.7rem;
     }
   }

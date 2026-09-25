@@ -16,6 +16,7 @@ export async function GET(context: APIContext) {
     title: `${site.name} · ${ui.blog.indexTitle}`,
     description: ui.blog.metaDescription,
     site: context.site ?? site.url,
+    customData: "<language>en-US</language>",
     items: posts.map((p: Post) => ({
       title: p.data.title,
       description: p.data.description,

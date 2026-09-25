@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { test, expect } from "@playwright/test";
-import { frenchSpacing } from "../src/lib/french-spacing.mjs";
+import { frenchSpacing, englishTypography } from "../src/lib/french-spacing.mjs";
 
 // Smoke tests for the standalone engineer site (ethan-puyaubreau.github.io).
 // Home is at / (+ /fr); the cluster case study at /cluster; the blog at /blog.
@@ -193,6 +193,10 @@ test("header: section links show on desktop and hide on phones", async ({ page }
   await expect(page.locator("#site-header .sections")).toBeVisible();
   await page.setViewportSize({ width: 600, height: 900 });
   await expect(page.locator("#site-header .sections")).toBeHidden();
+  // Narrow screens reach the sections through a menu that closes on pick.
+  await page.locator(".menu summary").click();
+  await page.locator('.menu a[href="#about"]').click();
+  await expect(page.locator(".menu")).not.toHaveAttribute("open");
 });
 
 // ---------- 404 ----------
@@ -235,6 +239,18 @@ test("the 404 page points back to home", async ({ page }) => {
   await page.goto("/does-not-exist", { waitUntil: "domcontentloaded" });
   await expect(page.locator('a[href="/"]')).toBeVisible();
   await expect(page).toHaveTitle(/Ethan Puyaubreau/);
+});
+
+test("a missing French page gets the French 404 copy", async ({ page }) => {
+  await page.goto("/fr/does-not-exist", { waitUntil: "load" });
+  await expect(page.locator('a.nf-back[href="/fr"]')).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+});
+
+test("english typography helper", () => {
+  expect(englishTypography("NVML's refresh, the tools' users, don't")).toBe(
+    "NVML’s refresh, the tools' users, don’t",
+  );
 });
 
 test("french typography helper", () => {

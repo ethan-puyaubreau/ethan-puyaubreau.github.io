@@ -7,10 +7,9 @@ import portrait from "../assets/avatar.jpg";
 interface Props {
   about: readonly string[];
   timeline: readonly TimelineEntry[];
-  role: string;
   timelineLabel: string;
 }
-const { about, timeline, role, timelineLabel } = Astro.props;
+const { about, timeline, timelineLabel } = Astro.props;
 ---
 
 <div class="about">
@@ -18,7 +17,7 @@ const { about, timeline, role, timelineLabel } = Astro.props;
     <figure class="portrait">
       <Image
         src={portrait}
-        alt={`${site.name}, ${role}`}
+        alt=""
         width={116}
         densities={[1, 2]}
         loading="lazy"

@@ -160,7 +160,10 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
   min-height: 2.6em;
 }
 .meters {
-  margin: var(--space-2xs) 0 0;
+  /* Pushed to the card's foot so the rows line up across cards whose role
+     text runs to different lengths. */
+  margin: auto 0 0;
+  padding-top: var(--space-2xs);
   display: grid;
   gap: 0.5rem;
 }

@@ -1,5 +1,6 @@
 ---
 import "@fontsource-variable/archivo";
+import archivoLatin from "@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2?url";
 import "@fontsource-variable/jetbrains-mono";
 import "../styles/tokens.css";
 import "../styles/global.css";
@@ -26,6 +27,8 @@ interface Props {
       sets this false so we never emit an alternate to a 404. Defaults to
       path-based detection (isPairedPath). */
   paired?: boolean;
+  /** Keep the page out of search results (404): no canonical, no og:url. */
+  noindex?: boolean;
 }
 
 const locale = Astro.props.locale ?? toLocale(Astro.currentLocale);
@@ -37,6 +40,7 @@ const {
   description = ui.metaDescription,
   ogType = "website",
   paired,
+  noindex = false,
 } = Astro.props;
 
 const ogImageUrl = new URL("/og.png", site.url).href;
@@ -83,7 +87,7 @@ const jsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     {alternates.map((a) => (
       <link rel="alternate" hreflang={a.hreflang} href={a.href} />
     ))}
@@ -93,6 +97,7 @@ const jsonLd = {
       title={`${site.name} blog`}
       href={locale === "fr" ? "/fr/rss.xml" : "/rss.xml"}
     />
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin="anonymous" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f7f7f5" />
 
@@ -104,7 +109,7 @@ const jsonLd = {
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {!noindex && <meta property="og:url" content={canonical} />}
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content={OG_LOCALE[locale]} />
     {isPaired &&

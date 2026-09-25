@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Portfolio of Ethan Puyaubreau, HPC & infrastructure engineer. ethan-puyaubreau.github.io",
+  "description": "Portfolio of Ethan Puyaubreau, research software engineer (HPC). ethan-puyaubreau.github.io",
   "engines": {
     "node": ">=22.12.0"
   },

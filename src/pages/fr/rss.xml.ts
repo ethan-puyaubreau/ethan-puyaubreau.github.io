@@ -15,7 +15,8 @@ export async function GET(context: APIContext) {
   return rss({
     title: `${site.name} · ${ui.blog.indexTitle}`,
     description: ui.blog.metaDescription,
-    site: context.site ?? site.url,
+    site: new URL("/fr", context.site ?? site.url).href,
+    customData: "<language>fr-FR</language>",
     items: posts.map((p: Post) => ({
       title: p.data.title,
       description: p.data.description,
