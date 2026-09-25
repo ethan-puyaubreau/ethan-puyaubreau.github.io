@@ -50,9 +50,6 @@ export function blogPost(locale: Locale, slug: string): string {
   return locale === DEFAULT_LOCALE ? `/blog/${slug}` : `/${locale}/blog/${slug}`;
 }
 
-/** localStorage key the language switch and the first-visit detector share. */
-export const LOCALE_STORAGE_KEY = "site.locale";
-
 /** Routes that exist in both locales, so they get a canonical + hreflang pair. */
 export const PAIRED_ROUTES: readonly string[] = ["/", "/cluster"];
 

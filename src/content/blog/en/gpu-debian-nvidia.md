@@ -9,7 +9,7 @@ slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 ---
 
-<p>The GPU node in my homelab is a single-socket Xeon workstation that for a year ran Proxmox like the rest of the cluster. In June I wiped it and reinstalled bare Debian 13 (Trixie), because the one job I actually want from that box, running CUDA workloads against its GPU, is the one job a hypervisor makes harder. The reinstall took twenty minutes. Getting the driver to load took the rest of the evening, almost all of it on a single thing nobody warns you about: Secure Boot silently refusing a module signed with a key it did not know.</p>
+<p>The GPU node in my homelab is a single-socket Xeon workstation that for a year ran Proxmox like the rest of the cluster. In June I wiped it and reinstalled bare Debian 13 (Trixie), because the one job I actually want from that box, running CUDA workloads against its GPU, is the one job a hypervisor makes harder. The reinstall took twenty minutes. Getting the driver to load took the rest of the evening, almost all of it on one step: Secure Boot silently refusing a module signed with a key it did not know.</p>
 
 <p>The order of operations that actually works on Trixie is only a few steps, one of which is easy to miss.</p>
 
@@ -22,7 +22,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 <p>A box that exists only to run one GPU does not need a hypervisor sitting between me and <code>nvidia-smi</code>. Remove the layer and the card is back on bare metal, with the passthrough tax gone along with it.</p>
 
 <figure>
-<div class="scroll" tabindex="0" role="region" aria-label="Diagram, scrolls sideways on narrow screens">
+<div class="scroll" tabindex="0" role="region" aria-labelledby="fig-gpu-1">
 <svg viewBox="0 0 720 340" role="img" aria-label="Two software stacks compared. The Proxmox stack has five layers with VFIO passthrough as friction; the bare Debian stack has four layers with the GPU directly under the kernel." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -59,12 +59,12 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
   <text x="359" y="150" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="12" font-style="italic" fill="#5f5f5c">collapse the stack</text>
 </svg>
 </div>
-<figcaption>The same hardware, two stacks. Passthrough buys flexibility a single-purpose GPU node never uses.</figcaption>
+<figcaption id="fig-gpu-1">The same hardware, two stacks. Passthrough buys flexibility a single-purpose GPU node never uses.</figcaption>
 </figure>
 
 <h2>Keeping nouveau off the card</h2>
 
-<p>Debian ships <code>nouveau</code>, the open-source driver, and loads it at boot. The proprietary module will not bind while nouveau is holding the card. The <code>nvidia-driver</code> package installs its own blacklist for it, so the file below is belt and braces; the step that matters is rebuilding the initramfs, so the blacklist is already in place in early boot, before nouveau can load from the initramfs and claim the GPU.</p>
+<p>Debian ships <code>nouveau</code>, the open-source driver, and loads it at boot. The proprietary module will not bind while nouveau is holding the card. The <code>nvidia-driver</code> package installs its own blacklist for it, so the file below is only a safeguard; the step that matters is rebuilding the initramfs, so the blacklist is already in place in early boot, before nouveau can load from the initramfs and claim the GPU.</p>
 
 <pre tabindex="0"><code># /etc/modprobe.d/blacklist-nouveau.conf
 blacklist nouveau
@@ -99,7 +99,7 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 <p>After that, <code>nvidia-smi</code> came up clean with the card and driver version.</p>
 
 <figure>
-<div class="scroll" tabindex="0" role="region" aria-label="Diagram, scrolls sideways on narrow screens">
+<div class="scroll" tabindex="0" role="region" aria-labelledby="fig-gpu-2">
 <svg viewBox="0 0 720 560" role="img" aria-label="A vertical flowchart of the driver install: add sources, blacklist nouveau, install headers and driver via DKMS, then a Secure Boot decision that either enrolls a MOK or proceeds straight to reboot, ending at a working nvidia-smi." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u2" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -138,7 +138,7 @@ sudo mokutil --import /var/lib/dkms/mok.pub
   <text x="425" y="292" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">yes</text>
 </svg>
 </div>
-<figcaption>The whole sequence. Every box except the amber one is mechanical; the amber one is where a clean build still gives you a dead <code>nvidia-smi</code>.</figcaption>
+<figcaption id="fig-gpu-2">The whole sequence. Every box except the amber one is mechanical; the amber one is where a clean build still gives you a dead <code>nvidia-smi</code>.</figcaption>
 </figure>
 
 <h2>What I got back</h2>

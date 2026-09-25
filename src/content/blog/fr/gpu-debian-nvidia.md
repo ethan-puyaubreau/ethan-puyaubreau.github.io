@@ -9,7 +9,7 @@ slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 ---
 
-<p>Le nœud GPU de mon homelab est une station de travail Xeon mono-socket qui, pendant un an, a fait tourner Proxmox comme le reste du cluster. En juin, je l'ai effacé et j'ai réinstallé une Debian 13 (Trixie) nue, parce que la seule chose que j'attends vraiment de cette machine, faire tourner des charges CUDA sur son GPU, est justement celle qu'un hyperviseur rend plus difficile. La réinstallation a pris vingt minutes. Faire charger le pilote a pris le reste de la soirée, presque entièrement sur une seule chose dont personne ne vous prévient : le Secure Boot refusant en silence un module signé par une clé inconnue.</p>
+<p>Le nœud GPU de mon homelab est une station de travail Xeon mono-socket qui, pendant un an, a fait tourner Proxmox comme le reste du cluster. En juin, je l'ai effacé et j'ai réinstallé une Debian 13 (Trixie) nue, parce que la seule chose que j'attends vraiment de cette machine, faire tourner des charges CUDA sur son GPU, est justement celle qu'un hyperviseur rend plus difficile. La réinstallation a pris vingt minutes. Faire charger le pilote a pris le reste de la soirée, presque entièrement sur une seule étape : le Secure Boot refusant en silence un module signé par une clé inconnue.</p>
 
 <p>L'ordre des opérations qui marche réellement sur Trixie tient en quelques étapes, dont une facile à manquer.</p>
 
@@ -22,7 +22,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 <p>Une machine qui n'existe que pour faire tourner un GPU n'a pas besoin d'un hyperviseur posé entre moi et <code>nvidia-smi</code>. Une fois la couche supprimée, la carte revient sur le métal nu, et la taxe du passthrough disparaît avec elle.</p>
 
 <figure>
-<div class="scroll" tabindex="0" role="region" aria-label="Schéma, défile horizontalement sur petit écran">
+<div class="scroll" tabindex="0" role="region" aria-labelledby="fig-gpu-1">
 <svg viewBox="0 0 720 340" role="img" aria-label="Deux piles logicielles comparées. La pile Proxmox a cinq couches avec le passthrough VFIO comme friction ; la pile Debian nue a quatre couches avec le GPU directement sous le noyau." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -59,7 +59,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
   <text x="359" y="150" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="12" font-style="italic" fill="#5f5f5c">aplatir la pile</text>
 </svg>
 </div>
-<figcaption>Le même matériel, deux piles. Le passthrough offre une flexibilité dont un nœud GPU à usage unique ne se sert jamais.</figcaption>
+<figcaption id="fig-gpu-1">Le même matériel, deux piles. Le passthrough offre une flexibilité dont un nœud GPU à usage unique ne se sert jamais.</figcaption>
 </figure>
 
 <h2>Écarter nouveau de la carte</h2>
@@ -99,7 +99,7 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 <p>Après ça, <code>nvidia-smi</code> a répondu normalement, avec la carte et la version du pilote.</p>
 
 <figure>
-<div class="scroll" tabindex="0" role="region" aria-label="Schéma, défile horizontalement sur petit écran">
+<div class="scroll" tabindex="0" role="region" aria-labelledby="fig-gpu-2">
 <svg viewBox="0 0 720 560" role="img" aria-label="Un organigramme vertical de l'installation du pilote : ajouter les sources, mettre nouveau en liste noire, installer les en-têtes et le pilote via DKMS, puis une décision Secure Boot qui soit enrôle une MOK, soit passe directement au redémarrage, pour finir sur un nvidia-smi qui fonctionne." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u2" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -138,7 +138,7 @@ sudo mokutil --import /var/lib/dkms/mok.pub
   <text x="425" y="292" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">oui</text>
 </svg>
 </div>
-<figcaption>Toute la séquence. Toutes les cases sauf la case ambrée sont mécaniques ; la case ambrée est celle où une compilation propre vous donne quand même un <code>nvidia-smi</code> mort.</figcaption>
+<figcaption id="fig-gpu-2">Toute la séquence. Toutes les cases sauf la case ambrée sont mécaniques ; la case ambrée est celle où une compilation propre vous donne quand même un <code>nvidia-smi</code> mort.</figcaption>
 </figure>
 
 <h2>Ce que j'ai récupéré</h2>

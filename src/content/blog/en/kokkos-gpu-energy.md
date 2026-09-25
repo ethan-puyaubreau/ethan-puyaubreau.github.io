@@ -8,7 +8,7 @@ slug: kokkos-gpu-energy
 tags: ["HPC", "GPU", "Kokkos", "NVML"]
 ---
 
-<p>I spent the summer of 2025 at Oak Ridge on this, and the question behind it is short: does the fastest way to compute something also cost the least energy? A profiler ranks code by time, but clusters increasingly run under a power cap rather than a clock-rate target, so energy-to-solution is becoming the number that matters, and almost nothing in a normal HPC workflow reports it per region. So I built a tool that does, as a Kokkos Tools connector that attributes joules to each profiled region without touching the application it measures.</p>
+<p>I spent the summer of 2025 at Oak Ridge on one question: does the fastest way to compute something also cost the least energy? A profiler ranks code by time, but clusters increasingly run under a power cap rather than a clock-rate target, so energy-to-solution is becoming the number that matters, and almost nothing in a normal HPC workflow reports it per region. So I built a tool that does, as a Kokkos Tools connector that attributes joules to each profiled region without touching the application it measures.</p>
 
 <p>Start with the DBSCAN comparison from the poster, recomputed in September 2026 from the raw traces. ArborX ships two DBSCAN implementations, <code>fdbscan</code> and <code>fdbscan-dense</code>. On the same input and the same NVIDIA H100 NVL they return the same clusters, and over 64 runs of each, the dense one is faster and cheaper:</p>
 
@@ -31,7 +31,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <p>One more thing the medians hide. The first 16 <code>fdbscan-dense</code> runs, consecutive at the start of the series, are about 1.5 times slower in every phase (3.4 to 3.9 s) and draw less power (222 W on average), which looks like a different machine state rather than the algorithm. I kept them in the medians. Without them the comparison barely moves (19% less time, 26% less energy); with them, the means over all 64 runs give 5% less time and 18% less energy. A bootstrap over the runs puts the median reductions at 17.6 to 19.3% for time and 24.9 to 26.0% for energy.</p>
 
-<p>So the faster variant also wins on energy, but by more: 25% less energy for 19% less time, because its mean power is also 9% lower while it runs. A time profile would report the 19%. The other six points only show up when you measure energy instead of inferring it from time.</p>
+<p>So the faster variant also wins on energy, but by more: 25% less energy for 19% less time, because its mean power is also 9% lower while it runs. A time profile would report the 19%; the extra 6 percentage points of energy only show up when you measure energy instead of inferring it from time.</p>
 
 <h2>Instrumentation you do not have to compile in</h2>
 
@@ -46,7 +46,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 <p>The deeper issue is that power is the wrong quantity to sample at the boundaries. Power is a rate, in watts. What you pay for is energy, in joules, and energy is the integral of power over time. Two readings give you two heights of a curve. The bill is the area under it. My first version reported nonsense on short kernels, sometimes zero, sometimes the power of the previous kernel, depending on which side of a sensor update the two readings landed, and that was the signal to stop sampling on the kernel's schedule and start sampling on the clock's.</p>
 
 <figure>
-<div class="scroll" tabindex="0" role="region" aria-label="Diagram, scrolls sideways on narrow screens">
+<div class="scroll" tabindex="0" role="region" aria-labelledby="fig-kokkos-1">
 <svg viewBox="0 0 720 380" role="img" aria-label="A schematic power-versus-time trace for three profiled regions, A, B and C, each drawing a different power level. Sample dots sit at a fixed cadence along the curve. A dashed line marks the idle floor, and the area under the first region is shaded and labeled energy equals the integral of power over time." xmlns="http://www.w3.org/2000/svg">
   <g stroke="#c9c9c4" stroke-width="1">
     <line x1="70" y1="50" x2="70" y2="300"/>
@@ -71,7 +71,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
   <polygon points="99,108 255,112 255,249 99,249" fill="#b93a0a" opacity="0.22"/>
   <polygon points="99,249 255,249 255,300 99,300" fill="#5f5f5c" opacity="0.10"/>
   <line x1="70" y1="249" x2="700" y2="249" stroke="#5f5f5c" stroke-width="1.2" stroke-dasharray="6 4"/>
-  <text x="700" y="245" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#5f5f5c">idle floor</text>
+  <text x="700" y="245" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">idle floor</text>
   <polyline fill="none" stroke="#111111" stroke-width="2"
     points="70,249 95,249 99,108 255,112 259,249 300,249 304,193 470,196 474,249 510,249 514,214 540,205 562,221 586,208 612,220 640,210 650,214 654,249 700,249"/>
   <g fill="#b93a0a">
@@ -87,10 +87,10 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
     <circle cx="676" cy="249" r="2.4"/>
   </g>
   <text x="177" y="180" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#9a3412">Energy = &#8747; P dt</text>
-  <text x="177" y="198" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#9a3412">area above idle = marginal cost</text>
+  <text x="177" y="198" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#9a3412">area above idle = marginal cost</text>
 </svg>
 </div>
-<figcaption>A schematic, not a measurement. One region's energy is the area under its power curve. The dashed line is the idle floor; the marginal cost of a region is the part of the area that sits above it. The dots are the side thread sampling at a fixed cadence.</figcaption>
+<figcaption id="fig-kokkos-1">A schematic, not a measurement. One region's energy is the area under its power curve. The dashed line is the idle floor; the marginal cost of a region is the part of the area that sits above it. The dots are the side thread sampling at a fixed cadence.</figcaption>
 </figure>
 
 <h2>A side thread, a fixed cadence, and a trapezoid</h2>
@@ -108,7 +108,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 <p>NVML answers one question: what this NVIDIA GPU drew. It reports per board, in milliwatts, NVIDIA only, and sees nothing outside the card. So the 2025 tooling has a second measurement tool built on Variorum (#302, beside the NVML one in #301), which is vendor-neutral and reads power at the node and socket level, including the CPU (through RAPL, the power counters built into Intel and AMD processors), the DRAM, and some non-NVIDIA GPUs. NVML gives you what the GPU drew, Variorum what the whole node drew. A region that looks cheap on the card can still be shuffling enough data to light up the CPU and the memory controllers around it, and only the node-level view catches that. You reach for NVML when the question is what the GPU itself spent, and for Variorum when you want the energy bill the machine room actually sees.</p>
 
 <figure>
-<div class="scroll" tabindex="0" role="region" aria-label="Diagram, scrolls sideways on narrow screens">
+<div class="scroll" tabindex="0" role="region" aria-labelledby="fig-kokkos-2">
 <svg viewBox="0 0 760 340" role="img" aria-label="The connector pipeline. The Kokkos application fires Tools callbacks at every parallel region; the energy connector receives a power trace from a sampler thread that reads power out of band at a fixed interval; NVML and Variorum feed the sampler; the connector integrates the trace per region into joules, which flow to energy-dashboard-for-kokkos, the analysis tool." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-k1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -160,7 +160,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
   <text x="392" y="180" text-anchor="start" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" font-style="italic" fill="#5f5f5c">integrated trace</text>
 </svg>
 </div>
-<figcaption>The callbacks only mark when each region opens and closes. The energy comes from a separate power trace the connector integrates over those windows, with NVML or Variorum underneath the sampler depending on whether you are asking about the card or the node. In the 2026 version the connector only records the trace, and energy-dashboard-for-kokkos does the integration.</figcaption>
+<figcaption id="fig-kokkos-2">The callbacks only mark when each region opens and closes. The energy comes from a separate power trace the connector integrates over those windows, with NVML or Variorum underneath the sampler depending on whether you are asking about the card or the node. In the 2026 version the connector only records the trace, and energy-dashboard-for-kokkos does the integration.</figcaption>
 </figure>
 
 <h2>What per-region joules buy you</h2>
@@ -169,4 +169,4 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <p>The sampling daemon I started was merged into <code>kokkos/kokkos-tools</code> (#300) in March 2026, after my ORNL mentor reworked it through review; the core (#299) and the NVML and Variorum connectors (#301, #302) are still open. The CSV trace first fed a Grafana and PostgreSQL dashboard; it now goes to <a href="https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos">energy-dashboard-for-kokkos</a>, a single Rust binary with no daemon and no Docker, which prints a per-region energy table, exports a Perfetto timeline, and writes a standalone HTML report. The full results are on the page of <a href="https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/">the poster I co-authored with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié</a> (SMC 2025). What is still missing is resolution finer than the whole board and than the 100 ms refresh: attribution stays at the scale of the GPU, and I have no clean answer for concurrent streams.</p>
 
-<p class="note" id="note-figures"><strong>Note on the figures.</strong> Four numbers describe <code>fdbscan</code>, and they measure different things. The table gives 777 J, the median over 64 runs of the DBSCANCalculation region alone. One of those runs, drawn on this site's home page, spends 769 J in that region. The poster's box, labelled DBSCAN Calculation, reads 772.8 J because it sums every kernel region of the run, and its 925.1 J total also counts the time outside any region.</p>
+<p class="note" id="note-figures"><strong>Note on the figures.</strong> Four numbers describe <code>fdbscan</code>, and they measure different things. The table gives 777 J, the median over 64 runs of the DBSCANCalculation region alone. One of those runs, drawn on this site's home page, spends 769 J in that region. The poster's box, labeled DBSCAN Calculation, reads 772.8 J because it sums every kernel region of the run, and its 925.1 J total also counts the time outside any region.</p>

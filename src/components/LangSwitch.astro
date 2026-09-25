@@ -1,7 +1,6 @@
 ---
-// Discreet, keyboard-accessible EN/FR switch. Real links (one per locale) so it
-// works without JS; a tiny inline script records the manual choice so the
-// first-visit region detector never overrides it. House style: no em dashes.
+// Discreet, keyboard-accessible EN/FR switch: real links, one per locale, no
+// JS. House style: no em dashes.
 import { type Locale, localeHome } from "../lib/i18n";
 
 interface Props {
@@ -11,15 +10,14 @@ interface Props {
   switchLabel: string;
   names: Record<Locale, string>;
   titles: Record<Locale, string>;
-  storageKey: string;
   /** Per-locale target URL. Defaults to each locale's home; set on sub-pages
       (e.g. /cluster) so switching language stays on the same page. */
   paths?: Partial<Record<Locale, string>>;
 }
-const { locale, locales, switchLabel, names, titles, storageKey, paths } = Astro.props;
+const { locale, locales, switchLabel, names, titles, paths } = Astro.props;
 ---
 
-<nav class="lang" aria-label={switchLabel} data-lang-switch data-storage-key={storageKey}>
+<nav class="lang" aria-label={switchLabel}>
   {locales.map((l, i) => (
     <>
       {i > 0 && (
@@ -38,7 +36,6 @@ const { locale, locales, switchLabel, names, titles, storageKey, paths } = Astro
           hreflang={l}
           lang={l}
           title={titles[l]}
-          data-locale={l}
         >
           {names[l]}
         </a>
@@ -46,24 +43,6 @@ const { locale, locales, switchLabel, names, titles, storageKey, paths } = Astro
     </>
   ))}
 </nav>
-
-<script is:inline>
-  // Remember a manual language choice so the auto-detect redirect on / yields to it.
-  (function () {
-    const nav = document.querySelector("[data-lang-switch]");
-    if (!nav) return;
-    const key = nav.getAttribute("data-storage-key") || "site.locale";
-    nav.addEventListener("click", function (e) {
-      const t = e.target instanceof Element ? e.target.closest("a[data-locale]") : null;
-      if (!t) return;
-      try {
-        localStorage.setItem(key, t.getAttribute("data-locale") || "");
-      } catch {
-        /* private mode: navigation still works, choice just isn't remembered */
-      }
-    });
-  })();
-</script>
 
 <style>
   .lang {

@@ -36,11 +36,11 @@ export const en: SiteContent = {
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The upstream connectors read power through NVML or Variorum; an AMD path through ROCm SMI, not public yet, is the version I ran on Frontier. energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases archived on Zenodo with a DOI. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
+          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The connectors I submitted upstream (#301, #302) read power through NVML or Variorum; an AMD path through ROCm SMI, not public yet, is the version I ran on Frontier. energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases archived on Zenodo with a DOI. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
         },
         {
           h: "Where it stands",
-          p: "The rest of the profiler is three open pull requests I wrote: the core and timing export (#299), the NVML connector (#301, with changes requested), and the Variorum connector (#302, a draft of about 2,700 lines that includes unit tests). Its sampling daemon (#300) was merged into kokkos-tools in March 2026, after my ORNL mentor, Jakob Bludau, carried it through review once my stay had ended. Nine pull requests to kokkos-tools and LAMMPS in all, some later split into smaller ones; three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report.",
+          p: "The rest of the profiler is three open pull requests I wrote: the core and timing export (#299), the NVML connector (#301, with changes requested), and the Variorum connector (#302, a draft of about 2,700 lines that includes unit tests). Its sampling daemon (#300) was merged into kokkos-tools in March 2026, after my ORNL mentor, Jakob Bludau, reworked it through review once my stay had ended. Nine pull requests to kokkos-tools and LAMMPS in all, some later split into smaller ones; three merged: the daemon and two build fixes. One poster, with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, presented at SMC 2025 and at an ORNL internal session, and cited in the S4PST 2024–2025 project report.",
         },
       ],
       links: [
@@ -53,10 +53,6 @@ export const en: SiteContent = {
           href: "https://github.com/kokkos/kokkos-tools/pull/302",
         },
         {
-          label: "Kokkos Tools · PR #300 (merged)",
-          href: "https://github.com/kokkos/kokkos-tools/pull/300",
-        },
-        {
           label: "energy-dashboard-for-kokkos",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
@@ -66,6 +62,10 @@ export const en: SiteContent = {
           href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
         },
         { label: "S4PST report (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
+        {
+          label: "PR #300: sampling daemon (merged)",
+          href: "https://github.com/kokkos/kokkos-tools/pull/300",
+        },
       ],
     },
     {
@@ -121,7 +121,7 @@ export const en: SiteContent = {
 
   about: [
     "I write research software for high-performance computing: tools that make scientific codes measurable, and the engineering around them (tests, packaging, CI/CD, releases, documentation) that lets other people rely on them. I graduated from Polytech Paris-Saclay in September 2026 with an engineering degree, equivalent to an M.Eng., and I am looking for a research software engineer role from January 2027, at a national lab, a university, or a research institute, in the US or in France.",
-    "Languages: C++17 daily, Python (NumPy, pandas) for analysis and bindings, Rust, CUDA. Build, test and delivery: CMake, GitLab CI/CD, GitHub Actions, Jenkins, Debian packaging, Sphinx. Batch jobs with Slurm, on Frontier and at EDF. English: professional working language (TOEIC 965); French native.",
+    "Languages: C++17 daily, Python (NumPy, pandas) for analysis and bindings, Rust, CUDA. Build, test and delivery: CMake, GitLab CI/CD, GitHub Actions, Jenkins, Debian packaging, Sphinx. Batch jobs with Slurm, on Frontier and at EDF. English: professional working language (TOEIC 970/990); French native.",
   ],
 
   timeline: [

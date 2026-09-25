@@ -193,8 +193,9 @@ const articleLd = {
     font-family: var(--font-mono);
     font-size: 0.9em;
     background: var(--bg-sunken);
-    padding: 0.1rem 0.3rem;
+    padding: 0.05em 0.15em;
     border-radius: var(--radius);
+    white-space: nowrap;
   }
   .prose :global(pre) {
     overflow-x: auto;
@@ -260,6 +261,8 @@ const articleLd = {
   @media (max-width: 640px) {
     .prose :global(.scroll) {
       overflow-x: auto;
+      /* Fade at the right edge: the diagram continues off screen. */
+      mask-image: linear-gradient(to right, #000 90%, transparent);
     }
     .prose :global(.scroll > svg) {
       min-width: 560px;

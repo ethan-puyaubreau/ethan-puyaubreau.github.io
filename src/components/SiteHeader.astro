@@ -2,7 +2,7 @@
 import { site } from "../lib/site";
 import type { NavSection } from "../lib/content";
 import type { UIStrings } from "../lib/ui";
-import { type Locale, LOCALES, DEFAULT_LOCALE, LOCALE_STORAGE_KEY, blogHome } from "../lib/i18n";
+import { type Locale, LOCALES, DEFAULT_LOCALE, blogHome } from "../lib/i18n";
 import LangSwitch from "./LangSwitch.astro";
 import Mark from "./Mark.astro";
 
@@ -51,7 +51,11 @@ const inPage = brandHref === "#top";
           </nav>
         </details>
       )}
-      <a class="navlink" href={blogHref}>
+      <a
+        class="navlink"
+        href={blogHref}
+        aria-current={Astro.url.pathname.includes("/blog") ? "page" : undefined}
+      >
         Blog
       </a>
       <LangSwitch
@@ -61,7 +65,6 @@ const inPage = brandHref === "#top";
         switchLabel={ui.langSwitchLabel}
         names={ui.langName}
         titles={ui.langSwitchTo}
-        storageKey={LOCALE_STORAGE_KEY}
         paths={langPaths}
       />
     </div>
@@ -161,6 +164,9 @@ const inPage = brandHref === "#top";
      in the accessibility tree as the summary's name. */
   @media (max-width: 520px) {
     .bar-right {
+      gap: var(--space-s);
+    }
+    .bar {
       gap: var(--space-s);
     }
     .menu-label {

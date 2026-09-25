@@ -43,7 +43,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Où ça en est",
-          p: "Le reste du profileur tient en trois pull requests que j'ai écrites, encore ouvertes : le cœur et l'export des mesures (#299), le connecteur NVML (#301, avec des modifications demandées) et le connecteur Variorum (#302, un brouillon d'environ 2 700 lignes qui inclut des tests unitaires). Son démon d'échantillonnage (#300) a été fusionné dans kokkos-tools en mars 2026, après que mon encadrant à l'ORNL, Jakob Bludau, l'a mené au bout de la relecture à la fin de mon séjour. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont certaines redécoupées ensuite ; trois fusionnées : le démon et deux correctifs de build. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié ; le poster SMC est cité dans le rapport de projet S4PST 2024–2025.",
+          p: "Le reste du profileur tient en trois pull requests que j'ai écrites, encore ouvertes : le cœur et l'export des mesures (#299), le connecteur NVML (#301, avec des modifications demandées) et le connecteur Variorum (#302, un brouillon d'environ 2 700 lignes qui inclut des tests unitaires). Son démon d'échantillonnage (#300) a été fusionné dans kokkos-tools en mars 2026, après que mon encadrant à l'ORNL, Jakob Bludau, l'a retravaillé pendant la relecture, après mon séjour. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont certaines redécoupées ensuite ; trois fusionnées : le démon et deux correctifs de build. Un poster, avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, présenté à la SMC 2025 et lors d'une session interne de l'ORNL, et cité dans le rapport de projet S4PST 2024–2025.",
         },
       ],
       links: [
@@ -56,10 +56,6 @@ export const fr: SiteContent = {
           href: "https://github.com/kokkos/kokkos-tools/pull/302",
         },
         {
-          label: "Kokkos Tools · PR #300 (fusionnée)",
-          href: "https://github.com/kokkos/kokkos-tools/pull/300",
-        },
-        {
           label: "energy-dashboard-for-kokkos",
           href: "https://github.com/ethan-puyaubreau/energy-dashboard-for-kokkos",
         },
@@ -69,6 +65,10 @@ export const fr: SiteContent = {
           href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
         },
         { label: "Rapport S4PST (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
+        {
+          label: "PR #300 : démon d'échantillonnage (fusionnée)",
+          href: "https://github.com/kokkos/kokkos-tools/pull/300",
+        },
       ],
     },
     {
@@ -124,7 +124,7 @@ export const fr: SiteContent = {
 
   about: [
     "Je développe des logiciels de recherche pour le calcul haute performance : des outils qui rendent les codes scientifiques mesurables, et l'ingénierie autour (tests, packaging, CI/CD, versions publiées, documentation) qui permet à d'autres de s'y fier. Je suis diplômé de Polytech Paris-Saclay depuis septembre 2026 (diplôme d'ingénieur) et je cherche un poste d'ingénieur logiciel pour la recherche à partir de janvier 2027, dans un laboratoire national, une université ou un institut de recherche, en France comme à l'international.",
-    "Langages : C++17 au quotidien, Python (NumPy, pandas) pour l'analyse et les bindings, Rust, CUDA. Build, tests et livraison : CMake, GitLab CI/CD, GitHub Actions, Jenkins, paquets Debian, Sphinx. Calcul par lots avec Slurm, sur Frontier et chez EDF. Anglais : langue de travail professionnelle (TOEIC 965) ; français langue maternelle.",
+    "Langages : C++17 au quotidien, Python (NumPy, pandas) pour l'analyse et les bindings, Rust, CUDA. Build, tests et livraison : CMake, GitLab CI/CD, GitHub Actions, Jenkins, paquets Debian, Sphinx. Calcul par lots avec Slurm, sur Frontier et chez EDF. Anglais : langue de travail professionnelle (TOEIC 970/990) ; français langue maternelle.",
   ],
 
   timeline: [

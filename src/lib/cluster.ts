@@ -160,7 +160,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       lead: "The five machines behind ",
       em: "my homelab",
       tail: ".",
-      lede: "The homelab is a five-node Proxmox cluster I run: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and about twenty services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time.",
+      lede: "The homelab is a five-node Proxmox cluster I have run since 2020 for about 60 regular users: routing and DNS at the edge, a self-hosted Git forge with its own CI/CD, and about twenty services behind one Traefik reverse proxy. The numbers on this page are a snapshot captured at build time.",
     },
     nodesHead: {
       title: "Five nodes, each with a job",
@@ -179,7 +179,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     pathHead: {
       title: "How a request reaches a service",
       intro:
-        "Every hit on one of my self-hosted apps crosses the same path, from the public edge to the backend that answers it. Here it is, end to end.",
+        "Every hit on one of my self-hosted apps crosses the same path, from the public edge to the backend that answers it.",
     },
     path: [
       { label: "Visitor", sub: "a browser" },
@@ -219,15 +219,15 @@ const CONTENT: Record<Locale, ClusterContent> = {
     opsHead: {
       title: "Operated end to end",
       intro:
-        "Backups, monitoring, and written procedures, so the cluster does not depend on my memory.",
+        "Backups, monitoring, and a written procedure for each recurring operation.",
     },
     ops: {
       oncall:
         "I handle backups, certificate renewal, monitoring, and incidents myself.",
       monitoring: "Monitored by Uptime Kuma, and by Gatus from outside the cluster",
-      runbooksTitle: "Runbooks as a repo",
+      runbooksTitle: "Runbooks in a private repo",
       runbooksBody:
-        "The cluster's setup, runbooks, and automation live in a versioned repo, operated like code. Adding a node or restoring a service follows a written procedure.",
+        "The cluster's setup, runbooks, and automation live in a private versioned repo. Adding a node or restoring a service follows a written procedure.",
     },
     talk: {
       head: "Questions about the cluster or my work",
@@ -236,7 +236,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     stackHead: {
       title: "The stack that holds it up",
-      intro: "Standard tools, chosen to be boring to operate.",
+      intro: "Standard, widely used tools.",
     },
     stack: [
       { name: "Proxmox VE", note: "The five-node hypervisor cluster" },
@@ -271,7 +271,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
       lead: "Les cinq machines qui font tourner ",
       em: "mon homelab",
       tail: ".",
-      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite : routage et DNS en frontal, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané pris à la génération du site.",
+      lede: "Le homelab, c'est le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : routage et DNS en frontal, une forge Git auto-hébergée avec sa propre CI/CD, et une vingtaine de services derrière un seul reverse proxy Traefik. Les chiffres de cette page sont un instantané pris à la génération du site.",
     },
     nodesHead: {
       title: "Cinq nœuds, chacun son rôle",
@@ -290,7 +290,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     pathHead: {
       title: "Comment une requête atteint un service",
       intro:
-        "Chaque visite d'une de mes apps auto-hébergées suit le même chemin, du point d'entrée public jusqu'au backend qui répond. Le voici, de bout en bout.",
+        "Chaque visite d'une de mes apps auto-hébergées suit le même chemin, du point d'entrée public jusqu'au backend qui répond.",
     },
     path: [
       { label: "Visiteur", sub: "un navigateur" },
@@ -334,15 +334,15 @@ const CONTENT: Record<Locale, ClusterContent> = {
     opsHead: {
       title: "Exploité de bout en bout",
       intro:
-        "Sauvegardes, supervision et procédures écrites, pour que le cluster ne dépende pas de ma mémoire.",
+        "Sauvegardes, supervision et une procédure écrite pour chaque opération courante.",
     },
     ops: {
       oncall:
         "Je gère moi-même les sauvegardes, le renouvellement des certificats, la supervision et les incidents.",
       monitoring: "Supervisé par Uptime Kuma, et par Gatus depuis l'extérieur du cluster",
-      runbooksTitle: "Les runbooks dans un dépôt",
+      runbooksTitle: "Les runbooks dans un dépôt privé",
       runbooksBody:
-        "La configuration, les runbooks et l'automatisation du cluster vivent dans un dépôt versionné, exploités comme du code. Ajouter un nœud ou restaurer un service suit une procédure écrite.",
+        "La configuration, les runbooks et l'automatisation du cluster vivent dans un dépôt versionné privé. Ajouter un nœud ou restaurer un service suit une procédure écrite.",
     },
     talk: {
       head: "Des questions sur le cluster ou mon travail",
@@ -351,7 +351,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     },
     stackHead: {
       title: "Les outils qui tiennent l'ensemble",
-      intro: "Des outils standard, choisis pour être simples à exploiter.",
+      intro: "Des outils standard et répandus.",
     },
     stack: [
       { name: "Proxmox VE", note: "Le cluster d'hyperviseurs à cinq nœuds" },
