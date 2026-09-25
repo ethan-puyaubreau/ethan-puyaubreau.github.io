@@ -105,14 +105,20 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
 
       <section id="operations">
         <SectionHeader title={c.opsHead.title}>{c.opsHead.intro}</SectionHeader>
-        <div class="ops">
-          <p class="ops-oncall">{c.ops.oncall}</p>
-          <p class="ops-monitor">{c.ops.monitoring}</p>
-          <div class="ops-runbooks">
-            <h3 class="ops-rb-title">{c.ops.runbooksTitle}</h3>
+        <ul class="ops">
+          <li>
+            <h3>{c.ops.oncallTitle}</h3>
+            <p>{c.ops.oncall}</p>
+          </li>
+          <li>
+            <h3>{c.ops.monitoringTitle}</h3>
+            <p>{c.ops.monitoring}</p>
+          </li>
+          <li>
+            <h3>{c.ops.runbooksTitle}</h3>
             <p>{c.ops.runbooksBody}</p>
-          </div>
-        </div>
+          </li>
+        </ul>
       </section>
 
       <aside id="hire" class="talk">
@@ -173,28 +179,22 @@ const asOf = new Date(snapshot.generatedAt).toLocaleDateString(
     padding-bottom: var(--space-xl);
   }
   .ops {
-    margin-top: var(--space-l);
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
     display: grid;
-    gap: var(--space-m);
-    max-width: var(--measure);
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-l);
   }
-  .ops-oncall {
-    font-size: var(--step-1);
-    color: var(--ink);
-  }
-  .ops-monitor {
-    font-size: var(--step--1);
-    color: var(--muted);
-  }
-  .ops-runbooks {
+  .ops li {
     border-top: 1px solid var(--line);
     padding-top: var(--space-s);
   }
-  .ops-rb-title {
+  .ops h3 {
     font-size: var(--step-0);
     margin-bottom: var(--space-2xs);
   }
-  .ops-runbooks p {
+  .ops p {
     color: var(--ink-dim);
   }
 

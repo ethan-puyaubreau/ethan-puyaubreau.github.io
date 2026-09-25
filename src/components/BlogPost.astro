@@ -69,6 +69,8 @@ const articleLd = {
   description={d.description}
   ogType="article"
   paired={hasOther}
+  ogImage={`/og/${locale}/${d.slug}.png`}
+  ogImageAlt={d.title}
 >
   <SiteHeader
     locale={locale}

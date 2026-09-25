@@ -84,7 +84,9 @@ export interface ClusterContent {
   };
   readonly opsHead: { readonly title: string; readonly intro: string };
   readonly ops: {
+    readonly oncallTitle: string;
     readonly oncall: string;
+    readonly monitoringTitle: string;
     readonly monitoring: string;
     readonly runbooksTitle: string;
     readonly runbooksBody: string;
@@ -222,9 +224,11 @@ const CONTENT: Record<Locale, ClusterContent> = {
         "Backups, monitoring, and a written procedure for each recurring operation.",
     },
     ops: {
-      oncall:
-        "I handle backups, certificate renewal, monitoring, and incidents myself.",
-      monitoring: "Monitored by Uptime Kuma, and by Gatus from outside the cluster",
+      oncallTitle: "Run by one person",
+      oncall: "I handle backups, certificate renewal, monitoring, and incidents myself.",
+      monitoringTitle: "Watched from two sides",
+      monitoring:
+        "Uptime Kuma inside the cluster, and Gatus on an outside server, so an outage of the cluster cannot hide its own alert.",
       runbooksTitle: "Runbooks in a private repo",
       runbooksBody:
         "The cluster's setup, runbooks, and automation live in a private versioned repo. Adding a node or restoring a service follows a written procedure.",
@@ -337,9 +341,12 @@ const CONTENT: Record<Locale, ClusterContent> = {
         "Sauvegardes, supervision et une procédure écrite pour chaque opération courante.",
     },
     ops: {
+      oncallTitle: "Exploité par une seule personne",
       oncall:
         "Je gère moi-même les sauvegardes, le renouvellement des certificats, la supervision et les incidents.",
-      monitoring: "Supervisé par Uptime Kuma, et par Gatus depuis l'extérieur du cluster",
+      monitoringTitle: "Surveillé des deux côtés",
+      monitoring:
+        "Uptime Kuma dans le cluster, et Gatus sur un serveur extérieur, pour qu'une panne du cluster ne puisse pas masquer sa propre alerte.",
       runbooksTitle: "Les runbooks dans un dépôt privé",
       runbooksBody:
         "La configuration, les runbooks et l'automatisation du cluster vivent dans un dépôt versionné privé. Ajouter un nœud ou restaurer un service suit une procédure écrite.",

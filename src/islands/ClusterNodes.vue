@@ -103,7 +103,7 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
 <style scoped>
 .nodes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
   gap: var(--space-m);
   margin-top: var(--space-l);
 }
@@ -169,7 +169,7 @@ const tone = (pct: number): string => (pct >= 85 ? "down" : pct >= 65 ? "warn" :
 }
 .meter {
   display: grid;
-  grid-template-columns: 4.5rem 1fr;
+  grid-template-columns: 3.75rem 1fr;
   align-items: center;
   gap: 0.6rem;
 }

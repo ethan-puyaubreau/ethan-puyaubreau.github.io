@@ -29,6 +29,9 @@ interface Props {
   paired?: boolean;
   /** Keep the page out of search results (404): no canonical, no og:url. */
   noindex?: boolean;
+  /** Site-relative Open Graph card and its alt text; defaults to the site card. */
+  ogImage?: string;
+  ogImageAlt?: string;
 }
 
 const locale = Astro.props.locale ?? toLocale(Astro.currentLocale);
@@ -41,10 +44,11 @@ const {
   ogType = "website",
   paired,
   noindex = false,
+  ogImage = "/og.png",
 } = Astro.props;
 
-const ogImageUrl = new URL("/og.png", site.url).href;
-const ogImageAlt = `${site.name}, ${copy.role}`;
+const ogImageUrl = new URL(ogImage, site.url).href;
+const ogImageAlt = Astro.props.ogImageAlt ?? `${site.name}, ${copy.role}`;
 
 // Strip the root's trailing slash so the canonical matches the hreflang
 // alternates (getAbsoluteLocaleUrl yields no slash under trailingSlash: never).

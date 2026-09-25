@@ -1,0 +1,97 @@
+---
+// Source pages for the 1200x630 Open Graph card of each blog post, captured to
+// /og/<lang>/<slug>.png by the same local screenshot script as /og. Not
+// indexed, not in the sitemap. House style: no em dashes.
+import "@fontsource-variable/archivo";
+import "@fontsource-variable/jetbrains-mono";
+import "../../../styles/tokens.css";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Mark from "../../../components/Mark.astro";
+import { site } from "../../../lib/site";
+import { getUI } from "../../../lib/ui";
+import { blogHome, type Locale } from "../../../lib/i18n";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", (p: CollectionEntry<"blog">) => !p.data.draft);
+  return posts.map((p: CollectionEntry<"blog">) => ({
+    params: { lang: p.data.lang, slug: p.data.slug },
+    props: { post: p },
+  }));
+}
+
+const { post } = Astro.props as { post: CollectionEntry<"blog"> };
+const locale = post.data.lang as Locale;
+const ui = getUI(locale);
+const blogUrl = `${site.url.replace("https://", "")}${blogHome(locale)}`;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>OG card</title>
+  </head>
+  <body>
+    <div class="og">
+      <p class="brand">
+        <Mark size={40} />
+        <span>{site.name}</span>
+      </p>
+      <div>
+        <p class="kicker">{ui.blog.kicker} · {post.data.tags.slice(0, 3).join(" · ")}</p>
+        <h1>{post.data.title}</h1>
+      </div>
+      <p class="url">{blogUrl}</p>
+    </div>
+
+    <style>
+      :global(html),
+      :global(body) {
+        margin: 0;
+        padding: 0;
+      }
+      .og {
+        box-sizing: border-box;
+        width: 1200px;
+        height: 630px;
+        padding: 64px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        border-left: 16px solid var(--accent);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 0;
+        font-size: 26px;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+      }
+      .kicker {
+        margin: 0 0 20px;
+        font-family: var(--font-mono);
+        font-size: 22px;
+        color: var(--accent);
+      }
+      h1 {
+        margin: 0;
+        max-width: 22ch;
+        font-size: 64px;
+        line-height: 1.05;
+        font-weight: 650;
+        letter-spacing: -0.03em;
+      }
+      .url {
+        margin: 0;
+        font-size: 22px;
+        color: var(--muted);
+      }
+    </style>
+  </body>
+</html>
