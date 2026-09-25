@@ -282,6 +282,16 @@ const articleLd = {
     color: var(--muted);
   }
 
+  /* End note: detail kept out of the argument, one click away from it. */
+  .prose :global(.note) {
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+    font-size: var(--step--1);
+    color: var(--muted);
+    scroll-margin-top: 5rem;
+  }
+
   /* Author card: a reader who lands straight on the article still sees who
      wrote it, that they are available, and a one-click path to contact. */
   .author-card {
