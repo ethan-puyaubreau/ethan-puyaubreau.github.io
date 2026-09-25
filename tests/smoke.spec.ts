@@ -42,7 +42,7 @@ test("home: the hero draws both measured traces with their energy", async ({ pag
 
 test("home FR renders in French and the lang switch points to /fr", async ({ page }) => {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await page.locator('.lang a[data-locale="fr"]').click();
+  await page.locator('.lang a[hreflang="fr"]').click();
   await expect(page).toHaveURL(/\/fr$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
 });
