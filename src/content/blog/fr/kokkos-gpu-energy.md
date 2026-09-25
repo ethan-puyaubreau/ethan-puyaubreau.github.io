@@ -3,7 +3,6 @@ title: "Imputer l'énergie GPU au code qui l'a dépensée"
 description: "Un profileur vous dit où du code GPU passe son temps. Je voulais savoir où il dépense ses joules : j'ai donc construit un connecteur Kokkos Tools qui échantillonne la puissance sur un thread dédié et l'intègre sur chaque région profilée. Sur le DBSCAN d'ArborX, l'implémentation la plus rapide économise plus d'énergie que de temps : 19 % de temps et 25 % d'énergie en moins."
 pubDate: 2026-06-12
 updatedDate: 2026-09-24
-pinned: true
 lang: fr
 slug: kokkos-gpu-energy
 tags: ["HPC", "GPU", "Kokkos", "NVML"]
@@ -23,8 +22,8 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 </table>
 
 <figure>
-  <img src="/blog/kokkos/fdbscan.png" alt="Puissance GPU dans le temps pour fdbscan d'ArborX sur un H100 NVL, un plateau autour de 300 W sous un plafond de 350 W. Énergie totale estimée : 925,1 J, dont 772,8 J dans les régions de noyaux." width="1200" height="898" loading="lazy" />
-  <img src="/blog/kokkos/fdbscan-dense.png" alt="Puissance GPU dans le temps pour fdbscan-dense sur le même GPU et la même entrée, un plateau similaire. Énergie totale estimée : 784,8 J, dont 615,6 J dans les régions de noyaux." width="1200" height="898" loading="lazy" />
+  <a href="/blog/kokkos/fdbscan.png"><img src="/blog/kokkos/fdbscan.png" alt="Puissance GPU dans le temps pour fdbscan d'ArborX sur un H100 NVL, un plateau autour de 300 W sous un plafond de 350 W. Énergie totale estimée : 925,1 J, dont 772,8 J dans les régions de noyaux." width="1200" height="898" loading="lazy" /></a>
+  <a href="/blog/kokkos/fdbscan-dense.png"><img src="/blog/kokkos/fdbscan-dense.png" alt="Puissance GPU dans le temps pour fdbscan-dense sur le même GPU et la même entrée, un plateau similaire. Énergie totale estimée : 784,8 J, dont 615,6 J dans les régions de noyaux." width="1200" height="898" loading="lazy" /></a>
   <figcaption>Figure 3 du poster : <code>fdbscan</code> (en haut) et <code>fdbscan-dense</code> (en bas). Les bandes colorées sont les régions Kokkos ; l'énergie est la trace de puissance intégrée dans le temps.</figcaption>
 </figure>
 
@@ -42,11 +41,12 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <h2>On ne peut pas lire l'énergie, seulement observer la puissance</h2>
 
-<p>La première version évidente lit le capteur de puissance au callback de début, le relit à la fin, et multiplie la moyenne par la durée ; c'est ce que fait le <a href="https://github.com/kokkos/kokkos-tools/tree/develop/profiling/variorum-connector">connecteur Variorum</a> déjà présent dans Kokkos Tools. Ça ne marche pas, et la raison pour laquelle ça ne marche pas est au cœur du problème. La bibliothèque de gestion de NVIDIA, NVML, expose <code>nvmlDeviceGetPowerUsage</code>, qui renvoie la puissance instantanée de la carte en milliwatts. Le piège est double. Cette valeur n'est rafraîchie que toutes les 100 ms, et elle ne moyenne que les 25 dernières ms de chaque intervalle (<a href="https://doi.org/10.1109/SC41406.2024.00028">Yang, Adamek et Armour, SC24</a>) : l'essentiel de ce que fait la carte n'est jamais observé. La plupart des noyaux HPC durent moins de 10 ms : début et fin renvoient alors souvent la même valeur périmée, et la durée ne dit rien. Et même quand une région est assez longue pour couvrir plusieurs mises à jour, deux lectures ponctuelles ne peuvent pas décrire une courbe qui monte et descend pendant toute sa durée.</p>
+<p>La première version évidente lit le capteur de puissance au callback de début, le relit à la fin, et multiplie la moyenne par la durée ; c'est ce que fait le <a href="https://github.com/kokkos/kokkos-tools/tree/develop/profiling/variorum-connector">connecteur Variorum</a> déjà présent dans Kokkos Tools. Ça ne marche pas, et la raison pour laquelle ça ne marche pas est au cœur du problème. La bibliothèque de gestion de NVIDIA, NVML, expose <code>nvmlDeviceGetPowerUsage</code>, qui renvoie la puissance instantanée de la carte en milliwatts. Le piège est double. Cette valeur n'est rafraîchie que toutes les 100 ms, et elle ne moyenne que les 25 dernières ms de chaque intervalle (<a href="https://doi.org/10.1109/SC41406.2024.00028">Yang, Adamek et Armour, SC24</a>) : l'essentiel de ce que fait la carte n'est jamais observé. Beaucoup de noyaux durent bien moins que ces 100 ms : début et fin renvoient alors souvent la même valeur périmée, et la durée ne dit rien. Et même quand une région est assez longue pour couvrir plusieurs mises à jour, deux lectures ponctuelles ne peuvent pas décrire une courbe qui monte et descend pendant toute sa durée.</p>
 
 <p>Le problème de fond, c'est que la puissance est la mauvaise grandeur à échantillonner aux bornes. La puissance est un débit instantané, en watts. Ce qu'on paie, c'est de l'énergie, en joules, et l'énergie est l'intégrale de la puissance dans le temps. Deux lectures donnent deux hauteurs d'une courbe. La facture, c'est l'aire en dessous. Ma première version donnait n'importe quoi sur les noyaux courts : tantôt zéro, tantôt la puissance du noyau précédent, selon le côté d'une mise à jour du capteur où tombaient les deux lectures, et c'était le signal pour cesser d'échantillonner au rythme du noyau et passer au rythme de l'horloge.</p>
 
 <figure>
+<div class="scroll" tabindex="0" role="region" aria-label="Schéma, défile horizontalement sur petit écran">
 <svg viewBox="0 0 720 380" role="img" aria-label="Une courbe puissance-temps schématique pour trois régions profilées, A, B et C, chacune à un niveau de puissance différent. Des points d'échantillonnage jalonnent la courbe à cadence fixe. Une ligne pointillée marque le plancher de repos, et l'aire sous la première région est ombrée et annotée énergie égale l'intégrale de la puissance dans le temps." xmlns="http://www.w3.org/2000/svg">
   <g stroke="#c9c9c4" stroke-width="1">
     <line x1="70" y1="50" x2="70" y2="300"/>
@@ -89,6 +89,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
   <text x="177" y="180" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#9a3412">Énergie = &#8747; P dt</text>
   <text x="177" y="198" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#9a3412">aire au-dessus du repos = coût marginal</text>
 </svg>
+</div>
 <figcaption>Un schéma, pas une mesure. L'énergie d'une région est l'aire sous sa courbe de puissance. La ligne pointillée est le plancher de repos ; le coût marginal d'une région est la part de l'aire qui se situe au-dessus. Les points sont le thread dédié qui échantillonne à cadence fixe.</figcaption>
 </figure>
 
@@ -107,6 +108,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 <p>NVML répond à une seule question : ce qu'a consommé ce GPU NVIDIA. La mesure est par carte, en milliwatts, NVIDIA uniquement, et ne voit rien hors de la carte. L'outillage de 2025 a donc un second outil de mesure bâti sur Variorum (#302, à côté de l'outil NVML de #301), indépendant du fournisseur, qui lit la puissance au niveau du nœud et du socket, y compris le CPU (via RAPL, les compteurs de puissance intégrés aux processeurs Intel et AMD), la DRAM, et certains GPU non NVIDIA. NVML donne ce que le GPU a consommé, Variorum ce que le nœud entier a consommé. Une région qui paraît bon marché sur la carte peut tout de même brasser assez de données pour faire chauffer le CPU et les contrôleurs mémoire autour d'elle, et seule la vue au niveau du nœud le détecte. On se tourne vers NVML quand la question porte sur ce qu'a dépensé le GPU lui-même, et vers Variorum quand on veut la facture énergétique que la salle machine voit réellement.</p>
 
 <figure>
+<div class="scroll" tabindex="0" role="region" aria-label="Schéma, défile horizontalement sur petit écran">
 <svg viewBox="0 0 760 340" role="img" aria-label="Le pipeline du connecteur. L'application Kokkos déclenche les callbacks Tools à chaque région parallèle ; le connecteur énergie reçoit une trace de puissance d'un thread échantillonneur qui lit la puissance hors bande à intervalle fixe ; NVML et Variorum alimentent l'échantillonneur ; le connecteur intègre la trace par région en joules, qui partent vers energy-dashboard-for-kokkos, l'outil d'analyse." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-k1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -157,6 +159,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
   </g>
   <text x="392" y="180" text-anchor="start" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" font-style="italic" fill="#5f5f5c">trace intégrée</text>
 </svg>
+</div>
 <figcaption>Les callbacks ne font que marquer quand chaque région s'ouvre et se ferme. L'énergie vient d'une trace de puissance séparée que le connecteur intègre sur ces fenêtres, avec NVML ou Variorum sous l'échantillonneur selon que vous interrogez la carte ou le nœud. Dans la version de 2026, le connecteur ne fait qu'enregistrer la trace, et c'est energy-dashboard-for-kokkos qui intègre.</figcaption>
 </figure>
 

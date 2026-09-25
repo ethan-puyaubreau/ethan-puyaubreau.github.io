@@ -3,6 +3,7 @@ title: "Tearing the GPU node down from Proxmox to bare Debian"
 description: "The GPU node ran Proxmox. I wiped it for bare Debian 13 so the GPU would sit directly under the host kernel, then spent the evening in the NVIDIA driver gauntlet Trixie hands you. The part that caught me was Secure Boot. (It has since gone back to Proxmox.)"
 pubDate: 2026-06-18
 updatedDate: 2026-09-23
+home: false
 lang: en
 slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
@@ -21,6 +22,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 <p>A box that exists only to run one GPU does not need a hypervisor sitting between me and <code>nvidia-smi</code>. Remove the layer and the card is back on bare metal, with the passthrough tax gone along with it.</p>
 
 <figure>
+<div class="scroll" tabindex="0" role="region" aria-label="Diagram, scrolls sideways on narrow screens">
 <svg viewBox="0 0 720 340" role="img" aria-label="Two software stacks compared. The Proxmox stack has five layers with VFIO passthrough as friction; the bare Debian stack has four layers with the GPU directly under the kernel." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -56,6 +58,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
   <line x1="314" y1="162" x2="404" y2="162" stroke="#111111" stroke-width="3" marker-end="url(#ar-u1)"/>
   <text x="359" y="150" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="12" font-style="italic" fill="#5f5f5c">collapse the stack</text>
 </svg>
+</div>
 <figcaption>The same hardware, two stacks. Passthrough buys flexibility a single-purpose GPU node never uses.</figcaption>
 </figure>
 
@@ -63,7 +66,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 
 <p>Debian ships <code>nouveau</code>, the open-source driver, and loads it at boot. The proprietary module will not bind while nouveau is holding the card. The <code>nvidia-driver</code> package installs its own blacklist for it, so the file below is belt and braces; the step that matters is rebuilding the initramfs, so the blacklist is already in place in early boot, before nouveau can load from the initramfs and claim the GPU.</p>
 
-<pre><code># /etc/modprobe.d/blacklist-nouveau.conf
+<pre tabindex="0"><code># /etc/modprobe.d/blacklist-nouveau.conf
 blacklist nouveau
 options nouveau modeset=0
 
@@ -74,7 +77,7 @@ sudo update-initramfs -u</code></pre>
 
 <p>Trixie keeps the NVIDIA driver in the <code>non-free</code> component and its firmware in <code>non-free-firmware</code>, so the sources have to be widened before any of it is installable. Then you install the kernel headers and the driver package, and DKMS compiles the module against your running kernel. That is the reason to use the packaged driver instead of the <code>.run</code> installer: DKMS rebuilds the module on every kernel upgrade, so an <code>apt upgrade</code> does not quietly leave you with a black screen.</p>
 
-<pre><code># add  contrib non-free non-free-firmware  to your apt sources, then:
+<pre tabindex="0"><code># add  contrib non-free non-free-firmware  to your apt sources, then:
 sudo apt update
 sudo apt install linux-headers-amd64 nvidia-driver</code></pre>
 
@@ -82,20 +85,21 @@ sudo apt install linux-headers-amd64 nvidia-driver</code></pre>
 
 <p>After the reboot I ran <code>nvidia-smi</code> and got this:</p>
 
-<pre><code>$ nvidia-smi
+<pre tabindex="0"><code>$ nvidia-smi
 NVIDIA-SMI has failed because it couldn't communicate with the
 NVIDIA driver. Make sure that the latest NVIDIA driver is installed
 and running.</code></pre>
 
 <p>The card was fine and the module had built without complaint. The kernel was simply refusing to load it, because Secure Boot was on and DKMS had signed the module with a local key the firmware did not trust yet. There are two ways out. You can turn Secure Boot off in firmware, or enroll that key as a Machine Owner Key and keep the chain of trust intact. I kept Secure Boot and enrolled the key, a one-time step in the MOK manager on the next boot. Nothing in the install itself fails loudly; you only find out at <code>nvidia-smi</code>.</p>
 
-<pre><code># enroll the DKMS signing key, set a one-time password, then reboot
+<pre tabindex="0"><code># enroll the DKMS signing key, set a one-time password, then reboot
 sudo mokutil --import /var/lib/dkms/mok.pub
 # at the blue MOK manager on reboot: Enroll MOK, enter the password, reboot</code></pre>
 
 <p>After that, <code>nvidia-smi</code> came up clean with the card and driver version.</p>
 
 <figure>
+<div class="scroll" tabindex="0" role="region" aria-label="Diagram, scrolls sideways on narrow screens">
 <svg viewBox="0 0 720 560" role="img" aria-label="A vertical flowchart of the driver install: add sources, blacklist nouveau, install headers and driver via DKMS, then a Secure Boot decision that either enrolls a MOK or proceeds straight to reboot, ending at a working nvidia-smi." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u2" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -133,6 +137,7 @@ sudo mokutil --import /var/lib/dkms/mok.pub
   <text x="284" y="362" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">no</text>
   <text x="425" y="292" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">yes</text>
 </svg>
+</div>
 <figcaption>The whole sequence. Every box except the amber one is mechanical; the amber one is where a clean build still gives you a dead <code>nvidia-smi</code>.</figcaption>
 </figure>
 

@@ -27,11 +27,11 @@ export const fr: SiteContent = {
       },
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Mesurer où part l'énergie sur le GPU",
-      role: "Graduate Research Fellow (programme GRO)",
+      role: "Stagiaire de recherche d'été (programme GRO)",
       period: "Été 2025",
-      stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
+      stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Slurm", "Rust"],
       summary:
-        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances sur laquelle reposent de nombreux codes du Département de l'Énergie américain : un démon d'échantillonnage fusionné dans Kokkos Tools, des connecteurs de mesure soumis en amont, des outils testés sur Frontier, et energy-dashboard-for-kokkos, un outil d'analyse open source que j'ai réécrit en septembre 2026.",
+        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances sur laquelle reposent de nombreux codes du Département de l'Énergie américain : un profileur d'énergie pour Kokkos Tools, avec des connecteurs NVML et Variorum, soumis en amont avec ses tests unitaires, dont le démon d'échantillonnage est déjà fusionné, et energy-dashboard-for-kokkos, l'outil d'analyse open source que j'ai réécrit en septembre 2026.",
       body: [
         {
           h: "Le problème",
@@ -43,12 +43,16 @@ export const fr: SiteContent = {
         },
         {
           h: "Où ça en est",
-          p: "J'ai écrit le démon d'échantillonnage (#300) ; mon encadrant à l'ORNL, Jakob Bludau, l'a mené au bout de la relecture après mon séjour, et il a été fusionné dans kokkos-tools en mars 2026. Le cœur (#299) et les connecteurs NVML et Variorum (#301, #302) sont encore ouverts. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont certaines redécoupées ensuite ; trois fusionnées : le démon et deux correctifs de build. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié ; le poster SMC est cité dans le rapport de projet S4PST 2024–2025. J'ai aussi été invité à présenter ces travaux à SC25, ce que mon calendrier d'alternance n'a pas permis.",
+          p: "Le profileur est en relecture sous la forme de trois pull requests que j'ai écrites : le cœur et l'export des mesures (#299), le connecteur NVML (#301) et le connecteur Variorum (#302, environ 2 700 lignes avec ses tests unitaires, encore en brouillon). Son démon d'échantillonnage (#300) a été fusionné dans kokkos-tools en mars 2026, après que mon encadrant à l'ORNL, Jakob Bludau, l'a mené au bout de la relecture à la fin de mon séjour. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont certaines redécoupées ensuite ; trois fusionnées : le démon et deux correctifs de build. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié ; le poster SMC est cité dans le rapport de projet S4PST 2024–2025.",
         },
       ],
       links: [
         {
-          label: "Kokkos Tools · PR #300",
+          label: "Toutes les pull requests kokkos-tools",
+          href: "https://github.com/kokkos/kokkos-tools/pulls?q=is%3Apr+author%3Aethan-puyaubreau",
+        },
+        {
+          label: "Kokkos Tools · PR #300 (fusionnée)",
           href: "https://github.com/kokkos/kokkos-tools/pull/300",
         },
         {
@@ -61,10 +65,6 @@ export const fr: SiteContent = {
           href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
         },
         { label: "Rapport S4PST (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
-        {
-          label: "Toutes les pull requests kokkos-tools",
-          href: "https://github.com/kokkos/kokkos-tools/pulls?q=is%3Apr+author%3Aethan-puyaubreau",
-        },
       ],
     },
     {
@@ -104,12 +104,6 @@ export const fr: SiteContent = {
       hrefLabel: "Le cluster",
     },
     {
-      name: "Événements DCS World",
-      blurb:
-        "De grands événements multijoueurs sur le simulateur de vol DCS World, que je conçois et organise depuis 2021 : 150 à plus de 180 participants, une équipe bénévole de quatre ou cinq personnes qui monte à une douzaine pour les finales, et un retour d'expérience écrit après chaque événement.",
-      noLinkLabel: "en cours",
-    },
-    {
       name: "n-body galaxy",
       blurb:
         "Jusqu'à 65 536 corps en interaction gravitationnelle, intégrés en temps réel dans des compute shaders WebGPU. Un projet personnel.",
@@ -117,15 +111,16 @@ export const fr: SiteContent = {
       hrefLabel: "En ligne",
     },
     {
-      name: "vireli",
+      name: "Événements DCS World",
       blurb:
-        "Une PWA d'empreinte carbone gamifiée, réalisée avec un partenaire industriel. J'ai dirigé l'équipe de six (554 heures au total) et pris en charge l'architecture, le backend et le déploiement ; les 18 exigences ont été livrées.",
-      noLinkLabel: "non public",
+        "Des événements multijoueurs de 150 à plus de 180 participants sur le simulateur de vol DCS World, organisés avec une équipe bénévole depuis 2021.",
+      noLinkLabel: "en cours",
     },
   ],
 
   about: [
-    "Je développe des logiciels de recherche pour le calcul haute performance : des outils qui rendent les codes scientifiques mesurables, et l'ingénierie autour (tests, packaging, CI/CD, versions publiées, documentation) qui permet à d'autres de s'y fier. Je sors diplômé de Polytech Paris-Saclay en septembre 2026 (diplôme d'ingénieur) et je cherche un poste d'ingénieur logiciel pour la recherche à partir de janvier 2027, dans un laboratoire national, une université ou un institut de recherche, en France comme à l'international.",
+    "Je développe des logiciels de recherche pour le calcul haute performance : des outils qui rendent les codes scientifiques mesurables, et l'ingénierie autour (tests, packaging, CI/CD, versions publiées, documentation) qui permet à d'autres de s'y fier. Je suis diplômé de Polytech Paris-Saclay depuis septembre 2026 (diplôme d'ingénieur) et je cherche un poste d'ingénieur logiciel pour la recherche à partir de janvier 2027, dans un laboratoire national, une université ou un institut de recherche, en France comme à l'international.",
+    "Langages : C++17 au quotidien, Python (NumPy, pandas) pour l'analyse et les bindings, Rust, CUDA. Build, tests et livraison : CMake, GitLab CI/CD, GitHub Actions, Jenkins, paquets Debian, Sphinx. Calcul par lots avec Slurm, sur Frontier et chez EDF. Anglais : langue de travail professionnelle (TOEIC 965) ; français langue maternelle.",
   ],
 
   timeline: [

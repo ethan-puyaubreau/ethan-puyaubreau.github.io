@@ -3,6 +3,7 @@ title: "Démonter le nœud GPU, de Proxmox à une Debian nue"
 description: "Ce nœud tournait sous Proxmox. Je l'ai effacé pour une Debian 13 nue afin que le GPU soit piloté directement par le noyau de l'hôte, sans hyperviseur entre les deux, puis j'ai passé la soirée dans le parcours du combattant des pilotes NVIDIA que Trixie vous réserve. Ce qui m'a piégé, c'est le Secure Boot. (Il est depuis revenu sous Proxmox.)"
 pubDate: 2026-06-18
 updatedDate: 2026-09-23
+home: false
 lang: fr
 slug: gpu-debian-nvidia
 tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
@@ -21,6 +22,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 <p>Une machine qui n'existe que pour faire tourner un GPU n'a pas besoin d'un hyperviseur posé entre moi et <code>nvidia-smi</code>. Une fois la couche supprimée, la carte revient sur le métal nu, et la taxe du passthrough disparaît avec elle.</p>
 
 <figure>
+<div class="scroll" tabindex="0" role="region" aria-label="Schéma, défile horizontalement sur petit écran">
 <svg viewBox="0 0 720 340" role="img" aria-label="Deux piles logicielles comparées. La pile Proxmox a cinq couches avec le passthrough VFIO comme friction ; la pile Debian nue a quatre couches avec le GPU directement sous le noyau." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -56,6 +58,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
   <line x1="314" y1="162" x2="404" y2="162" stroke="#111111" stroke-width="3" marker-end="url(#ar-u1)"/>
   <text x="359" y="150" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="12" font-style="italic" fill="#5f5f5c">aplatir la pile</text>
 </svg>
+</div>
 <figcaption>Le même matériel, deux piles. Le passthrough offre une flexibilité dont un nœud GPU à usage unique ne se sert jamais.</figcaption>
 </figure>
 
@@ -63,7 +66,7 @@ tags: ["Homelab", "Debian", "NVIDIA", "Proxmox"]
 
 <p>Debian fournit <code>nouveau</code>, le pilote open source, et le charge au démarrage. Le module propriétaire ne s'attachera pas tant que nouveau tient la carte. Le paquet <code>nvidia-driver</code> installe déjà sa propre liste noire, donc le fichier ci-dessous n'est qu'une précaution ; l'étape qui compte, c'est de reconstruire l'initramfs, pour que la liste noire s'applique dès le début du démarrage, avant que nouveau ne soit chargé depuis l'initramfs et ne prenne la carte.</p>
 
-<pre><code># /etc/modprobe.d/blacklist-nouveau.conf
+<pre tabindex="0"><code># /etc/modprobe.d/blacklist-nouveau.conf
 blacklist nouveau
 options nouveau modeset=0
 
@@ -74,7 +77,7 @@ sudo update-initramfs -u</code></pre>
 
 <p>Trixie garde le pilote NVIDIA dans le composant <code>non-free</code> et son firmware dans <code>non-free-firmware</code> : il faut donc élargir les sources avant de pouvoir installer quoi que ce soit. Ensuite on installe les en-têtes du noyau et le paquet du pilote, et DKMS compile le module pour le noyau en cours d'exécution. C'est la raison de préférer le pilote empaqueté à l'installeur <code>.run</code> : DKMS recompile le module à chaque mise à jour du noyau, si bien qu'un <code>apt upgrade</code> ne vous laisse pas discrètement avec un écran noir.</p>
 
-<pre><code># ajoutez  contrib non-free non-free-firmware  à vos sources apt, puis :
+<pre tabindex="0"><code># ajoutez  contrib non-free non-free-firmware  à vos sources apt, puis :
 sudo apt update
 sudo apt install linux-headers-amd64 nvidia-driver</code></pre>
 
@@ -82,20 +85,21 @@ sudo apt install linux-headers-amd64 nvidia-driver</code></pre>
 
 <p>Après le redémarrage, j'ai lancé <code>nvidia-smi</code> et j'ai obtenu ceci :</p>
 
-<pre><code>$ nvidia-smi
+<pre tabindex="0"><code>$ nvidia-smi
 NVIDIA-SMI has failed because it couldn't communicate with the
 NVIDIA driver. Make sure that the latest NVIDIA driver is installed
 and running.</code></pre>
 
 <p>La carte allait bien et le module s'était compilé sans broncher. Le noyau refusait simplement de le charger, parce que le Secure Boot était actif et que DKMS avait signé le module avec une clé locale que le firmware ne reconnaissait pas encore. Il y a deux issues. On peut désactiver le Secure Boot dans le firmware, ou enrôler cette clé comme clé du propriétaire de la machine (Machine Owner Key) et garder la chaîne de confiance intacte. J'ai gardé le Secure Boot et enrôlé la clé, une manipulation à faire une seule fois dans le gestionnaire MOK, au démarrage suivant. Rien dans l'installation elle-même n'échoue bruyamment : on ne s'en aperçoit qu'au moment de lancer <code>nvidia-smi</code>.</p>
 
-<pre><code># enrôler la clé de signature DKMS, définir un mot de passe à usage unique, puis redémarrer
+<pre tabindex="0"><code># enrôler la clé de signature DKMS, définir un mot de passe à usage unique, puis redémarrer
 sudo mokutil --import /var/lib/dkms/mok.pub
 # au gestionnaire MOK bleu au redémarrage : Enroll MOK, saisir le mot de passe, redémarrer</code></pre>
 
 <p>Après ça, <code>nvidia-smi</code> a répondu normalement, avec la carte et la version du pilote.</p>
 
 <figure>
+<div class="scroll" tabindex="0" role="region" aria-label="Schéma, défile horizontalement sur petit écran">
 <svg viewBox="0 0 720 560" role="img" aria-label="Un organigramme vertical de l'installation du pilote : ajouter les sources, mettre nouveau en liste noire, installer les en-têtes et le pilote via DKMS, puis une décision Secure Boot qui soit enrôle une MOK, soit passe directement au redémarrage, pour finir sur un nvidia-smi qui fonctionne." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-u2" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -133,6 +137,7 @@ sudo mokutil --import /var/lib/dkms/mok.pub
   <text x="284" y="362" text-anchor="end" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">non</text>
   <text x="425" y="292" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11.5" fill="#5f5f5c">oui</text>
 </svg>
+</div>
 <figcaption>Toute la séquence. Toutes les cases sauf la case ambrée sont mécaniques ; la case ambrée est celle où une compilation propre vous donne quand même un <code>nvidia-smi</code> mort.</figcaption>
 </figure>
 

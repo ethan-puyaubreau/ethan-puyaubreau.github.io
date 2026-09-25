@@ -6,7 +6,7 @@
  * House style: no em dashes anywhere, EN or FR. Voice stays dry and precise.
  */
 import type { Locale } from "./i18n";
-import { withFrenchSpacing } from "./french-spacing.mjs";
+import { withFrenchSpacing, withEnglishTypography } from "./french-spacing.mjs";
 
 export interface HeroStrings {
   readonly title: string;
@@ -91,7 +91,7 @@ const STRINGS: Record<Locale, UIStrings> = {
   en: {
     skipToContent: "Skip to content",
     metaDescription:
-      "Research software engineer in high-performance computing. Open-source GPU energy tooling for Kokkos at Oak Ridge, tested on Frontier; performance tooling for nuclear simulation at EDF; a five-node cluster I run with CI/CD.",
+      "Research software engineer in high-performance computing. Open-source GPU energy tooling for Kokkos at Oak Ridge; performance tooling for nuclear simulation at EDF; a five-node cluster I run with CI/CD.",
     contactMailSubject: "Research software engineer role: getting in touch (available Jan 2027)",
     hero: {
       title: "I build research software that measures what scientific computing costs.",
@@ -99,7 +99,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       ledeBeforeLink: "Energy-measurement tooling for ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
-        ", built at Oak Ridge National Laboratory and tested on Frontier, and three years of performance tooling for a nuclear reactor simulation code at EDF.",
+        ", built at Oak Ridge National Laboratory, and three years of performance tooling for a nuclear reactor simulation code at EDF.",
       figureLabel:
         "GPU power over time for two ArborX DBSCAN implementations on an NVIDIA H100 NVL, aligned on the start of the DBSCAN computation. fdbscan runs for 2.68 seconds and uses 769 joules; fdbscan-dense runs for 2.20 seconds and uses 569 joules.",
       figureCaption:
@@ -147,17 +147,17 @@ const STRINGS: Record<Locale, UIStrings> = {
       updated: "updated",
       tagsLabel: "Tags:",
       authorTagline:
-        "Research software engineer in HPC; Graduate Research Fellow at Oak Ridge National Laboratory in 2025.",
+        "Research software engineer in HPC; summer 2025 research intern at Oak Ridge National Laboratory.",
       authorAvailable: "Open to research software engineer roles from January 2027.",
       contactCta: "Get in touch",
-      talkHead: "Questions, corrections, or work: my address is below.",
+      talkHead: "Questions, corrections, or work:",
     },
   },
 
   fr: {
     skipToContent: "Aller au contenu",
     metaDescription:
-      "Ingénieur logiciel pour la recherche en calcul haute performance. Outils open source de mesure d'énergie GPU pour Kokkos à Oak Ridge, testés sur Frontier ; outillage de performance pour la simulation nucléaire chez EDF ; un cluster de cinq nœuds que j'exploite avec CI/CD.",
+      "Ingénieur logiciel pour la recherche en calcul haute performance. Outils open source de mesure d'énergie GPU pour Kokkos à Oak Ridge ; outillage de performance pour la simulation nucléaire chez EDF ; un cluster de cinq nœuds que j'exploite avec CI/CD.",
     contactMailSubject:
       "Poste d'ingénieur logiciel pour la recherche : prise de contact (dispo janv. 2027)",
     hero: {
@@ -167,7 +167,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       ledeBeforeLink: "Des outils de mesure d'énergie pour ",
       ledeLinkLabel: "Kokkos",
       ledeAfterLink:
-        ", développés à l'Oak Ridge National Laboratory et testés sur Frontier, et trois ans d'outillage de performance pour un code de simulation de réacteurs nucléaires chez EDF.",
+        ", développés à l'Oak Ridge National Laboratory, et trois ans d'outillage de performance pour un code de simulation de réacteurs nucléaires chez EDF.",
       figureLabel:
         "Puissance GPU dans le temps pour deux implémentations de DBSCAN d'ArborX sur un NVIDIA H100 NVL, alignées sur le début du calcul DBSCAN. fdbscan tourne 2,68 secondes et consomme 769 joules ; fdbscan-dense tourne 2,20 secondes et consomme 569 joules.",
       figureCaption:
@@ -216,16 +216,19 @@ const STRINGS: Record<Locale, UIStrings> = {
       updated: "mis à jour le",
       tagsLabel: "Étiquettes :",
       authorTagline:
-        "Ingénieur logiciel pour la recherche en HPC ; Graduate Research Fellow à l'Oak Ridge National Laboratory en 2025.",
+        "Ingénieur logiciel pour la recherche en HPC ; stagiaire de recherche à l'Oak Ridge National Laboratory à l'été 2025.",
       authorAvailable: "Ouvert aux postes d'ingénieur logiciel pour la recherche dès janvier 2027.",
       contactCta: "Me contacter",
-      talkHead: "Questions, corrections ou propositions : mon adresse est en dessous.",
+      talkHead: "Questions, corrections ou propositions :",
     },
   },
 };
 
 /** Resolve the UI chrome strings for a locale. */
-const SPACED: Record<Locale, UIStrings> = { en: STRINGS.en, fr: withFrenchSpacing(STRINGS.fr) };
+const SPACED: Record<Locale, UIStrings> = {
+  en: withEnglishTypography(STRINGS.en),
+  fr: withFrenchSpacing(STRINGS.fr),
+};
 
 export function getUI(locale: Locale): UIStrings {
   return SPACED[locale];

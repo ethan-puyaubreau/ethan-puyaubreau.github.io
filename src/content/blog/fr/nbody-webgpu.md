@@ -1,13 +1,13 @@
 ---
 title: "Une galaxie dans un onglet, calculée sur votre GPU avec WebGPU"
-description: "Une galaxie gravitationnelle N-corps en temps réel : une somme O(N²) en force brute recalculée à chaque image dans un compute shader WebGPU. 65k corps, sans serveur, sans précalcul."
+description: "Une galaxie gravitationnelle N-corps en temps réel : une somme O(N²) en force brute recalculée à chaque image dans un compute shader WebGPU. 65 536 corps, sans serveur, sans précalcul."
 pubDate: 2026-06-09
 lang: fr
 slug: nbody-webgpu
 tags: ["WebGPU", "GPGPU", "WGSL", "simulation"]
 ---
 
-Je voulais savoir jusqu'où une simulation gravitationnelle N-corps naïve pouvait aller dans un onglet de navigateur, sans serveur et sans images précalculées. La réponse : 65 536 corps à 60 fps sur un GPU dédié récent, soit environ 258 milliards de calculs de force par seconde, le tout via les compute shaders WebGPU.
+Je voulais savoir jusqu'où une simulation gravitationnelle N-corps naïve pouvait aller dans un onglet de navigateur, sans serveur et sans images précalculées. La réponse : 65 536 corps à 60 fps sur une NVIDIA RTX 3080 Ti, soit environ 258 milliards de calculs de force par seconde, le tout via les compute shaders WebGPU.
 
 [Démo en ligne](https://ethan-puyaubreau.github.io/nbody-webgpu/) · [Code source sur GitHub](https://github.com/ethan-puyaubreau/nbody-webgpu) (TypeScript, zéro dépendance runtime)
 
@@ -27,7 +27,7 @@ Le noyau évident fait boucler chaque thread sur les N corps, en lisant chaque p
 
 La première version utilisait un simple Euler explicite, et la galaxie se défaisait lentement en bouillie. Euler injecte un peu d'énergie à chaque pas, et sur des millions de pas cette erreur s'accumule jusqu'à faire disparaître la structure.
 
-Passer à un schéma saute-mouton (leapfrog) a réglé ça. C'est l'intégrateur standard pour ce genre de simulation parce qu'il reste stable en énergie sur de longues durées : l'énergie totale oscille un peu mais ne dérive pas, donc le disque garde sa forme sur de longues exécutions. Le prix à payer : garder position et vitesse décalées d'un demi-pas. Sans lui, la galaxie explosait.
+Passer à un schéma saute-mouton (leapfrog) a réglé ça. C'est l'intégrateur standard pour ce genre de simulation parce qu'il reste stable en énergie sur de longues durées : l'énergie totale oscille un peu mais ne dérive pas, donc le disque garde sa forme. Le prix à payer : garder position et vitesse décalées d'un demi-pas.
 
 ## L'adoucissement, pour que les rencontres proches n'explosent pas
 
@@ -41,7 +41,7 @@ Les positions vivent dans deux tampons. Chaque pas lit l'un et écrit l'autre, p
 
 À l'intérieur d'une même passe de calcul WebGPU, les lancements sont ordonnés. Quand j'enchaîne plusieurs sous-pas dans une seule passe, la lecture-après-écriture entre eux est donc déjà sûre, et je n'ai pas besoin d'insérer de barrières manuelles. Les vitesses, elles, vivent dans un seul tampon, parce que chaque thread ne touche jamais qu'à sa propre vitesse : aucun conflit possible.
 
-## Dessiner 65k points qui ne font pas 1 pixel
+## Dessiner 65 536 points qui ne font pas 1 pixel
 
 La primitive point de WebGPU ne dessine jamais qu'un point d'un pixel, ce qui ressemble à de la neige. Chaque corps est donc rendu comme un quad instancié, deux triangles agrandis à une taille fixe en pixels, avec une atténuation radiale douce dans le fragment shader et un mélange additif pour que les corps qui se chevauchent rayonnent. La couleur est indexée sur la vitesse, donc le disque interne rapide chauffe et le bord lent reste sombre. Sans cette correspondance, l'image se lit comme un nuage de particules.
 
@@ -51,6 +51,6 @@ L'état initial est un disque en rotation autour d'une masse centrale lourde. La
 
 ## Bilan
 
-Sur un GPU dédié récent, ça tient 60 fps à 65k corps, soit, d'après l'affichage à l'écran, environ 258 milliards d'interactions entre paires par seconde (N² × fps). L'ensemble tient en une poignée de fichiers TypeScript et deux shaders WGSL, construit avec Vite, sans dépendance à l'exécution, et se déploie sur GitHub Pages.
+Sur la RTX 3080 Ti, ça tient 60 fps à 65 536 corps, soit, d'après l'affichage à l'écran, environ 258 milliards d'interactions entre paires par seconde (N² × fps). L'ensemble tient en une poignée de fichiers TypeScript et deux shaders WGSL, construit avec Vite, sans dépendance à l'exécution, et se déploie sur GitHub Pages.
 
 Pour dépasser le plafond en N², il faudrait Barnes-Hut ou une méthode multipolaire rapide (FMM), avec des millions de corps en ligne de mire ; faire entrer deux disques en collision viendrait ensuite. En attendant, la version O(N²) bête et méchante va déjà nettement plus loin que je ne le pensais.

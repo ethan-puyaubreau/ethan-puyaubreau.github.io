@@ -24,11 +24,11 @@ export const en: SiteContent = {
       },
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Measuring where the energy goes on the GPU",
-      role: "Graduate Research Fellow (GRO program)",
+      role: "Summer research intern (GRO program)",
       period: "Summer 2025",
-      stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Rust"],
+      stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Slurm", "Rust"],
       summary:
-        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a sampling daemon merged into Kokkos Tools, measurement connectors submitted upstream, tools tested on Frontier, and energy-dashboard-for-kokkos, an open-source analysis tool I rewrote in September 2026.",
+        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a power-sampling profiler for Kokkos Tools with NVML and Variorum back ends, submitted upstream with unit tests, its sampling daemon already merged, and energy-dashboard-for-kokkos, the open-source analysis tool I rewrote in September 2026.",
       body: [
         {
           h: "The problem",
@@ -40,12 +40,16 @@ export const en: SiteContent = {
         },
         {
           h: "Where it stands",
-          p: "I wrote the sampling daemon (#300); my ORNL mentor, Jakob Bludau, carried it through review after my stay, and it was merged into kokkos-tools in March 2026. The core (#299) and the NVML and Variorum connectors (#301, #302) are still open. Nine pull requests to kokkos-tools and LAMMPS in all, some later split into smaller ones; three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report. I was also invited to present the work at SC25, which my apprenticeship schedule did not allow.",
+          p: "The profiler is in review as three pull requests I wrote: the core and timing export (#299), the NVML connector (#301), and the Variorum connector (#302, about 2,700 lines with its unit tests, still a draft). Its sampling daemon (#300) was merged into kokkos-tools in March 2026, after my ORNL mentor, Jakob Bludau, carried it through review once my stay had ended. Nine pull requests to kokkos-tools and LAMMPS in all, some later split into smaller ones; three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report.",
         },
       ],
       links: [
         {
-          label: "Kokkos Tools · PR #300",
+          label: "All kokkos-tools pull requests",
+          href: "https://github.com/kokkos/kokkos-tools/pulls?q=is%3Apr+author%3Aethan-puyaubreau",
+        },
+        {
+          label: "Kokkos Tools · PR #300 (merged)",
           href: "https://github.com/kokkos/kokkos-tools/pull/300",
         },
         {
@@ -58,10 +62,6 @@ export const en: SiteContent = {
           href: "https://ethan-puyaubreau.github.io/smc2025-gpu-energy-poster/",
         },
         { label: "S4PST report (OSTI)", href: "https://www.osti.gov/biblio/3016977" },
-        {
-          label: "All kokkos-tools pull requests",
-          href: "https://github.com/kokkos/kokkos-tools/pulls?q=is%3Apr+author%3Aethan-puyaubreau",
-        },
       ],
     },
     {
@@ -101,12 +101,6 @@ export const en: SiteContent = {
       hrefLabel: "The cluster",
     },
     {
-      name: "DCS World events",
-      blurb:
-        "Large multiplayer events in the flight simulator DCS World, designed and run since 2021: 150 to 180+ participants, a volunteer staff of four to five that grows to about twelve for the finals, and a written debrief after every event.",
-      noLinkLabel: "ongoing",
-    },
-    {
       name: "n-body galaxy",
       blurb:
         "A galaxy of up to 65,536 bodies under mutual gravity, stepped live in WebGPU compute shaders. A side project.",
@@ -114,15 +108,16 @@ export const en: SiteContent = {
       hrefLabel: "Live",
     },
     {
-      name: "vireli",
+      name: "DCS World events",
       blurb:
-        "A gamified carbon-footprint PWA built with an industry partner. I led the team of six (554 hours in all) and owned the architecture, backend, and deployment; all 18 requirements were delivered.",
-      noLinkLabel: "not public",
+        "Multiplayer events of 150 to 180+ participants in the flight simulator DCS World, organized with a volunteer staff since 2021.",
+      noLinkLabel: "ongoing",
     },
   ],
 
   about: [
-    "I write research software for high-performance computing: tools that make scientific codes measurable, and the engineering around them (tests, packaging, CI/CD, releases, documentation) that lets other people rely on them. I graduate from Polytech Paris-Saclay in September 2026 with an engineering degree, equivalent to an M.Eng., and I am looking for a research software engineer role from January 2027, at a national lab, a university, or a research institute, in the US or in France.",
+    "I write research software for high-performance computing: tools that make scientific codes measurable, and the engineering around them (tests, packaging, CI/CD, releases, documentation) that lets other people rely on them. I graduated from Polytech Paris-Saclay in September 2026 with an engineering degree, equivalent to an M.Eng., and I am looking for a research software engineer role from January 2027, at a national lab, a university, or a research institute, in the US or in France.",
+    "Languages: C++17 daily, Python (NumPy, pandas) for analysis and bindings, Rust, CUDA. Build, test and delivery: CMake, GitLab CI/CD, GitHub Actions, Jenkins, Debian packaging, Sphinx. Batch jobs with Slurm, on Frontier and at EDF. English: professional working language (TOEIC 965); French native.",
   ],
 
   timeline: [

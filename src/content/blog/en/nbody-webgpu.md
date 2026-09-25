@@ -7,7 +7,7 @@ slug: nbody-webgpu
 tags: ["WebGPU", "GPGPU", "WGSL", "simulation"]
 ---
 
-I wanted to know how far a naive gravitational N-body simulation could go in a browser tab, with no server and no precomputed frames. The answer turned out to be 65,536 bodies at 60 fps on a recent discrete GPU, which is about 258 billion pairwise force computations every second, all running through WebGPU compute shaders.
+I wanted to know how far a naive gravitational N-body simulation could go in a browser tab, with no server and no precomputed frames. The answer turned out to be 65,536 bodies at 60 fps on an NVIDIA RTX 3080 Ti, which is about 258 billion pairwise force computations every second, all running through WebGPU compute shaders.
 
 [Live demo](https://ethan-puyaubreau.github.io/nbody-webgpu/) · [Source on GitHub](https://github.com/ethan-puyaubreau/nbody-webgpu) (TypeScript, no runtime dependencies)
 
@@ -27,7 +27,7 @@ The obvious kernel has each thread loop over all N bodies, reading every positio
 
 The first version used plain forward Euler and the galaxy slowly unwound into a smear. Euler adds a little energy every step, and over millions of steps that error compounds until the structure is gone.
 
-Switching to a leapfrog step fixed it. Leapfrog is the standard integrator for this kind of simulation because it stays energy-stable over long runs: the total energy wobbles a little but does not drift, so the disk holds its shape over long runs. The price is one extra bit of bookkeeping, keeping position and velocity half a step apart. Without it the galaxy exploded.
+Switching to a leapfrog step fixed it. Leapfrog is the standard integrator for this kind of simulation because it stays energy-stable over long runs: the total energy wobbles a little but does not drift, so the disk holds its shape. The price is one extra bit of bookkeeping, keeping position and velocity half a step apart.
 
 ## Softening, so close encounters do not blow up
 
@@ -51,6 +51,6 @@ The initial state is a rotating disk around a heavy central mass. Each body's or
 
 ## Results
 
-On a recent discrete GPU it holds 60 fps at 65k bodies, which the HUD reports as about 258 billion pairwise interactions per second (N² × fps). The whole thing is a handful of TypeScript files and two WGSL shaders, built with Vite, with no runtime dependencies, and it deploys to GitHub Pages.
+On the RTX 3080 Ti it holds 60 fps at 65k bodies, which the HUD reports as about 258 billion pairwise interactions per second (N² × fps). The whole thing is a handful of TypeScript files and two WGSL shaders, built with Vite, with no runtime dependencies, and it deploys to GitHub Pages.
 
 Barnes-Hut or a fast multipole method (FMM) would break the N² ceiling and open the door to millions of bodies; colliding two disks would come after that. For now the dumb O(N²) version goes considerably further than I expected.

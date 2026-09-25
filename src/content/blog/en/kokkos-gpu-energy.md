@@ -3,7 +3,6 @@ title: "Charging GPU energy to the code that spent it"
 description: "A profiler tells you where GPU code spends time. I wanted to know where it spends joules, so I built a Kokkos Tools connector that samples power on a side thread and integrates it over each profiled region. On ArborX DBSCAN, the faster implementation saves more energy than time: 19% less time, 25% less energy."
 pubDate: 2026-06-12
 updatedDate: 2026-09-24
-pinned: true
 lang: en
 slug: kokkos-gpu-energy
 tags: ["HPC", "GPU", "Kokkos", "NVML"]
@@ -23,8 +22,8 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 </table>
 
 <figure>
-  <img src="/blog/kokkos/fdbscan.png" alt="GPU power over time for ArborX fdbscan on an H100 NVL, a plateau near 300 W under a 350 W cap. Total estimated energy 925.1 J, of which 772.8 J inside kernel regions." width="1200" height="898" loading="lazy" />
-  <img src="/blog/kokkos/fdbscan-dense.png" alt="GPU power over time for ArborX fdbscan-dense on the same GPU and input, a similar plateau. Total estimated energy 784.8 J, of which 615.6 J inside kernel regions." width="1200" height="898" loading="lazy" />
+  <a href="/blog/kokkos/fdbscan.png"><img src="/blog/kokkos/fdbscan.png" alt="GPU power over time for ArborX fdbscan on an H100 NVL, a plateau near 300 W under a 350 W cap. Total estimated energy 925.1 J, of which 772.8 J inside kernel regions." width="1200" height="898" loading="lazy" /></a>
+  <a href="/blog/kokkos/fdbscan-dense.png"><img src="/blog/kokkos/fdbscan-dense.png" alt="GPU power over time for ArborX fdbscan-dense on the same GPU and input, a similar plateau. Total estimated energy 784.8 J, of which 615.6 J inside kernel regions." width="1200" height="898" loading="lazy" /></a>
   <figcaption>Figure 3 of the poster: <code>fdbscan</code> (top) and <code>fdbscan-dense</code> (bottom). Shaded bands are Kokkos regions; the energy is the power trace integrated over time.</figcaption>
 </figure>
 
@@ -42,11 +41,12 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 
 <h2>You cannot read energy, only watch power</h2>
 
-<p>The obvious first version reads the power sensor at the begin callback, reads it again at the end, and multiplies the average by the duration; that is what the existing <a href="https://github.com/kokkos/kokkos-tools/tree/develop/profiling/variorum-connector">Variorum connector</a> in Kokkos Tools does. It does not work, and the reason it does not work is the heart of the problem. NVIDIA's management library, NVML, exposes <code>nvmlDeviceGetPowerUsage</code>, which returns the board's instantaneous power draw in milliwatts. The catch is twofold. That value is refreshed only every 100 ms, and it averages just the last 25 ms of each interval (<a href="https://doi.org/10.1109/SC41406.2024.00028">Yang, Adamek and Armour, SC24</a>), so most of what the board does is never observed at all. Most HPC kernels run in under 10 ms: begin and end frequently return the same stale reading, and the duration tells you nothing. And even when a region is long enough to span several updates, two point readings cannot describe a curve that rises and falls across it.</p>
+<p>The obvious first version reads the power sensor at the begin callback, reads it again at the end, and multiplies the average by the duration; that is what the existing <a href="https://github.com/kokkos/kokkos-tools/tree/develop/profiling/variorum-connector">Variorum connector</a> in Kokkos Tools does. It does not work, and the reason it does not work is the heart of the problem. NVIDIA's management library, NVML, exposes <code>nvmlDeviceGetPowerUsage</code>, which returns the board's instantaneous power draw in milliwatts. The catch is twofold. That value is refreshed only every 100 ms, and it averages just the last 25 ms of each interval (<a href="https://doi.org/10.1109/SC41406.2024.00028">Yang, Adamek and Armour, SC24</a>), so most of what the board does is never observed at all. Many kernels finish in far less than those 100 ms: begin and end frequently return the same stale reading, and the duration tells you nothing. And even when a region is long enough to span several updates, two point readings cannot describe a curve that rises and falls across it.</p>
 
 <p>The deeper issue is that power is the wrong quantity to sample at the boundaries. Power is a rate, in watts. What you pay for is energy, in joules, and energy is the integral of power over time. Two readings give you two heights of a curve. The bill is the area under it. My first version reported nonsense on short kernels, sometimes zero, sometimes the power of the previous kernel, depending on which side of a sensor update the two readings landed, and that was the signal to stop sampling on the kernel's schedule and start sampling on the clock's.</p>
 
 <figure>
+<div class="scroll" tabindex="0" role="region" aria-label="Diagram, scrolls sideways on narrow screens">
 <svg viewBox="0 0 720 380" role="img" aria-label="A schematic power-versus-time trace for three profiled regions, A, B and C, each drawing a different power level. Sample dots sit at a fixed cadence along the curve. A dashed line marks the idle floor, and the area under the first region is shaded and labeled energy equals the integral of power over time." xmlns="http://www.w3.org/2000/svg">
   <g stroke="#c9c9c4" stroke-width="1">
     <line x1="70" y1="50" x2="70" y2="300"/>
@@ -89,6 +89,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
   <text x="177" y="180" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" fill="#9a3412">Energy = &#8747; P dt</text>
   <text x="177" y="198" text-anchor="middle" font-family="Archivo Variable,system-ui,sans-serif" font-size="10.5" fill="#9a3412">area above idle = marginal cost</text>
 </svg>
+</div>
 <figcaption>A schematic, not a measurement. One region's energy is the area under its power curve. The dashed line is the idle floor; the marginal cost of a region is the part of the area that sits above it. The dots are the side thread sampling at a fixed cadence.</figcaption>
 </figure>
 
@@ -107,6 +108,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
 <p>NVML answers one question: what this NVIDIA GPU drew. It reports per board, in milliwatts, NVIDIA only, and sees nothing outside the card. So the 2025 tooling has a second measurement tool built on Variorum (#302, beside the NVML one in #301), which is vendor-neutral and reads power at the node and socket level, including the CPU (through RAPL, the power counters built into Intel and AMD processors), the DRAM, and some non-NVIDIA GPUs. NVML gives you what the GPU drew, Variorum what the whole node drew. A region that looks cheap on the card can still be shuffling enough data to light up the CPU and the memory controllers around it, and only the node-level view catches that. You reach for NVML when the question is what the GPU itself spent, and for Variorum when you want the energy bill the machine room actually sees.</p>
 
 <figure>
+<div class="scroll" tabindex="0" role="region" aria-label="Diagram, scrolls sideways on narrow screens">
 <svg viewBox="0 0 760 340" role="img" aria-label="The connector pipeline. The Kokkos application fires Tools callbacks at every parallel region; the energy connector receives a power trace from a sampler thread that reads power out of band at a fixed interval; NVML and Variorum feed the sampler; the connector integrates the trace per region into joules, which flow to energy-dashboard-for-kokkos, the analysis tool." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="ar-k1" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto">
@@ -157,6 +159,7 @@ tags: ["HPC", "GPU", "Kokkos", "NVML"]
   </g>
   <text x="392" y="180" text-anchor="start" font-family="Archivo Variable,system-ui,sans-serif" font-size="11" font-style="italic" fill="#5f5f5c">integrated trace</text>
 </svg>
+</div>
 <figcaption>The callbacks only mark when each region opens and closes. The energy comes from a separate power trace the connector integrates over those windows, with NVML or Variorum underneath the sampler depending on whether you are asking about the card or the node. In the 2026 version the connector only records the trace, and energy-dashboard-for-kokkos does the integration.</figcaption>
 </figure>
 

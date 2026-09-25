@@ -11,7 +11,7 @@
  * request to that domain on every visit. House style: no em dashes, EN or FR.
  */
 import type { Locale } from "./i18n";
-import { withFrenchSpacing } from "./french-spacing.mjs";
+import { withFrenchSpacing, withEnglishTypography } from "./french-spacing.mjs";
 
 export interface ClusterNavSection {
   readonly id: string;
@@ -219,7 +219,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     opsHead: {
       title: "Operated end to end",
       intro:
-        "The part that does not fit in a screenshot: keeping it up, watching it, and writing the operations down so they outlive my memory.",
+        "Backups, monitoring, and written procedures, so the cluster does not depend on my memory.",
     },
     ops: {
       oncall:
@@ -230,13 +230,13 @@ const CONTENT: Record<Locale, ClusterContent> = {
         "The cluster's setup, runbooks, and automation live in a versioned repo, operated like code. Adding a node or restoring a service follows a written procedure.",
     },
     talk: {
-      head: "Everything here, I built and run myself",
-      body: "The GPU work, the cluster, the CI/CD. I am open to research software engineer roles from January 2027.",
+      head: "Questions about the cluster or my work",
+      body: "I am open to research software engineer roles from January 2027.",
       cta: "Get in touch",
     },
     stackHead: {
       title: "The stack that holds it up",
-      intro: "Well-worn tools, wired together and operated end to end.",
+      intro: "Standard tools, chosen to be boring to operate.",
     },
     stack: [
       { name: "Proxmox VE", note: "The five-node hypervisor cluster" },
@@ -334,7 +334,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
     opsHead: {
       title: "Exploité de bout en bout",
       intro:
-        "La partie qui ne tient pas dans une capture : le maintenir en route, le surveiller, et consigner l'exploitation pour ne pas dépendre de ma mémoire.",
+        "Sauvegardes, supervision et procédures écrites, pour que le cluster ne dépende pas de ma mémoire.",
     },
     ops: {
       oncall:
@@ -345,13 +345,13 @@ const CONTENT: Record<Locale, ClusterContent> = {
         "La configuration, les runbooks et l'automatisation du cluster vivent dans un dépôt versionné, exploités comme du code. Ajouter un nœud ou restaurer un service suit une procédure écrite.",
     },
     talk: {
-      head: "Tout ce qui est ici, je l'ai construit et je l'exploite",
-      body: "Le travail GPU, le cluster, la CI/CD. Je suis ouvert aux postes d'ingénieur logiciel pour la recherche à partir de janvier 2027.",
+      head: "Des questions sur le cluster ou mon travail",
+      body: "Je suis ouvert aux postes d'ingénieur logiciel pour la recherche à partir de janvier 2027.",
       cta: "Me contacter",
     },
     stackHead: {
       title: "Les outils qui tiennent l'ensemble",
-      intro: "Des outils éprouvés, câblés ensemble et exploités de bout en bout.",
+      intro: "Des outils standard, choisis pour être simples à exploiter.",
     },
     stack: [
       { name: "Proxmox VE", note: "Le cluster d'hyperviseurs à cinq nœuds" },
@@ -369,7 +369,7 @@ const CONTENT: Record<Locale, ClusterContent> = {
 };
 
 const SPACED: Record<Locale, ClusterContent> = {
-  en: CONTENT.en,
+  en: withEnglishTypography(CONTENT.en),
   fr: withFrenchSpacing(CONTENT.fr),
 };
 

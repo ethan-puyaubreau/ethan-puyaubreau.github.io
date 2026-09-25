@@ -38,12 +38,11 @@ const cvHref = locale === "fr" ? "/Ethan-Puyaubreau-CV-FR.pdf" : "/Ethan-Puyaubr
 const posts = (
   await getCollection(
     "blog",
-    (p: CollectionEntry<"blog">) => p.data.lang === locale && !p.data.draft,
+    (p: CollectionEntry<"blog">) => p.data.lang === locale && !p.data.draft && p.data.home,
   )
 )
   .sort(
     (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
-      Number(b.data.pinned) - Number(a.data.pinned) ||
       b.data.pubDate.getTime() - a.data.pubDate.getTime(),
   )
   .slice(0, 3);
@@ -131,7 +130,6 @@ const fmtDate = (d: Date): string =>
         <About
           about={content.about}
           timeline={content.timeline}
-          role={copy.role}
           timelineLabel={ui.timelineLabel}
         />
       </section>
