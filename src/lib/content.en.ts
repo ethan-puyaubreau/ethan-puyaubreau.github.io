@@ -28,7 +28,7 @@ export const en: SiteContent = {
       period: "Summer 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Slurm", "Rust"],
       summary:
-        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes: a power-sampling profiler for Kokkos Tools with NVML and Variorum back ends, submitted upstream with unit tests, its sampling daemon already merged, and energy-dashboard-for-kokkos, the open-source analysis tool I rewrote in September 2026.",
+        "Energy-measurement tooling for Kokkos, the C++ performance-portability library behind many US Department of Energy codes. I wrote a power-sampling profiler for Kokkos Tools, with NVML and Variorum back ends, whose sampling daemon is merged upstream, and energy-dashboard-for-kokkos, the open-source analysis tool I rewrote in September 2026.",
       body: [
         {
           h: "The problem",
@@ -40,13 +40,17 @@ export const en: SiteContent = {
         },
         {
           h: "Where it stands",
-          p: "The profiler is in review as three pull requests I wrote: the core and timing export (#299), the NVML connector (#301), and the Variorum connector (#302, about 2,700 lines with its unit tests, still a draft). Its sampling daemon (#300) was merged into kokkos-tools in March 2026, after my ORNL mentor, Jakob Bludau, carried it through review once my stay had ended. Nine pull requests to kokkos-tools and LAMMPS in all, some later split into smaller ones; three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report.",
+          p: "The rest of the profiler is three open pull requests I wrote: the core and timing export (#299), the NVML connector (#301, with changes requested), and the Variorum connector (#302, a draft of about 2,700 lines that includes unit tests). Its sampling daemon (#300) was merged into kokkos-tools in March 2026, after my ORNL mentor, Jakob Bludau, carried it through review once my stay had ended. Nine pull requests to kokkos-tools and LAMMPS in all, some later split into smaller ones; three merged: the daemon and two build fixes. Two posters, at an ORNL internal session and at SMC 2025 with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié; the SMC poster is cited in the S4PST 2024–2025 project report.",
         },
       ],
       links: [
         {
           label: "All kokkos-tools pull requests",
           href: "https://github.com/kokkos/kokkos-tools/pulls?q=is%3Apr+author%3Aethan-puyaubreau",
+        },
+        {
+          label: "PR #302: Variorum connector and unit tests",
+          href: "https://github.com/kokkos/kokkos-tools/pull/302",
         },
         {
           label: "Kokkos Tools · PR #300 (merged)",

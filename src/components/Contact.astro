@@ -22,7 +22,7 @@ const confirmed = links.filter((l) => l.confirmed && l.href);
       class="primary"
       href={`mailto:${site.email}?subject=${encodeURIComponent(availability.mailSubject)}`}
     >
-      {site.email}
+      {site.email.split("@")[0]}@<wbr />{site.email.split("@")[1]}
     </a>
   </div>
 
@@ -68,7 +68,7 @@ const confirmed = links.filter((l) => l.confirmed && l.href);
     font-size: var(--step-2);
     font-weight: 600;
     letter-spacing: -0.01em;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-decoration-color: var(--line-strong);

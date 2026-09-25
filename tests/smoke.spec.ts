@@ -197,6 +197,10 @@ test("header: section links show on desktop and hide on phones", async ({ page }
   await page.locator(".menu summary").click();
   await page.locator('.menu a[href="#about"]').click();
   await expect(page.locator(".menu")).not.toHaveAttribute("open");
+  await page.locator(".menu summary").click();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".menu")).not.toHaveAttribute("open");
+  await expect(page.locator(".menu summary")).toBeFocused();
 });
 
 // ---------- 404 ----------
@@ -245,6 +249,7 @@ test("a missing French page gets the French 404 copy", async ({ page }) => {
   await page.goto("/fr/does-not-exist", { waitUntil: "load" });
   await expect(page.locator('a.nf-back[href="/fr"]')).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+  await expect(page.locator(".skip-link")).toHaveText("Aller au contenu");
 });
 
 test("english typography helper", () => {

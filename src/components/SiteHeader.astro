@@ -69,9 +69,17 @@ const inPage = brandHref === "#top";
 </header>
 
 <script>
-  // Close the narrow-screen section menu once a section is picked.
-  for (const a of document.querySelectorAll<HTMLAnchorElement>(".menu a")) {
-    a.addEventListener("click", () => a.closest("details")?.removeAttribute("open"));
+  // Close the narrow-screen section menu once a section is picked, or on
+  // Escape (focus goes back to the toggle).
+  for (const menu of document.querySelectorAll<HTMLDetailsElement>(".menu")) {
+    for (const a of menu.querySelectorAll("a")) {
+      a.addEventListener("click", () => (menu.open = false));
+    }
+    menu.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || !menu.open) return;
+      menu.open = false;
+      menu.querySelector("summary")?.focus();
+    });
   }
 </script>
 
@@ -147,6 +155,7 @@ const inPage = brandHref === "#top";
   }
   .menu summary::after {
     content: " ▾";
+    content: " ▾" / "";
   }
   /* Phones: the label gives way to an icon so EN / FR still fits; it stays
      in the accessibility tree as the summary's name. */
@@ -162,8 +171,14 @@ const inPage = brandHref === "#top";
       clip-path: inset(50%);
       white-space: nowrap;
     }
+    .menu summary {
+      display: inline-flex;
+      justify-content: center;
+      min-width: 44px;
+    }
     .menu summary::after {
       content: "☰";
+      content: "☰" / "";
       font-size: 1.15em;
     }
   }

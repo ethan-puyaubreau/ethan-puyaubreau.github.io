@@ -31,7 +31,7 @@ export const fr: SiteContent = {
       period: "Été 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Slurm", "Rust"],
       summary:
-        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances sur laquelle reposent de nombreux codes du Département de l'Énergie américain : un profileur d'énergie pour Kokkos Tools, avec des connecteurs NVML et Variorum, soumis en amont avec ses tests unitaires, dont le démon d'échantillonnage est déjà fusionné, et energy-dashboard-for-kokkos, l'outil d'analyse open source que j'ai réécrit en septembre 2026.",
+        "Des outils de mesure d'énergie pour Kokkos, la bibliothèque C++ de portabilité des performances sur laquelle reposent de nombreux codes du Département de l'Énergie américain. J'ai écrit un profileur d'énergie pour Kokkos Tools, avec des connecteurs NVML et Variorum, dont le démon d'échantillonnage est fusionné en amont, et energy-dashboard-for-kokkos, l'outil d'analyse open source que j'ai réécrit en septembre 2026.",
       body: [
         {
           h: "Le problème",
@@ -43,13 +43,17 @@ export const fr: SiteContent = {
         },
         {
           h: "Où ça en est",
-          p: "Le profileur est en relecture sous la forme de trois pull requests que j'ai écrites : le cœur et l'export des mesures (#299), le connecteur NVML (#301) et le connecteur Variorum (#302, environ 2 700 lignes avec ses tests unitaires, encore en brouillon). Son démon d'échantillonnage (#300) a été fusionné dans kokkos-tools en mars 2026, après que mon encadrant à l'ORNL, Jakob Bludau, l'a mené au bout de la relecture à la fin de mon séjour. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont certaines redécoupées ensuite ; trois fusionnées : le démon et deux correctifs de build. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié ; le poster SMC est cité dans le rapport de projet S4PST 2024–2025.",
+          p: "Le reste du profileur tient en trois pull requests que j'ai écrites, encore ouvertes : le cœur et l'export des mesures (#299), le connecteur NVML (#301, avec des modifications demandées) et le connecteur Variorum (#302, un brouillon d'environ 2 700 lignes qui inclut des tests unitaires). Son démon d'échantillonnage (#300) a été fusionné dans kokkos-tools en mars 2026, après que mon encadrant à l'ORNL, Jakob Bludau, l'a mené au bout de la relecture à la fin de mon séjour. Neuf pull requests vers kokkos-tools et LAMMPS au total, dont certaines redécoupées ensuite ; trois fusionnées : le démon et deux correctifs de build. Deux posters, lors d'une session interne de l'ORNL et à la SMC 2025 avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié ; le poster SMC est cité dans le rapport de projet S4PST 2024–2025.",
         },
       ],
       links: [
         {
           label: "Toutes les pull requests kokkos-tools",
           href: "https://github.com/kokkos/kokkos-tools/pulls?q=is%3Apr+author%3Aethan-puyaubreau",
+        },
+        {
+          label: "PR #302 : connecteur Variorum et tests unitaires",
+          href: "https://github.com/kokkos/kokkos-tools/pull/302",
         },
         {
           label: "Kokkos Tools · PR #300 (fusionnée)",
