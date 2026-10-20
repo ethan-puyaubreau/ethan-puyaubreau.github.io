@@ -147,7 +147,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       updated: "updated",
       tagsLabel: "Tags:",
       authorTagline:
-        "Research software engineer in HPC; Graduate Research Fellow at Oak Ridge National Laboratory, summer 2025.",
+        "Research software engineer in HPC; summer intern (GRO program) at Oak Ridge National Laboratory, 2025.",
       authorAvailable: "Open to research software engineer roles from January 2027.",
       contactCta: "Get in touch",
       talkHead: "Questions, corrections, or work:",
@@ -216,7 +216,7 @@ const STRINGS: Record<Locale, UIStrings> = {
       updated: "mis à jour le",
       tagsLabel: "Étiquettes :",
       authorTagline:
-        "Ingénieur logiciel pour la recherche en HPC ; Graduate Research Fellow à l'Oak Ridge National Laboratory, été 2025.",
+        "Ingénieur logiciel pour la recherche en HPC ; stagiaire d'été (programme GRO) à l'Oak Ridge National Laboratory, 2025.",
       authorAvailable: "Ouvert aux postes d'ingénieur logiciel pour la recherche dès janvier 2027.",
       contactCta: "Me contacter",
       talkHead: "Questions, corrections ou propositions :",

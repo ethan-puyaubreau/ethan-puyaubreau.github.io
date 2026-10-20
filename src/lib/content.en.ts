@@ -24,7 +24,7 @@ export const en: SiteContent = {
       },
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Measuring where the energy goes on the GPU",
-      role: "Graduate Research Fellow (GRO program)",
+      role: "Summer intern (GRO program)",
       period: "Summer 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Slurm", "Rust"],
       summary:
@@ -36,7 +36,7 @@ export const en: SiteContent = {
         },
         {
           h: "How it is built",
-          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The connectors I submitted upstream (#301, #302) read power through NVML or Variorum; an AMD path through ROCm SMI, not public yet, is the version I ran on Frontier. energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases archived on Zenodo with a DOI. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
+          p: "The tools attach at run time through Kokkos Tools, so an application is measured without a rebuild or a patch. The connectors I submitted upstream (#301, #302) read power through NVML or Variorum; an AMD path through ROCm SMI, not public yet, is the version I ran on Frontier (those runs were not kept). energy-dashboard-for-kokkos, rewritten in Rust in September 2026, has a documented trace format, tests on a real GPU trace, and CI-built releases archived on Zenodo with a DOI. The traces and script behind the DBSCAN figures are public, and CI recomputes them.",
         },
         {
           h: "Where it stands",
