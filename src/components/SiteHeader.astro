@@ -93,7 +93,9 @@ const inPage = brandHref === "#top";
     root.dataset.theme = next;
     try {
       localStorage.setItem("theme", next);
-    } catch {}
+    } catch {
+      // storage blocked: the choice just won't persist
+    }
     sync();
   });
 
