@@ -77,6 +77,8 @@ export interface UIStrings {
   readonly langSwitchLabel: string;
   readonly langName: Record<Locale, string>;
   readonly langSwitchTo: Record<Locale, string>;
+  // Theme toggle.
+  readonly themeLabel: string;
   // 404.
   readonly notFoundLede: string;
   readonly notFoundBack: string;
@@ -126,6 +128,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     sectionsLabel: "Sections",
     homeLabel: "home",
     timelineLabel: "Timeline",
+    themeLabel: "Toggle dark mode",
     langSwitchLabel: "Language",
     langName: { en: "EN", fr: "FR" },
     langSwitchTo: { en: "View in English", fr: "Voir en français" },
@@ -194,6 +197,7 @@ const STRINGS: Record<Locale, UIStrings> = {
     sectionsLabel: "Sections",
     homeLabel: "accueil",
     timelineLabel: "Chronologie",
+    themeLabel: "Basculer le mode sombre",
     langSwitchLabel: "Langue",
     langName: { en: "EN", fr: "FR" },
     langSwitchTo: { en: "View in English", fr: "Voir en français" },

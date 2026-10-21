@@ -58,6 +58,12 @@ const inPage = brandHref === "#top";
       >
         Blog
       </a>
+      <button class="theme-toggle" type="button" aria-label={ui.themeLabel} aria-pressed="false">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.5"></circle>
+          <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"></path>
+        </svg>
+      </button>
       <LangSwitch
         locale={locale}
         locales={LOCALES}
@@ -72,6 +78,25 @@ const inPage = brandHref === "#top";
 </header>
 
 <script>
+  // Theme toggle: flips against whatever is currently showing (stored choice
+  // or OS preference) and remembers it.
+  const root = document.documentElement;
+  const dark = matchMedia("(prefers-color-scheme: dark)");
+  const isDark = () =>
+    root.dataset.theme ? root.dataset.theme === "dark" : dark.matches;
+  const toggle = document.querySelector<HTMLButtonElement>(".theme-toggle");
+  const sync = () => toggle?.setAttribute("aria-pressed", String(isDark()));
+  sync();
+  dark.addEventListener("change", sync);
+  toggle?.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem("theme", next);
+    } catch {}
+    sync();
+  });
+
   // Close the narrow-screen section menu once a section is picked, or on
   // Escape (focus goes back to the toggle).
   for (const menu of document.querySelectorAll<HTMLDetailsElement>(".menu")) {
@@ -132,6 +157,26 @@ const inPage = brandHref === "#top";
     color: var(--ink);
     text-decoration: underline;
     text-underline-offset: 0.25em;
+  }
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink-dim);
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    color: var(--ink);
+  }
+  @media (pointer: coarse) {
+    .theme-toggle {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
   }
   .bar-right {
     display: flex;

@@ -102,8 +102,16 @@ const jsonLd = {
       href={locale === "fr" ? "/fr/rss.xml" : "/rss.xml"}
     />
     <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin="anonymous" />
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f7f7f5" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
+    <script is:inline>
+      // Apply a stored choice before first paint so there is no flash.
+      try {
+        var t = localStorage.getItem("theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />

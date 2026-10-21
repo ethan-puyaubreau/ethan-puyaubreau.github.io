@@ -84,10 +84,13 @@
 }
 
 /*
- * Dark ground, kept for the few components that sit on a dark surface
- * (terminal-like readouts). Same semantic tokens, re-scoped.
+ * Dark ground. Same semantic tokens, re-scoped. Applied three ways: the
+ * `.theme-dark` class (components that sit on a dark surface), an explicit
+ * data-theme="dark" choice, and the OS preference when no choice is stored.
+ * The two token blocks below must stay identical.
  */
-.theme-dark {
+.theme-dark,
+:root[data-theme="dark"] {
   color-scheme: dark;
   color: var(--ink);
   background-color: var(--bg);
@@ -104,4 +107,29 @@
   --line: rgb(242 242 239 / 0.14);
   --line-strong: rgb(242 242 239 / 0.3);
   --hairline: rgb(242 242 239 / 0.1);
+  --ok: #4fb37a;
+  --warn: #d89a45;
+  --down: #e8695a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #111111;
+    --bg-raised: #1a1a1a;
+    --bg-sunken: #0a0a0a;
+    --ink: #f2f2ef;
+    --ink-dim: #cfcfca;
+    --muted: #9b9b96;
+    --faint: #5a5a56;
+    --accent: #f07b4f;
+    --accent-deep: #f5a27f;
+    --accent-fill: rgb(240 123 79 / 0.2);
+    --line: rgb(242 242 239 / 0.14);
+    --line-strong: rgb(242 242 239 / 0.3);
+    --hairline: rgb(242 242 239 / 0.1);
+    --ok: #4fb37a;
+    --warn: #d89a45;
+    --down: #e8695a;
+  }
 }
