@@ -24,7 +24,7 @@ export const en: SiteContent = {
       },
       kicker: "Oak Ridge National Laboratory · CSED",
       title: "Measuring where the energy goes on the GPU",
-      role: "Summer intern (GRO program)",
+      role: "Research Intern, Graduate Research at ORNL (GRO)",
       period: "Summer 2025",
       stack: ["C++", "Kokkos", "CUDA", "NVML", "ROCm SMI", "Variorum", "Slurm", "Rust"],
       summary:
