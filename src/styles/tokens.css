@@ -23,6 +23,9 @@
   --line: rgb(17 17 17 / 0.14);
   --line-strong: rgb(17 17 17 / 0.28);
   --hairline: rgb(17 17 17 / 0.08);
+  --grid: #c9c9c4; /* gridlines in the blog figures */
+  --tint: #e6e6e2; /* neutral box fill in figures */
+  --accent-tint: #fbe7df; /* accent box fill in figures */
   --ok: #2f7d4f;
   --warn: #b06a14;
   --down: #c0392b;
@@ -107,6 +110,9 @@
   --line: rgb(242 242 239 / 0.14);
   --line-strong: rgb(242 242 239 / 0.3);
   --hairline: rgb(242 242 239 / 0.1);
+  --grid: #3a3a37;
+  --tint: #262624;
+  --accent-tint: #3b2217;
   --ok: #4fb37a;
   --warn: #d89a45;
   --down: #e8695a;
@@ -128,6 +134,9 @@
     --line: rgb(242 242 239 / 0.14);
     --line-strong: rgb(242 242 239 / 0.3);
     --hairline: rgb(242 242 239 / 0.1);
+    --grid: #3a3a37;
+    --tint: #262624;
+    --accent-tint: #3b2217;
     --ok: #4fb37a;
     --warn: #d89a45;
     --down: #e8695a;
