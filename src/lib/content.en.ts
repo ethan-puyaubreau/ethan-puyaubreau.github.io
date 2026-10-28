@@ -40,7 +40,7 @@ export const en: SiteContent = {
         },
         {
           h: "Where it stands",
-          p: "The rest of the profiler is three open pull requests I wrote: the core and timing export (#299), the NVML connector (#301, with changes requested), and the Variorum connector (#302, a draft of about 2,700 lines that includes unit tests). Its sampling daemon (#300) was merged into kokkos-tools in March 2026, after my ORNL mentor, Jakob Bludau, reworked it through review once my stay had ended. Eleven pull requests in all, ten to kokkos-tools and one to LAMMPS, some later split into smaller ones; four merged: the daemon, two build fixes (one in LAMMPS), and a fix for the nightly ROCm builds (October 2026). A follow-up that fixes, builds and tests the daemon (#350) is open. One poster, with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, presented at SMC 2025 and at an ORNL internal session, and cited in the S4PST 2024–2025 project report.",
+          p: "The rest of the profiler is three open pull requests I wrote: the core and timing export (#299), the NVML connector (#301, with changes requested), and the Variorum connector (#302, a draft of about 2,700 lines that includes unit tests). Its sampling daemon (#300) was merged into kokkos-tools in March 2026, after my ORNL mentor, Jakob Bludau, reworked it through review once my stay had ended. Eleven pull requests in all, ten to kokkos-tools and one to LAMMPS, some later split into smaller ones; four merged: the daemon, two build fixes (one in LAMMPS), and a fix for the nightly ROCm builds (October 2026). A follow-up that fixes, builds and tests the daemon (#350) is open. One poster, with Daniel Arndt, Jakob Bludau and Damien Lebrun-Grandié, presented at SMC 2025 and at an ORNL internal session, invited to SC25 (declined, apprenticeship schedule), and cited in the S4PST 2024–2025 project report.",
         },
       ],
       links: [
@@ -98,11 +98,25 @@ export const en: SiteContent = {
 
   moreWork: [
     {
+      name: "heapline",
+      blurb:
+        "Heap usage of a Linux program, through LD_PRELOAD and without recompiling it: one record per MPI rank and a job report to size a Slurm memory request. Debian and RPM packages for x86_64 and aarch64, documentation, and a case study on miniAMR, LULESH and CloverLeaf built with Spack; heapline-gate fails a CI build when the peak goes over a budget. Written from scratch after my apprenticeship, from the ideas behind the profiler I wrote at EDF, with none of its code.",
+      href: "https://ethan-puyaubreau.github.io/heapline/",
+      hrefLabel: "Documentation",
+    },
+    {
       name: "Homelab",
       blurb:
         "The five-node Proxmox cluster I have run since 2020 for about 60 regular users: around 20 services behind one Traefik, Gitea CI, Coolify and a Kubernetes VM today, GitLab CI/CD, Ceph and Ansible over the years, and a deploy pipeline that rolls back on a failed health check.",
       href: "/cluster",
       hrefLabel: "The cluster",
+    },
+    {
+      name: "proxmox-ops-mcp",
+      blurb:
+        "An MCP server that lets an AI assistant operate that cluster. Every command goes through a deny-by-default classifier; destructive ones wait for my approval on a separate channel, so a prompt injection cannot approve itself.",
+      href: "https://github.com/ethan-puyaubreau/proxmox-ops-mcp",
+      hrefLabel: "Source",
     },
     {
       name: "n-body galaxy",

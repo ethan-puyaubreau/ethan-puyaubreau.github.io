@@ -43,7 +43,7 @@ export const fr: SiteContent = {
         },
         {
           h: "Où ça en est",
-          p: "Le reste du profileur tient en trois pull requests que j'ai écrites, encore ouvertes : le cœur et l'export des mesures (#299), le connecteur NVML (#301, avec des modifications demandées) et le connecteur Variorum (#302, un brouillon d'environ 2 700 lignes qui inclut des tests unitaires). Son démon d'échantillonnage (#300) a été fusionné dans kokkos-tools en mars 2026, après que mon encadrant à l'ORNL, Jakob Bludau, l'a retravaillé pendant la relecture, après mon séjour. Onze pull requests au total, dix vers kokkos-tools et une vers LAMMPS, dont certaines redécoupées ensuite ; quatre fusionnées : le démon, deux correctifs de build (dont un dans LAMMPS) et un correctif des builds ROCm nocturnes (octobre 2026). Une suite qui corrige, compile et teste le démon (#350) est ouverte. Un poster, avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, présenté à la SMC 2025 et lors d'une session interne de l'ORNL, et cité dans le rapport de projet S4PST 2024–2025.",
+          p: "Le reste du profileur tient en trois pull requests que j'ai écrites, encore ouvertes : le cœur et l'export des mesures (#299), le connecteur NVML (#301, avec des modifications demandées) et le connecteur Variorum (#302, un brouillon d'environ 2 700 lignes qui inclut des tests unitaires). Son démon d'échantillonnage (#300) a été fusionné dans kokkos-tools en mars 2026, après que mon encadrant à l'ORNL, Jakob Bludau, l'a retravaillé pendant la relecture, après mon séjour. Onze pull requests au total, dix vers kokkos-tools et une vers LAMMPS, dont certaines redécoupées ensuite ; quatre fusionnées : le démon, deux correctifs de build (dont un dans LAMMPS) et un correctif des builds ROCm nocturnes (octobre 2026). Une suite qui corrige, compile et teste le démon (#350) est ouverte. Un poster, avec Daniel Arndt, Jakob Bludau et Damien Lebrun-Grandié, présenté à la SMC 2025 et lors d'une session interne de l'ORNL, invité à SC25 (décliné, à cause du calendrier de l'alternance), et cité dans le rapport de projet S4PST 2024–2025.",
         },
       ],
       links: [
@@ -101,11 +101,25 @@ export const fr: SiteContent = {
 
   moreWork: [
     {
+      name: "heapline",
+      blurb:
+        "La consommation de tas d'un programme Linux, via LD_PRELOAD et sans le recompiler : un relevé par rang MPI et un rapport de job pour dimensionner la mémoire demandée à Slurm. Paquets Debian et RPM pour x86_64 et aarch64, documentation, et une étude de cas sur miniAMR, LULESH et CloverLeaf compilés avec Spack ; heapline-gate fait échouer un build de CI quand le pic dépasse un budget. Écrit de zéro après mon alternance, à partir des idées du profileur que j'avais écrit chez EDF, sans rien reprendre de son code.",
+      href: "https://ethan-puyaubreau.github.io/heapline/",
+      hrefLabel: "Documentation",
+    },
+    {
       name: "Homelab",
       blurb:
         "Le cluster Proxmox de cinq nœuds que j'exploite depuis 2020 pour une soixantaine d'utilisateurs réguliers : une vingtaine de services derrière un seul Traefik, la CI Gitea, Coolify et une VM Kubernetes aujourd'hui, GitLab CI/CD, Ceph et Ansible au fil des ans, et un pipeline de déploiement qui revient à la version précédente si la vérification échoue.",
       href: "/fr/cluster",
       hrefLabel: "Le cluster",
+    },
+    {
+      name: "proxmox-ops-mcp",
+      blurb:
+        "Un serveur MCP qui permet à un assistant IA d'exploiter ce cluster. Chaque commande passe par un classifieur qui refuse par défaut ; les commandes destructrices attendent mon accord sur un canal séparé, pour qu'une injection de prompt ne puisse pas s'approuver elle-même.",
+      href: "https://github.com/ethan-puyaubreau/proxmox-ops-mcp",
+      hrefLabel: "Code source",
     },
     {
       name: "n-body galaxy",
