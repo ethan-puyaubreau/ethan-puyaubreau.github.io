@@ -54,10 +54,11 @@ const articleLd = {
   image: ogImage,
   author: { "@type": "Person", "@id": `${site.url}#person`, name: site.name, url: site.url },
   publisher: {
-    "@type": "Organization",
+    "@type": "Person",
+    "@id": `${site.url}#person`,
     name: site.name,
     url: site.url,
-    logo: { "@type": "ImageObject", url: logoUrl },
+    image: { "@type": "ImageObject", url: logoUrl },
   },
   mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
 };

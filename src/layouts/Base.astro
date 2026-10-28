@@ -5,7 +5,9 @@ import "@fontsource-variable/jetbrains-mono";
 import "../styles/tokens.css";
 import "../styles/global.css";
 import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { getImage } from "astro:assets";
 import { site, links, getSiteCopy } from "../lib/site";
+import avatar from "../assets/avatar.jpg";
 import {
   type Locale,
   toLocale,
@@ -72,15 +74,39 @@ const alternates = isPaired
   : [];
 
 // Structured data ties this domain to the confirmed profiles (ORCID, Google Scholar, GitHub, LinkedIn).
+// The WebSite node names its owner, so search engines read the site as this person's.
+const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": `${site.url}#person`,
-  name: site.name,
-  url: site.url,
-  email: `mailto:${site.email}`,
-  jobTitle: copy.role,
-  sameAs: links.filter((l) => l.confirmed && l.href).map((l) => l.href),
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${site.url}#person`,
+      name: site.name,
+      url: site.url,
+      image: new URL(photo.src, site.url).href,
+      email: `mailto:${site.email}`,
+      jobTitle: copy.role,
+      alumniOf: { "@type": "CollegeOrUniversity", name: "Polytech Paris-Saclay" },
+      knowsAbout: [
+        "High-performance computing",
+        "Research software engineering",
+        "GPU energy measurement",
+        "Kokkos",
+        "C++",
+        "Performance profiling",
+      ],
+      sameAs: links.filter((l) => l.confirmed && l.href).map((l) => l.href),
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${site.url}#website`,
+      url: site.url,
+      name: site.name,
+      inLanguage: ["en", "fr"],
+      author: { "@id": `${site.url}#person` },
+    },
+  ],
 };
 ---
 
@@ -114,7 +140,6 @@ const jsonLd = {
         // storage blocked: fall back to the OS preference
       }
     </script>
-
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
